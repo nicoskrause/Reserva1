@@ -1,0 +1,19 @@
+{
+  "name": "underground-representacoes",
+  "version": "1.0.0",
+  "description": "Sistema de gestão comercial — Underground Representações",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve public -p 3000",
+    "build": "echo 'Static site'",
+    "preview": "npx serve public -p 4000"
+  },
+  "author": "Underground Representações",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "serve": "^14.2.3"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
