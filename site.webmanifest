@@ -1,0 +1,26 @@
+{
+  "name": "Underground Representações",
+  "short_name": "Underground",
+  "description": "Sistema de gestão comercial — Underground Representações",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f0f0e",
+  "theme_color": "#b8995a",
+  "orientation": "landscape-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "lang": "pt-BR"
+}
