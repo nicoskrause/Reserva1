@@ -234,6 +234,51 @@ tr:last-child td{border-bottom:none}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:3px}
 
+/* BI PAGE */
+.bi-filters{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;padding:1rem 2rem;background:var(--bg-card);border-bottom:1px solid var(--line);position:sticky;top:56px;z-index:40}
+.bi-filter-group{display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--ink-muted);font-weight:500;font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em}
+.bi-filter-group select{padding:.38rem .65rem;border:1px solid var(--line-strong);border-radius:6px;font-size:.78rem;background:var(--bg-card);font-family:inherit;color:var(--ink);cursor:pointer}
+.bi-filter-group select:focus{outline:none;border-color:var(--gold)}
+.bi-filter-group select[multiple]{height:auto}
+.bi-kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem;margin-bottom:1.25rem}
+.bi-kpi{background:var(--bg-card);border:1px solid var(--line);border-radius:10px;padding:1rem;position:relative;overflow:hidden}
+.bi-kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold)}
+.bi-kpi.green::before{background:var(--green)}
+.bi-kpi.blue::before{background:var(--blue)}
+.bi-kpi.red::before{background:var(--red)}
+.bi-kpi.amber::before{background:var(--amber)}
+.bi-kpi-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-muted);margin-bottom:.4rem;font-weight:600;font-family:var(--mono)}
+.bi-kpi-val{font-family:var(--serif);font-size:1.65rem;font-weight:400;color:var(--ink);line-height:1;margin-bottom:.25rem}
+.bi-kpi-sub{font-size:.72rem;color:var(--ink-muted)}
+.bi-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.bi-grid-3{display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-bottom:1rem}
+.bi-panel{background:var(--bg-card);border:1px solid var(--line);border-radius:10px;padding:1.1rem}
+.bi-panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.9rem;padding-bottom:.7rem;border-bottom:1px solid var(--line)}
+.bi-panel-title{font-family:var(--serif);font-size:.95rem;font-weight:400}
+.bi-chart-wrap{height:280px;position:relative}
+.bi-chart-tall{height:340px;position:relative}
+.bi-section-title{font-family:var(--serif);font-size:1.05rem;font-weight:400;margin-bottom:.85rem;color:var(--ink-soft)}
+.bi-rank-row{display:flex;align-items:center;gap:.65rem;padding:.55rem .75rem;border-radius:7px;transition:background .12s;cursor:default}
+.bi-rank-row:hover{background:var(--bg-hover)}
+.bi-rank-num{font-family:var(--mono);font-size:.75rem;color:var(--ink-muted);width:22px;flex-shrink:0;text-align:right}
+.bi-rank-bar-wrap{flex:1;height:6px;background:var(--bg-soft);border-radius:100px;overflow:hidden}
+.bi-rank-bar{height:100%;background:var(--gold);border-radius:100px;transition:width .5s}
+.bi-rank-bar.green{background:var(--green)}
+.bi-rank-val{font-family:var(--mono);font-size:.77rem;font-weight:500;color:var(--ink);min-width:60px;text-align:right}
+.bi-rank-name{font-size:.78rem;font-weight:500;color:var(--ink-soft);min-width:120px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bi-legend{display:flex;flex-wrap:wrap;gap:.5rem .9rem;margin-top:.7rem;padding-top:.6rem;border-top:1px solid var(--line)}
+.bi-legend-item{display:flex;align-items:center;gap:.3rem;font-size:.72rem;color:var(--ink-muted)}
+.bi-legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.bi-empty{padding:2rem;text-align:center;color:var(--ink-muted);font-size:.85rem}
+.bi-tag{display:inline-flex;align-items:center;padding:.12rem .48rem;border-radius:100px;font-size:.66rem;font-weight:600}
+.bi-tag.atingiu{background:var(--green-soft);color:var(--green)}
+.bi-tag.parcial{background:var(--amber-soft);color:var(--amber)}
+.bi-tag.nao-atingiu{background:var(--red-soft);color:var(--red)}
+@media(max-width:968px){
+  .bi-grid-2,.bi-grid-3{grid-template-columns:1fr}
+  .bi-filters{top:0}
+}
+
 /* LOGIN */
 .login-screen{position:fixed;inset:0;background:#0f0f0e;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2rem}
 .login-box{background:#1a1a18;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:2.5rem 3rem;width:100%;max-width:400px;text-align:center}
@@ -353,6 +398,7 @@ window.addEventListener('load', () => {
     <button class="nav-item" data-page="clientes"><span class="ndot"></span><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Clientes</button>
     <button class="nav-item" data-page="compras"><span class="ndot"></span><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>Compras / Coleções</button>
     <button class="nav-item" data-page="rankings"><span class="ndot"></span><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>Rankings</button>
+    <button class="nav-item" data-page="bi"><span class="ndot"></span><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 0 1 0 20M2 12h20"/><path d="M12 2C7 7 7 17 12 22M12 2c5 5 5 15 0 20"/></svg>BI / Análises</button>
   </div>
   <div class="nav-section">
     <div class="nav-label">Operação</div>
@@ -463,6 +509,78 @@ window.addEventListener('load', () => {
     <div class="topbar-actions"><button class="btn btn-secondary btn-sm" onclick="editarClienteAtual()">Editar</button><button class="btn btn-danger btn-sm" onclick="excluirClienteAtual()">Excluir</button></div>
   </div>
   <div class="page-content" id="detalhe-body"></div>
+</div>
+<!-- BI / ANÁLISES -->
+<div class="page" id="page-bi">
+  <div class="topbar"><h1>BI / Análises</h1><div class="topbar-actions"><span id="bi-update-label" style="font-size:.75rem;color:var(--ink-muted);font-family:var(--mono)"></span></div></div>
+  <!-- Filtros -->
+  <div class="bi-filters">
+    <div class="bi-filter-group">
+      <span>Coleções:</span>
+      <select id="bi-col-filter" multiple size="1" style="height:34px;min-width:160px" title="Ctrl+clique para múltiplas">
+        <option value="__todas__" selected>Todas</option>
+      </select>
+    </div>
+    <div class="bi-filter-group">
+      <span>Cidade:</span>
+      <select id="bi-cidade-filter">
+        <option value="">Todas</option>
+      </select>
+    </div>
+    <div class="bi-filter-group">
+      <span>Performance:</span>
+      <select id="bi-perf-filter">
+        <option value="">Todos</option>
+        <option value="acima">Acima da meta</option>
+        <option value="abaixo">Abaixo da meta</option>
+        <option value="sem-compra">Sem compra</option>
+      </select>
+    </div>
+    <button class="btn btn-secondary btn-sm" onclick="renderBI()">↺ Atualizar</button>
+  </div>
+  <div class="page-content">
+    <!-- KPIs -->
+    <div class="bi-kpi-row" id="bi-kpis"></div>
+    <!-- Row 1: Evolução + donut cidades -->
+    <div class="bi-grid-3" style="margin-bottom:1rem">
+      <div class="bi-panel">
+        <div class="bi-panel-head"><div class="bi-panel-title">Evolução por Coleção</div><span class="badge">Faturamento R$</span></div>
+        <div class="bi-chart-wrap"><canvas id="bi-chart-ev"></canvas></div>
+      </div>
+      <div class="bi-panel">
+        <div class="bi-panel-head"><div class="bi-panel-title">Top Cidades</div><span class="badge">Volume</span></div>
+        <div class="bi-chart-wrap"><canvas id="bi-chart-cidades"></canvas></div>
+      </div>
+    </div>
+    <!-- Row 2: Meta por coleção -->
+    <div class="bi-panel" style="margin-bottom:1rem">
+      <div class="bi-panel-head"><div class="bi-panel-title">Atingimento de Meta por Coleção</div><span id="bi-meta-legenda" class="badge"></span></div>
+      <div class="bi-chart-wrap"><canvas id="bi-chart-meta"></canvas></div>
+    </div>
+    <!-- Row 3: Ranking clientes + comparativo coleções -->
+    <div class="bi-grid-2" style="margin-bottom:1rem">
+      <div class="bi-panel">
+        <div class="bi-panel-head"><div class="bi-panel-title">Ranking Clientes (LTV filtrado)</div><span class="badge">Top 15</span></div>
+        <div id="bi-rank-list" style="max-height:320px;overflow-y:auto"></div>
+      </div>
+      <div class="bi-panel">
+        <div class="bi-panel-head"><div class="bi-panel-title">Comparativo entre Coleções</div><span class="badge">Valor total</span></div>
+        <div class="bi-chart-tall"><canvas id="bi-chart-comp"></canvas></div>
+      </div>
+    </div>
+    <!-- Row 4: Clientes por cidade + dispersão -->
+    <div class="bi-grid-2">
+      <div class="bi-panel">
+        <div class="bi-panel-head"><div class="bi-panel-title">Participação por Cidade</div><span class="badge">% do faturamento</span></div>
+        <div class="bi-chart-wrap"><canvas id="bi-chart-part"></canvas></div>
+      </div>
+      <div class="bi-panel">
+        <div class="bi-panel-head"><div class="bi-panel-title">Clientes Ativos vs Inativos</div><span class="badge">Base completa</span></div>
+        <div class="bi-chart-wrap"><canvas id="bi-chart-ativo"></canvas></div>
+        <div class="bi-legend" id="bi-ativo-legend"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 </main>
@@ -1275,6 +1393,233 @@ function fazerLogin(){
 window._initApp = init;
 // Tentar iniciar imediatamente (caso Firebase já carregou)
 if(window._fbReady) init();
+
+// ═══════════ BI / ANÁLISES ═══════════
+let biCharts = {};
+
+function getColsFiltradas(){
+  const sel = document.getElementById('bi-col-filter');
+  if(!sel) return COLS;
+  const vals = Array.from(sel.selectedOptions).map(o=>o.value);
+  if(vals.includes('__todas__') || vals.length===0) return COLS;
+  return vals;
+}
+
+function getCidadeFiltrada(){
+  const el = document.getElementById('bi-cidade-filter');
+  return el ? el.value : '';
+}
+
+function getPerfFiltro(){
+  const el = document.getElementById('bi-perf-filter');
+  return el ? el.value : '';
+}
+
+function getComprasFiltradas(){
+  const cidF = getCidadeFiltrada();
+  const perf = getPerfFiltro();
+  const cols = getColsFiltradas();
+
+  return compras.filter(c => {
+    const cli = getCli(c.CNPJ);
+    if(cidF && cli?.Cidade !== cidF) return false;
+    if(perf === 'sem-compra'){
+      return cols.every(col => !num(c[col]));
+    }
+    if(perf === 'acima'){
+      return cols.some(col => {
+        const v = num(c[col]), m = METAS[col]||1;
+        return (v/m) >= 1;
+      });
+    }
+    if(perf === 'abaixo'){
+      return cols.some(col => {
+        const v = num(c[col]);
+        return v > 0 && (v / (METAS[col]||1)) < 1;
+      });
+    }
+    return true;
+  });
+}
+
+function destroyBIChart(id){
+  if(biCharts[id]){ biCharts[id].destroy(); delete biCharts[id]; }
+}
+
+function renderBI(){
+  const cols = getColsFiltradas();
+  const compF = getComprasFiltradas();
+
+  // Update timestamp
+  const lbl = document.getElementById('bi-update-label');
+  if(lbl) lbl.textContent = 'Atualizado: ' + new Date().toLocaleTimeString('pt-BR');
+
+  // ── KPIs ──────────────────────────────────
+  const fatTotal = compF.reduce((s,c)=>s+cols.reduce((s2,col)=>s2+num(c[col]),0),0);
+  const ativos = compF.filter(c=>cols.some(col=>num(c[col])>0)).length;
+  const inativos = compF.length - ativos;
+  const ticketMedio = ativos ? fatTotal/ativos : 0;
+  const metaTotal = cols.reduce((s,col)=>s+(METAS[col]||0),0);
+  const pctMeta = metaTotal ? (fatTotal/metaTotal)*100 : 0;
+
+  document.getElementById('bi-kpis').innerHTML = [
+    {l:'Faturamento Filtrado', v:fmtK(fatTotal), s:'Coleções selecionadas', cls:''},
+    {l:'Clientes Ativos', v:ativos, s:`${inativos} inativos na seleção`, cls:'green'},
+    {l:'Ticket Médio LTV', v:fmtK(ticketMedio), s:'Por cliente ativo', cls:'blue'},
+    {l:'% Meta Geral', v:pctMeta.toFixed(1)+'%', s:`Meta: ${fmtK(metaTotal)}`, cls:pctMeta>=100?'green':pctMeta>=60?'amber':'red'},
+    {l:'Coleções Analisadas', v:cols.length, s:'de '+COLS.length+' disponíveis', cls:''},
+    {l:'Cidades Cobertas', v:new Set(compF.map(c=>getCli(c.CNPJ)?.Cidade).filter(Boolean)).size, s:'Na seleção atual', cls:''},
+  ].map(k=>`<div class="bi-kpi ${k.cls}"><div class="bi-kpi-label">${k.l}</div><div class="bi-kpi-val">${k.v}</div><div class="bi-kpi-sub">${k.s}</div></div>`).join('');
+
+  // ── EVOLUÇÃO POR COLEÇÃO ──────────────────
+  destroyBIChart('ev');
+  const totC = {};
+  cols.forEach(c=>totC[c]=compF.reduce((s,x)=>s+num(x[c]),0));
+  biCharts['ev'] = new Chart(document.getElementById('bi-chart-ev'),{
+    type:'bar',
+    data:{
+      labels: cols.map(c=>c.trim()),
+      datasets:[
+        {label:'Realizado',data:cols.map(c=>totC[c]),backgroundColor:'rgba(184,153,90,.85)',borderRadius:5,order:2},
+        {label:'Meta',data:cols.map(c=>METAS[c]||0),type:'line',borderColor:'#9e3a30',backgroundColor:'transparent',borderWidth:2,pointRadius:4,pointBackgroundColor:'#9e3a30',order:1}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},scales:{y:{ticks:{callback:v=>'R$ '+(v/1000).toFixed(0)+'k'},grid:{color:'#f0ede6'}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+  });
+
+  // ── TOP CIDADES ───────────────────────────
+  destroyBIChart('cidades');
+  const cidF2={};
+  compF.forEach(c=>{const ci=getCli(c.CNPJ)?.Cidade||'Outras';const v=cols.reduce((s,col)=>s+num(c[col]),0);cidF2[ci]=(cidF2[ci]||0)+v;});
+  const topCid = Object.entries(cidF2).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const paleta = ['#b8995a','#8b7440','#3d6b47','#2c4a7c','#a07820','#9e3a30','#7a7a72','#ccc9c0'];
+  biCharts['cidades'] = new Chart(document.getElementById('bi-chart-cidades'),{
+    type:'doughnut',
+    data:{labels:topCid.map(c=>c[0]),datasets:[{data:topCid.map(c=>c[1]),backgroundColor:paleta,borderWidth:2,borderColor:'#fff'}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:10},boxWidth:10}}}}
+  });
+
+  // ── META POR COLEÇÃO ──────────────────────
+  destroyBIChart('meta');
+  const metaPct = cols.map(c=>((totC[c]/(METAS[c]||1))*100));
+  const metaColors = metaPct.map(p=>p>=100?'#3d6b47':p>=60?'#a07820':'#9e3a30');
+  document.getElementById('bi-meta-legenda').textContent = cols.length + ' coleções';
+  biCharts['meta'] = new Chart(document.getElementById('bi-chart-meta'),{
+    type:'bar',
+    data:{
+      labels:cols.map(c=>c.trim()),
+      datasets:[{
+        label:'% Meta',data:metaPct,
+        backgroundColor:metaColors,borderRadius:5
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw.toFixed(1)}% (${fmtK(totC[cols[ctx.dataIndex]])} / ${fmtK(METAS[cols[ctx.dataIndex]]||0)})`}}},
+      scales:{
+        y:{min:0,max:Math.max(150,Math.ceil(Math.max(...metaPct)/50)*50),ticks:{callback:v=>v+'%'},grid:{color:'#f0ede6'}},
+        x:{ticks:{font:{size:9}},grid:{display:false}}
+      },
+      plugins:{annotation:{annotations:{line100:{type:'line',y:100,borderColor:'#b8995a',borderWidth:2,borderDash:[6,3]}}}}
+    }
+  });
+
+  // ── RANKING CLIENTES ──────────────────────
+  const ranked = compF.map(c=>{
+    const v=cols.reduce((s,col)=>s+num(c[col]),0);
+    return {cnpj:c.CNPJ,nome:c['Nome da Loja']||getCli(c.CNPJ)?.['Nome da Loja']||c.CNPJ,v};
+  }).filter(r=>r.v>0).sort((a,b)=>b.v-a.v).slice(0,15);
+  const maxV = ranked[0]?.v||1;
+  document.getElementById('bi-rank-list').innerHTML = ranked.length ? ranked.map((r,i)=>`
+    <div class="bi-rank-row">
+      <div class="bi-rank-num">${i+1}</div>
+      <div class="bi-rank-name" title="${r.nome}">${r.nome}</div>
+      <div class="bi-rank-bar-wrap"><div class="bi-rank-bar ${i<3?'green':''}" style="width:${(r.v/maxV)*100}%"></div></div>
+      <div class="bi-rank-val">${fmtK(r.v)}</div>
+    </div>`).join('') : '<div class="bi-empty">Nenhum cliente com compras nessa seleção.</div>';
+
+  // ── COMPARATIVO COLEÇÕES (horizontal) ─────
+  destroyBIChart('comp');
+  biCharts['comp'] = new Chart(document.getElementById('bi-chart-comp'),{
+    type:'bar',
+    data:{
+      labels:cols.map(c=>c.trim()),
+      datasets:[
+        {label:'Realizado',data:cols.map(c=>totC[c]),backgroundColor:'rgba(44,74,124,.75)',borderRadius:4},
+        {label:'Meta',data:cols.map(c=>METAS[c]||0),backgroundColor:'rgba(184,153,90,.3)',borderRadius:4}
+      ]
+    },
+    options:{
+      indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},
+      scales:{x:{ticks:{callback:v=>'R$ '+(v/1000).toFixed(0)+'k'},grid:{color:'#f0ede6'}},y:{ticks:{font:{size:10}},grid:{display:false}}}
+    }
+  });
+
+  // ── PARTICIPAÇÃO POR CIDADE ───────────────
+  destroyBIChart('part');
+  const top6 = Object.entries(cidF2).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const restTotal = Object.values(cidF2).reduce((s,v)=>s+v,0) - top6.reduce((s,c)=>s+c[1],0);
+  const partLabels = [...top6.map(c=>c[0])];
+  const partData = [...top6.map(c=>c[1])];
+  if(restTotal>0){partLabels.push('Outras');partData.push(restTotal);}
+  const partTotal = partData.reduce((s,v)=>s+v,0)||1;
+  biCharts['part'] = new Chart(document.getElementById('bi-chart-part'),{
+    type:'pie',
+    data:{labels:partLabels,datasets:[{data:partData,backgroundColor:[...paleta,'#d4c9a8'],borderWidth:2,borderColor:'#fff'}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:10},boxWidth:10}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${fmtK(ctx.raw)} (${((ctx.raw/partTotal)*100).toFixed(1)}%)`}}}}
+  });
+
+  // ── ATIVOS vs INATIVOS ────────────────────
+  destroyBIChart('ativo');
+  biCharts['ativo'] = new Chart(document.getElementById('bi-chart-ativo'),{
+    type:'doughnut',
+    data:{
+      labels:['Ativos (com compra)','Inativos (sem compra)'],
+      datasets:[{data:[ativos,inativos],backgroundColor:['#3d6b47','#e4e2db'],borderWidth:2,borderColor:'#fff'}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.raw} (${((ctx.raw/(ativos+inativos))*100).toFixed(0)}%)`}}}}
+  });
+  document.getElementById('bi-ativo-legend').innerHTML = `
+    <div class="bi-legend-item"><div class="bi-legend-dot" style="background:#3d6b47"></div>Ativos: ${ativos} (${ativos+inativos?((ativos/(ativos+inativos))*100).toFixed(0):0}%)</div>
+    <div class="bi-legend-item"><div class="bi-legend-dot" style="background:#e4e2db"></div>Inativos: ${inativos}</div>`;
+}
+
+function initBIFilters(){
+  // Coleções
+  const sel = document.getElementById('bi-col-filter');
+  if(sel){
+    sel.innerHTML = '<option value="__todas__" selected>Todas as coleções</option>' +
+      COLS.map(c=>`<option value="${c}">${c.trim()}</option>`).join('');
+    sel.addEventListener('change', ()=>{
+      // Se nenhum selecionado, volta para "Todas"
+      if(Array.from(sel.selectedOptions).length===0){
+        sel.options[0].selected=true;
+      }
+      renderBI();
+    });
+  }
+  // Cidades
+  const csel = document.getElementById('bi-cidade-filter');
+  if(csel){
+    const cids=[...new Set(clientes.map(c=>c.Cidade).filter(Boolean))].sort();
+    csel.innerHTML='<option value="">Todas as cidades</option>'+cids.map(c=>`<option value="${c}">${c}</option>`).join('');
+    csel.addEventListener('change', renderBI);
+  }
+  // Performance
+  const psel = document.getElementById('bi-perf-filter');
+  if(psel) psel.addEventListener('change', renderBI);
+}
+
+// Hook: quando navegar para BI, renderizar
+const _origNavTo = navTo;
+function navTo(p){
+  _origNavTo(p);
+  if(p==='bi'){
+    initBIFilters();
+    setTimeout(renderBI, 50);
+  }
+}
 </script>
 </body>
 </html>
