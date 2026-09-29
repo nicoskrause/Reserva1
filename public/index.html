@@ -8451,7 +8451,15 @@ const B64_INAD="PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InB0LUJSIj4KPGhlYWQ+CjxtZXRh
   <iframe id="frame-pipeline" title="Pipeline Comercial" style="width:100%;height:calc(100vh - 4px);border:none;display:block;background:#f7f7f5"></iframe>
 </div>
 <div class="page" id="page-inadimplencia" style="display:none">
-  <iframe id="frame-inad" title="Inadimplencia" style="width:100%;height:calc(100vh - 4px);border:none;display:block;background:#f7f7f5"></iframe>
+  <div style="padding:0 1.5rem;background:var(--bg-card);border-bottom:1px solid var(--line)" id="inad-tabs">
+    <button class="tab active" data-inadtab="painel" onclick="inadTab('painel')">Painel</button>
+    <button class="tab" data-inadtab="cobrar" onclick="inadTab('cobrar')">📞 Cobrar hoje</button>
+  </div>
+  <iframe id="frame-inad" title="Inadimplencia" style="width:100%;height:calc(100vh - 50px);border:none;display:block;background:#f7f7f5"></iframe>
+  <div id="inad-cobrar" style="display:none">
+    <div class="topbar"><h1>Cobrar hoje</h1><div class="topbar-actions"><button class="btn btn-secondary btn-sm" onclick="renderCobrar()">↻ Atualizar</button></div></div>
+    <div class="page-content" id="cobrar-content"></div>
+  </div>
 </div>
 
 <div class="page" id="page-posvendas" style="display:none">
@@ -9721,6 +9729,7 @@ body.sb-collapsed .nav-item:hover::after{content:attr(data-tip);position:absolut
     agenda:function(){try{renderAgenda();}catch(e){}},
     pipeline:function(){try{loadFrame('frame-pipeline','pipeline');}catch(e){}},
     inadimplencia:function(){try{loadFrame('frame-inad','inad');}catch(e){}},
+    cobrar:function(){try{navToPage('inadimplencia');inadTab('cobrar');}catch(e){}},
     posvendas:function(){try{loadPosVenda();}catch(e){}}
   };
   function _applyHash(){
@@ -13543,6 +13552,233 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
   window.POSVENDA={pedidos:function(){limpar();return pedidos();},saude:function(mid,cnpj){ var p=saudeCliente(mid,cnpj); return p?{level:p.level,label:LV[p.level].t,recompra:p.recompra,colecao:p.colecao}:null; },render:rerender};
   injetarAbas(); setTimeout(injetarAbas,1500); setTimeout(injetarAbas,5000);
   try{ var pg=document.getElementById('page-posvendas'); if(pg&&pg.style.display!=='none') renderGlobal(); }catch(e){}
+})();
+</script>
+<script>
+/* ===== Aba "Cobrar hoje" (add-on isolado, SOMENTE LEITURA da inadimplência) =====
+   Lê inadimplencia/{RESERVA,ARAMIS,FOXTON} no Firestore (ou o cache local), junta o
+   mesmo CNPJ entre marcas, prioriza e monta links de WhatsApp. Não altera a inadimplência.
+   A marcação "cobrado hoje" fica só no navegador de quem clicou (localStorage).
+   Única gravação: o nome do contato de cada cliente, num documento próprio (sistema/cobrar_contatos). */
+(function(){
+  var MARCAS_INAD=['RESERVA','ARAMIS','FOXTON'];
+  var ST={verde:'Em dia / Acordo OK',pagando_acordo:'Pagando acordo',sete_dias:'Pagamento em 7 dias',quinze_dias:'Previsão em 15 dias',sem_previsao:'Sem previsão de pgto',internas:'Situações internas',sem_cor:'A definir'};
+  var RX_DESCARTE=/perdas|jur[ií]dico|cnpj\s*baixado|pj\s*baixado|baixado\s*o\s*cnpj/i;
+  var LS_FEITOS='cobrar_feitos_v1';
+  var MS=86400000;
+
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function brl(v){return (Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
+  function dig(s){return String(s||'').replace(/\D/g,'');}
+  function normNome(s){return String(s||'').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\b(LTDA|EIRELI|ME|EPP|S\/?A|COMERCIO|DE|DO|DA|DOS|DAS|E)\b\.?/g,' ').replace(/[^A-Z0-9 ]/g,' ').replace(/\s+/g,' ').trim();}
+  function hojeZero(){var d=new Date();d.setHours(0,0,0,0);return d;}
+  function hojeKey(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+  // "28/09/26, 15:47" -> Date
+  function parseBR(t){var m=/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/.exec(String(t||''));if(!m)return null;var y=+m[3];if(y<100)y+=2000;var d=new Date(y,+m[2]-1,+m[1]);return isNaN(d)?null:d;}
+  function diasDesde(d){return d?Math.floor((hojeZero()-d)/MS):null;}
+  function diasAtraso(c){if(!c||!c.vencimento)return null;var v=new Date(c.vencimento+'T00:00:00');if(isNaN(v))return null;return Math.floor((hojeZero()-v)/MS);}
+
+  function feitosLoad(){try{var o=JSON.parse(localStorage.getItem(LS_FEITOS)||'{}');return (o&&o.dia===hojeKey())?o:{dia:hojeKey(),ids:{}};}catch(e){return {dia:hojeKey(),ids:{}};}}
+  function feitosSave(o){try{localStorage.setItem(LS_FEITOS,JSON.stringify(o));}catch(e){}}
+
+  // --- nome do contato (ex.: "Renato"): documento separado, não mexe em nenhum dado existente ---
+  var LS_CONTATOS='cobrar_contatos_v1', contatos={};
+  function contatosRef(){return window._fbDoc(window._db,'sistema','cobrar_contatos');}
+  async function contatosLoad(){
+    try{contatos=JSON.parse(localStorage.getItem(LS_CONTATOS)||'{}')||{};}catch(e){contatos={};}
+    if(window._db&&window._fbGetDoc){
+      try{var s=await window._fbGetDoc(contatosRef()); if(s&&s.exists()){contatos=(s.data()||{}).nomes||{}; try{localStorage.setItem(LS_CONTATOS,JSON.stringify(contatos));}catch(e){}}}catch(e){console.warn('[cobrar] contatos',e);}
+    }
+  }
+  async function contatoSalvar(k,nome){
+    nome=String(nome||'').trim().slice(0,40);
+    contatos[k]=nome;
+    try{localStorage.setItem(LS_CONTATOS,JSON.stringify(contatos));}catch(e){}
+    if(window._db&&window._fbSetDoc){
+      var upd={nomes:{},at:new Date().toISOString()}; upd.nomes[k]=nome;
+      await window._fbSetDoc(contatosRef(),upd,{merge:true});
+    }
+  }
+  function saudacao(g){
+    var s=(new Date().getHours()<12?'Bom dia':'Boa tarde'), n=contatos[g.key];
+    return n?s+', '+n:s;
+  }
+
+  // --- leitura (somente leitura) ---
+  async function lerMarca(m){
+    if(window._db&&window._fbGetDoc&&window._fbDoc){
+      try{var s=await window._fbGetDoc(window._fbDoc(window._db,'inadimplencia',m)); if(s&&s.exists()){var d=s.data()||{};return {data:d.data||[],hist:d.hist||[],meta:d.meta||{},fonte:'nuvem'};}}catch(e){console.warn('[cobrar] leitura '+m,e);}
+    }
+    try{var ld=JSON.parse(localStorage.getItem('inad_data_v1__'+m)||'null');if(Array.isArray(ld))return {data:ld,hist:JSON.parse(localStorage.getItem('inad_hist_v1__'+m)||'[]')||[],meta:JSON.parse(localStorage.getItem('inad_meta_v1__'+m)||'{}')||{},fonte:'cache'};}catch(e){}
+    return {data:[],hist:[],meta:{},fonte:'vazio'};
+  }
+
+  // Data da última mudança de status de cada cliente, pelo histórico ("NOME: status A → B")
+  function ultimasMudancas(hist){
+    var r={};
+    (hist||[]).forEach(function(h){ // hist vem do mais novo para o mais antigo
+      var m=/^(.*?):\s*status\s/.exec(String(h&&h.txt||'')); if(!m)return;
+      var k=m[1].trim(); if(!(k in r)) r[k]=parseBR(h.t);
+    });
+    return r;
+  }
+
+  // Índice de telefones do cadastro de clientes
+  function indiceFones(){
+    var porCnpj={},porNome=[];
+    var lista=(typeof clientes!=='undefined'&&Array.isArray(clientes)?clientes:[]).concat(Array.isArray(window._clientesAll)?window._clientesAll:[]);
+    lista.forEach(function(c){
+      if(!c)return; var tel=dig(c.Telefone||c.telefone||c.Celular||c.celular||c.WhatsApp||c.whatsapp); if(tel.length<10)return;
+      var cn=dig(c.CNPJ||c.cnpj); if(cn&&!porCnpj[cn])porCnpj[cn]=tel;
+      [c['Razão Social'],c['Nome da Loja'],c.nome].forEach(function(n){var nn=normNome(n);if(nn.length>=4)porNome.push([nn,tel]);});
+    });
+    return {porCnpj:porCnpj,porNome:porNome};
+  }
+  function acharFone(idx,cnpj,nome){
+    var cn=dig(cnpj); if(cn&&idx.porCnpj[cn])return idx.porCnpj[cn];
+    var nn=normNome(nome); if(nn.length<4)return '';
+    for(var i=0;i<idx.porNome.length;i++){var a=idx.porNome[i][0]; if(a===nn||(nn.length>=8&&a.indexOf(nn)===0)||(a.length>=8&&nn.indexOf(a)===0))return idx.porNome[i][1];}
+    return '';
+  }
+  function linkWhats(tel,txt){
+    var t=dig(tel).replace(/^0+/,''); if(!t)return ''; if(t.length<=11)t='55'+t;
+    return 'https://wa.me/'+t+'?text='+encodeURIComponent(txt);
+  }
+
+  // Pergunta principal pelo tempo de atraso (quem já está "Pagando acordo" segue com a mensagem de acordo)
+  function tipoPergunta(g){
+    if(g.cat==='acordo'||g.atraso===null)return '';
+    if(g.atraso>60)return 'acordo';
+    if(g.atraso>=0&&g.atraso<10)return 'recebeu';
+    return '';
+  }
+  function mensagem(g){
+    var marcas=g.marcas.join(', ');
+    var saud=saudacao(g);
+    var tp=tipoPergunta(g);
+    // Acima de R$ 15 mil não citamos o valor, só há quantos dias está em aberto
+    if(tp==='acordo') return saud+'! Tudo bem? Aqui é da Underground Representações. Sobre as pendências em aberto ('+marcas+')'+(g.valor>15000?' há '+g.atraso+' dias':', no total de '+brl(g.valor))+': vocês já iniciaram algum acordo de pagamento? Se ainda não, podemos ajudar a encaminhar uma proposta que caiba para vocês.';
+    if(tp==='recebeu') return saud+'! Tudo bem? Aqui é da Underground Representações. Identificamos títulos com vencimento recente ('+marcas+'), no valor de '+brl(g.valor)+'. Vocês já receberam a mercadoria? E os boletos chegaram certinho ou precisam de uma 2ª via?';
+    if(g.cat==='promessa') return saud+'! Tudo bem? Aqui é da Underground Representações. Passando para lembrar do pagamento combinado das pendências ('+marcas+'), no total de '+brl(g.valor)+'. Conseguimos confirmar para hoje? Se precisar, te mando os boletos atualizados.';
+    if(g.cat==='novo') return saud+'! Tudo bem? Aqui é da Underground Representações. Identificamos títulos em aberto ('+marcas+') no valor de '+brl(g.valor)+'. Pode ter sido só um esquecimento — consegue verificar para nós? Se precisar, envio os boletos atualizados.';
+    if(g.cat==='acordo') return saud+'! Tudo bem? Aqui é da Underground Representações. Estamos conferindo o andamento do acordo ('+marcas+'). A parcela desta semana já foi paga? Se puder, envia o comprovante por aqui. Obrigado!';
+    return saud+'! Tudo bem? Aqui é da Underground Representações. Gostaríamos de conversar sobre as pendências ('+marcas+'), no total de '+brl(g.valor)+', e encontrar uma forma de acerto que caiba para vocês. Qual o melhor horário para falarmos?';
+  }
+
+  // Mensagem de atualização (clientes com mais de 10 dias vencidos) — não cita valor, só os dias
+  function mensagemAtualizacao(g){
+    return saudacao(g)+'! Tudo bem? Aqui é da Underground Representações. Retomando nosso contato sobre as pendências em aberto ('+g.marcas.join(', ')+'), vencidas há '+g.atraso+' dias. Conseguem nos passar uma atualização e uma previsão de pagamento?';
+  }
+  function botaoMsg(g,tipo,rotulo,cor){
+    var txt=tipo==='atualizacao'?mensagemAtualizacao(g):mensagem(g);
+    if(g.fone) return '<a class="btn btn-sm" style="background:'+cor+';color:#fff;border:none;text-decoration:none;white-space:nowrap" target="_blank" rel="noopener" href="'+esc(linkWhats(g.fone,txt))+'" onclick="cobrarMarcar(\''+esc(g.key)+'\',true)">WhatsApp '+rotulo+'</a>';
+    return '<button class="btn btn-secondary btn-sm" style="white-space:nowrap" onclick="cobrarCopiar(\''+esc(g.key)+'\',\''+tipo+'\')" title="Sem telefone no cadastro — copia a mensagem">Copiar '+(rotulo||'msg')+'</button>';
+  }
+
+  function classificar(c,diasStatus){
+    var txt=[c.situacao,c.resposta,c.obs].join(' ');
+    if(c.status==='verde')return null;
+    if(c.status==='internas'||RX_DESCARTE.test(txt))return 'ignorar';
+    if(c.status==='sete_dias'||c.status==='quinze_dias'){var prazo=c.status==='sete_dias'?7:15; return (diasStatus===null||diasStatus>=prazo)?'promessa':'aguardando';}
+    if(c.status==='pagando_acordo')return (diasStatus===null||diasStatus>=7)?'acordo':'aguardando';
+    if(c.status==='sem_cor')return 'novo';
+    var at=diasAtraso(c); if(at!==null&&at<=60&&!String(c.situacao||'').trim())return 'novo';
+    return 'negociar';
+  }
+  var PESO={promessa:1,novo:2,acordo:3,negociar:4,aguardando:5,ignorar:6};
+
+  async function renderCobrar(){
+    var el=document.getElementById('cobrar-content'); if(!el)return;
+    el.innerHTML='<div class="panel" style="padding:1.2rem">Carregando inadimplência…</div>';
+    try{
+      for(var tries=0;tries<25&&!window._db;tries++) await new Promise(function(r){setTimeout(r,200);});
+      var marcas=await Promise.all(MARCAS_INAD.map(lerMarca));
+      await contatosLoad();
+      var idx=indiceFones(), grupos={}, atualiz=[];
+      marcas.forEach(function(md,i){
+        var mk=MARCAS_INAD[i], mud=ultimasMudancas(md.hist), lu=parseBR(md.meta&&md.meta.lastUpdate);
+        atualiz.push({m:mk,dias:diasDesde(lu),fonte:md.fonte});
+        (md.data||[]).forEach(function(c){
+          if(!c||!(Number(c.valor)>0))return;
+          var dStat=diasDesde(mud[String(c.cliente||'').trim()]||lu);
+          var cat=classificar(c,dStat); if(!cat)return;
+          var cn=dig(c.cnpj), key=cn.length>=8?('c'+cn.slice(0,8)):('n'+normNome(c.cliente));
+          var g=grupos[key]||(grupos[key]={key:key,nome:c.cliente,cnpj:c.cnpj||'',valor:0,itens:[],marcas:[],cat:cat,fone:'',atraso:null});
+          g.valor+=Number(c.valor)||0;
+          g.itens.push({marca:mk,c:c,cat:cat,dStat:dStat});
+          if(g.marcas.indexOf(mk)<0)g.marcas.push(mk);
+          if(PESO[cat]<PESO[g.cat])g.cat=cat;
+          var at=diasAtraso(c); if(at!==null&&(g.atraso===null||at>g.atraso))g.atraso=at;
+          if(!g.fone)g.fone=acharFone(idx,c.cnpj,c.cliente);
+          if(!g.cnpj&&c.cnpj)g.cnpj=c.cnpj;
+        });
+      });
+      var feitos=feitosLoad();
+      var lista=Object.values(grupos).sort(function(a,b){return (PESO[a.cat]-PESO[b.cat])||(b.valor-a.valor);});
+      var secoes=[
+        {cat:'promessa',tit:'🔴 Promessa vencida — cobrar hoje',sub:'Estavam em "7 dias" ou "15 dias" e o prazo já passou.',cor:'var(--red)'},
+        {cat:'novo',tit:'🟠 Primeiro contato',sub:'Atraso recente ou status "A definir" — maior chance de receber.',cor:'var(--amber)'},
+        {cat:'acordo',tit:'🟡 Conferir acordo',sub:'Pagando acordo e sem atualização há 7+ dias.',cor:'var(--amber)'},
+        {cat:'negociar',tit:'🔵 Negociar',sub:'Sem previsão de pagamento, mas ainda recuperáveis.',cor:'var(--accent,#0071E3)'},
+        {cat:'aguardando',tit:'⏳ Aguardando prazo',sub:'Prometeram pagar e o prazo ainda não venceu.',cor:'var(--ink-muted)',fechada:true},
+        {cat:'ignorar',tit:'⚪ Não cobrar agora',sub:'Perdas, jurídico, CNPJ baixado ou situações internas.',cor:'var(--ink-muted)',fechada:true}
+      ];
+      var hojeN=lista.filter(function(g){return PESO[g.cat]<=3;});
+      var hojeV=hojeN.reduce(function(s,g){return s+g.valor;},0);
+      var feitosN=hojeN.filter(function(g){return feitos.ids[g.key];}).length;
+      var velho=atualiz.filter(function(a){return a.dias!==null&&a.dias>=3;});
+      var html='';
+      if(velho.length) html+='<div class="panel" style="padding:.8rem 1.1rem;margin-bottom:1rem;border-left:3px solid var(--amber);background:var(--amber-soft)">⚠️ Dados desatualizados: '+velho.map(function(a){return '<b>'+a.m+'</b> há '+a.dias+' dia(s)';}).join(', ')+'. Importe o relatório do sistema na aba <a href="javascript:void(0)" onclick="inadTab(\'painel\')">Painel</a> antes de cobrar — alguém pode já ter pago.</div>';
+      html+='<div class="md-kpis">'
+        +'<div class="md-kpi"><div class="md-kpi-ic">📞</div><div><div class="v" style="color:var(--red)">'+hojeN.length+'</div><div class="l">Cobrar hoje</div></div></div>'
+        +'<div class="md-kpi"><div class="md-kpi-ic">💰</div><div><div class="v" title="'+brl(hojeV)+'">'+(typeof fmtK==='function'?fmtK(hojeV):brl(hojeV))+'</div><div class="l">Valor em jogo hoje</div></div></div>'
+        +'<div class="md-kpi"><div class="md-kpi-ic">✅</div><div><div class="v" style="color:var(--green)">'+feitosN+' / '+hojeN.length+'</div><div class="l">Cobrados hoje</div></div></div>'
+        +'</div>';
+      secoes.forEach(function(s){
+        var gs=lista.filter(function(g){return g.cat===s.cat;}); if(!gs.length)return;
+        var tot=gs.reduce(function(a,g){return a+g.valor;},0);
+        html+='<details class="panel" style="padding:0;margin-top:1rem"'+(s.fechada?'':' open')+'><summary class="panel-head" style="padding:.9rem 1.1rem;border-bottom:1px solid var(--line);cursor:pointer;list-style:none"><div><div class="panel-title">'+s.tit+' <span class="badge">'+gs.length+'</span></div><div style="font-size:.75rem;color:var(--ink-muted);margin-top:.15rem">'+s.sub+'</div></div><b style="color:'+s.cor+';white-space:nowrap">'+brl(tot)+'</b></summary><div style="padding:.3rem .9rem">';
+        gs.forEach(function(g){
+          var feito=!!feitos.ids[g.key];
+          var notas=g.itens.map(function(it){var t=[it.c.situacao,it.c.resposta,it.c.obs].filter(function(x){return x&&String(x).trim()&&String(x).trim()!=='.';}).join(' · ');return '<div style="font-size:.75rem;color:var(--ink-muted)"><b>'+esc(it.marca)+'</b> '+brl(it.c.valor)+' · '+esc(ST[it.c.status]||it.c.status)+(it.dStat!==null?' há '+it.dStat+'d':'')+(t?' — '+esc(t):'')+'</div>';}).join('');
+          var doisBotoes=g.atraso!==null&&g.atraso>10;
+          var ativo=!(s.cat==='ignorar'||s.cat==='aguardando');
+          var kq=esc(g.key).replace(/'/g,'');
+          var contato=contatos[g.key]
+            ?'<a href="javascript:void(0)" style="font-size:.75rem;text-decoration:none" onclick="cobrarContato(\''+kq+'\')" title="Alterar nome do contato">👤 '+esc(contatos[g.key])+' ✎</a>'
+            :'<a href="javascript:void(0)" style="font-size:.75rem;color:var(--ink-muted)" onclick="cobrarContato(\''+kq+'\')">+ nome do contato</a>';
+          var botoes=!ativo?'':
+            (doisBotoes?botaoMsg(g,'principal','1º contato','#25D366')+botaoMsg(g,'atualizacao','Atualização','#128C7E'):botaoMsg(g,'principal','','#25D366'))
+            +'<label style="font-size:.75rem;display:flex;align-items:center;gap:.25rem;cursor:pointer"><input type="checkbox" '+(feito?'checked':'')+' onchange="cobrarMarcar(\''+esc(g.key)+'\',this.checked)"> cobrado</label>';
+          html+='<div class="md-row" style="align-items:flex-start;'+(feito?'opacity:.5':'')+'"><div style="min-width:0;flex:1"><div><strong>'+esc(g.nome)+'</strong>'+(g.marcas.length>1?' <span class="badge" style="background:var(--red-soft);color:var(--red)">'+g.marcas.length+' marcas</span>':'')+'</div><div style="font-size:.78rem;margin:.1rem 0">'+brl(g.valor)+(g.atraso!==null?' · '+g.atraso+' dias de atraso':'')+(g.fone?'':' · <span style="color:var(--amber)">sem telefone no cadastro</span>')+({acordo:' · <span class="badge">pergunta: já iniciou acordo?</span>',recebeu:' · <span class="badge">pergunta: recebeu a mercadoria?</span>'}[tipoPergunta(g)]||'')+'</div>'+(ativo?'<div style="margin:.15rem 0">'+contato+'</div>':'')+notas+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:.35rem">'+botoes+'</div></div>';
+        });
+        html+='</div></details>';
+      });
+      if(!lista.length) html+='<div class="panel" style="padding:1.2rem">Nada para cobrar 🎉</div>';
+      html+='<div style="font-size:.72rem;color:var(--ink-muted);margin:1rem .2rem">Esta tela só lê a Inadimplência — para mudar status ou anotações, use a aba <a href="javascript:void(0)" onclick="inadTab(\'painel\')">Painel</a>. A marcação "cobrado" vale só para hoje e só neste navegador.</div>';
+      window._cobrarGrupos=grupos;
+      el.innerHTML=html;
+    }catch(e){console.warn('[cobrar]',e);el.innerHTML='<div class="panel" style="padding:1.2rem;color:var(--red)">Não foi possível montar a lista agora. Detalhes no console (F12).</div>';}
+  }
+  window.renderCobrar=renderCobrar;
+  // Abas dentro da tela de Inadimplência: Painel (iframe original) | Cobrar hoje
+  window.inadTab=function(t){
+    var fr=document.getElementById('frame-inad'), cb=document.getElementById('inad-cobrar');
+    if(fr)fr.style.display=(t==='cobrar')?'none':'block';
+    if(cb)cb.style.display=(t==='cobrar')?'block':'none';
+    document.querySelectorAll('#inad-tabs .tab').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-inadtab')===t);});
+    if(t==='cobrar')renderCobrar(); else { try{loadFrame('frame-inad','inad');}catch(e){} }
+  };
+  window.cobrarMarcar=function(k,v){var f=feitosLoad();if(v)f.ids[k]=1;else delete f.ids[k];feitosSave(f);setTimeout(renderCobrar,300);};
+  window.cobrarContato=async function(k){
+    var atual=contatos[k]||'';
+    var nome=prompt('Nome da pessoa que vai receber a mensagem (ex.: Renato). Deixe em branco para remover.',atual);
+    if(nome===null)return;
+    try{await contatoSalvar(k,nome);}catch(e){console.warn('[cobrar] salvar contato',e);alert('O nome ficou salvo só neste navegador — não foi possível salvar na nuvem agora.');}
+    renderCobrar();
+  };
+
+  window.cobrarCopiar=function(k,tipo){var g=(window._cobrarGrupos||{})[k];if(!g)return;var t=tipo==='atualizacao'?mensagemAtualizacao(g):mensagem(g);try{navigator.clipboard.writeText(t).then(function(){alert('Mensagem copiada. Cole no WhatsApp do cliente.');},function(){prompt('Copie a mensagem:',t);});}catch(e){prompt('Copie a mensagem:',t);}};
 })();
 </script>
 
