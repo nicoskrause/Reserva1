@@ -2906,99 +2906,99 @@ tr:last-child td{border-bottom:none}
   </div>
 </div>
 
-<div class="page" id="page-aramisnext" style="display:none">
+<div class="page" id="page-matteo" style="display:none">
   <!-- topbar da marca -->
   <div class="topbar" style="padding:.75rem 1.5rem">
     <div style="display:flex;align-items:center;gap:.75rem">
-      <div style="font-family:var(--serif);font-size:1.3rem;font-weight:400">Aramis Next</div>
-      <span class="badge " style="font-size:.65rem">Infantil</span>
+      <div style="font-family:var(--serif);font-size:1.3rem;font-weight:400">Matteo</div>
+      <span class="badge blue" style="font-size:.65rem">Masculino</span>
     </div>
     <div class="topbar-actions">
-      <div id="aramisnext-topbar-extra"></div>
+      <div id="matteo-topbar-extra"></div>
     </div>
   </div>
   <!-- sub-tabs da marca -->
-  <div class="tabs" style="padding:0 1.5rem;background:var(--bg-card);border-bottom:1px solid var(--line);margin-bottom:0" id="aramisnext-tabs">
-    <button class="tab active" onclick="switchMarcaTab('aramisnext','dashboard')">Dashboard</button>
-    <button class="tab" onclick="switchMarcaTab('aramisnext','clientes')">Clientes</button>
-    <button class="tab" onclick="switchMarcaTab('aramisnext','compras')">Compras</button>
-    <button class="tab" onclick="switchMarcaTab('aramisnext','metas')">Metas</button>
-    <button class="tab" onclick="switchMarcaTab('aramisnext','ltv')">Ranking LTV</button>
-    <button class="tab" onclick="switchMarcaTab('aramisnext','bi')">BI / Análises</button>
+  <div class="tabs" style="padding:0 1.5rem;background:var(--bg-card);border-bottom:1px solid var(--line);margin-bottom:0" id="matteo-tabs">
+    <button class="tab active" onclick="switchMarcaTab('matteo','dashboard')">Dashboard</button>
+    <button class="tab" onclick="switchMarcaTab('matteo','clientes')">Clientes</button>
+    <button class="tab" onclick="switchMarcaTab('matteo','compras')">Compras</button>
+    <button class="tab" onclick="switchMarcaTab('matteo','metas')">Metas</button>
+    <button class="tab" onclick="switchMarcaTab('matteo','ltv')">Ranking LTV</button>
+    <button class="tab" onclick="switchMarcaTab('matteo','bi')">BI / Análises</button>
   </div>
   <!-- sub-painéis -->
-  <div id="aramisnext-sub-dashboard" class="page-content marca-sub active-sub">
-    <div class="kpi-grid" id="aramisnext-kpi-grid"></div>
+  <div id="matteo-sub-dashboard" class="page-content marca-sub active-sub">
+    <div class="kpi-grid" id="matteo-kpi-grid"></div>
     <div style="margin-bottom:1.5rem">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.75rem">
         <div style="font-family:var(--serif);font-size:1.05rem">Atingimento por coleção</div>
         <span style="font-size:.72rem;color:var(--ink-muted)">Metas configuradas</span>
       </div>
-      <div class="panel"><div id="aramisnext-meta-list" class="meta-list"></div></div>
+      <div class="panel"><div id="matteo-meta-list" class="meta-list"></div></div>
     </div>
     <div class="grid-3" style="margin-bottom:1rem">
       <div class="panel">
         <div class="panel-head"><div class="panel-title">Evolução por coleção</div><span class="badge">R$ totais</span></div>
-        <div class="chart-wrap"><canvas id="aramisnext-chart-ev"></canvas></div>
+        <div class="chart-wrap"><canvas id="matteo-chart-ev"></canvas></div>
       </div>
       <div class="panel">
         <div class="panel-head"><div class="panel-title">Top cidades</div><span class="badge">Faturamento</span></div>
-        <div class="chart-wrap"><canvas id="aramisnext-chart-cid"></canvas></div>
+        <div class="chart-wrap"><canvas id="matteo-chart-cid"></canvas></div>
       </div>
     </div>
     <div class="grid-2">
       <div class="panel">
         <div class="panel-head"><div class="panel-title">Top 10 Clientes (LTV)</div></div>
-        <div class="table-wrap"><table><thead><tr><th>#</th><th>Cliente</th><th>Cidade</th><th style="text-align:right">LTV</th></tr></thead><tbody id="aramisnext-top-body"></tbody></table></div>
+        <div class="table-wrap"><table><thead><tr><th>#</th><th>Cliente</th><th>Cidade</th><th style="text-align:right">LTV</th></tr></thead><tbody id="matteo-top-body"></tbody></table></div>
       </div>
       <div class="panel">
         <div class="panel-head"><div class="panel-title">Insights</div><span class="badge gold">Auto</span></div>
-        <div id="aramisnext-insights-list"></div>
+        <div id="matteo-insights-list"></div>
       </div>
     </div>
   </div>
-  <div id="aramisnext-sub-clientes" class="marca-sub" style="display:none">
+  <div id="matteo-sub-clientes" class="marca-sub" style="display:none">
     <div class="topbar" style="border-top:1px solid var(--line)"><h1 style="font-size:1rem">&nbsp;</h1><div class="topbar-actions"><button class="btn btn-secondary btn-sm" onclick="exportarClientes()">Exportar CSV</button><button class="btn btn-primary" onclick="abrirNovoCliente()">+ Novo cliente</button></div></div>
     <div class="page-content">
       <div class="toolbar">
-        <input type="text" class="search" id="aramisnext-search-cli" placeholder="Buscar por nome, CNPJ, cidade..." oninput="renderMarcaCli('aramisnext')">
-        <select class="select" id="aramisnext-filter-cidade" onchange="renderMarcaCli('aramisnext')"><option value="">Todas as cidades</option></select>
-        <select class="select" id="aramisnext-filter-status" onchange="renderMarcaCli('aramisnext')"><option value="">Todos</option><option value="ativo">Com compras</option><option value="nunca">Sem compras</option></select>
+        <input type="text" class="search" id="matteo-search-cli" placeholder="Buscar por nome, CNPJ, cidade..." oninput="renderMarcaCli('matteo')">
+        <select class="select" id="matteo-filter-cidade" onchange="renderMarcaCli('matteo')"><option value="">Todas as cidades</option></select>
+        <select class="select" id="matteo-filter-status" onchange="renderMarcaCli('matteo')"><option value="">Todos</option><option value="ativo">Com compras</option><option value="nunca">Sem compras</option></select>
       </div>
-      <div class="info-bar" id="aramisnext-info-cli"></div>
-      <div class="panel" style="padding:0"><div class="table-wrap" style="max-height:65vh"><table><thead><tr><th>Loja</th><th>CNPJ</th><th>Cidade</th><th>Telefone</th><th style="text-align:right">LTV</th><th>Status</th><th></th></tr></thead><tbody id="aramisnext-cli-body"></tbody></table></div></div>
+      <div class="info-bar" id="matteo-info-cli"></div>
+      <div class="panel" style="padding:0"><div class="table-wrap" style="max-height:65vh"><table><thead><tr><th>Loja</th><th>CNPJ</th><th>Cidade</th><th>Telefone</th><th style="text-align:right">LTV</th><th>Status</th><th></th></tr></thead><tbody id="matteo-cli-body"></tbody></table></div></div>
     </div>
   </div>
-  <div id="aramisnext-sub-compras" class="marca-sub" style="display:none">
+  <div id="matteo-sub-compras" class="marca-sub" style="display:none">
     <div class="topbar" style="border-top:1px solid var(--line)"><h1 style="font-size:1rem">&nbsp;</h1><div class="topbar-actions"><button class="btn btn-secondary btn-sm" onclick="exportarCompras()">Exportar CSV</button><button class="btn btn-primary" onclick="abrirNovaCompra()">+ Novo registro</button></div></div>
     <div class="page-content">
-      <div class="toolbar"><input type="text" class="search" id="aramisnext-search-comp" placeholder="Buscar cliente..." oninput="renderMarcaCompras('aramisnext')"><button class="btn btn-secondary btn-sm" style="margin-left:.6rem" onclick="document.getElementById('fc-file-aramisnext').click()">⬆ Importar vendas gerais</button><input type="file" id="fc-file-aramisnext" accept=".xls,.xlsx" style="display:none" onchange="importForecast(event,'aramisnext')"><button class="btn btn-secondary btn-sm" style="margin-left:.4rem" onclick="abrirColecoesMarca('aramisnext')">⚙ Coleções</button></div>
-      <div class="info-bar" id="aramisnext-info-comp"></div>
+      <div class="toolbar"><input type="text" class="search" id="matteo-search-comp" placeholder="Buscar cliente..." oninput="renderMarcaCompras('matteo')"><button class="btn btn-secondary btn-sm" style="margin-left:.6rem" onclick="document.getElementById('fc-file-matteo').click()">⬆ Importar vendas gerais</button><input type="file" id="fc-file-matteo" accept=".xls,.xlsx" style="display:none" onchange="importForecast(event,'matteo')"><button class="btn btn-secondary btn-sm" style="margin-left:.4rem" onclick="abrirColecoesMarca('matteo')">⚙ Coleções</button></div>
+      <div class="info-bar" id="matteo-info-comp"></div>
       <div style="background:var(--blue-soft);color:var(--blue);padding:.65rem .9rem;border-radius:7px;margin-bottom:.9rem;font-size:.79rem"><strong>Dica:</strong> Clique em qualquer célula numérica para editar. Tab navega entre células.</div>
       <div class="editable-table"><div class="table-wrap" style="max-height:66vh"><table>
-        <thead id="aramisnext-comp-thead"></thead>
-        <tbody id="aramisnext-comp-body"></tbody>
+        <thead id="matteo-comp-thead"></thead>
+        <tbody id="matteo-comp-body"></tbody>
       </table></div></div>
     </div>
   </div>
-  <div id="aramisnext-sub-rankings" class="marca-sub" style="display:none">
-    <div class="topbar" style="border-top:1px solid var(--line)"><h1 style="font-size:1rem">&nbsp;</h1><div class="topbar-actions"><select class="select" id="aramisnext-ranking-tipo" onchange="renderMarcaRankings('aramisnext')"><option value="geral">Ranking Geral (LTV)</option></select></div></div>
+  <div id="matteo-sub-rankings" class="marca-sub" style="display:none">
+    <div class="topbar" style="border-top:1px solid var(--line)"><h1 style="font-size:1rem">&nbsp;</h1><div class="topbar-actions"><select class="select" id="matteo-ranking-tipo" onchange="renderMarcaRankings('matteo')"><option value="geral">Ranking Geral (LTV)</option></select></div></div>
     <div class="page-content">
-      <div class="info-bar" id="aramisnext-info-rank"></div>
-      <div class="panel" style="padding:0"><div class="table-wrap" style="max-height:74vh"><table><thead><tr><th style="width:55px">#</th><th>Cliente</th><th>Cidade</th><th style="text-align:right">Valor</th><th style="width:180px">Participação</th></tr></thead><tbody id="aramisnext-rank-body"></tbody></table></div></div>
+      <div class="info-bar" id="matteo-info-rank"></div>
+      <div class="panel" style="padding:0"><div class="table-wrap" style="max-height:74vh"><table><thead><tr><th style="width:55px">#</th><th>Cliente</th><th>Cidade</th><th style="text-align:right">Valor</th><th style="width:180px">Participação</th></tr></thead><tbody id="matteo-rank-body"></tbody></table></div></div>
     </div>
   </div>
-  <div id="aramisnext-sub-metas" class="marca-sub" style="display:none">
+  <div id="matteo-sub-metas" class="marca-sub" style="display:none">
     <div class="page-content">
-      <div id="aramisnext-metas-content"></div>
+      <div id="matteo-metas-content"></div>
     </div>
   </div>
-  <div id="aramisnext-sub-ltv" class="marca-sub" style="display:none">
+  <div id="matteo-sub-ltv" class="marca-sub" style="display:none">
     <div class="page-content">
-      <div class="ltv-kpi-row" id="aramisnext-ltv-kpis"></div>
+      <div class="ltv-kpi-row" id="matteo-ltv-kpis"></div>
       <div style="display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-bottom:1rem">
-        <div class="panel"><div class="panel-head"><div class="panel-title">Top Clientes — Evolução</div></div><div class="ltv-chart-wrap"><canvas id="aramisnext-ltv-chart-ev"></canvas></div></div>
-        <div class="panel"><div class="panel-head"><div class="panel-title">Distribuição de Constância</div></div><div class="ltv-chart-wrap"><canvas id="aramisnext-ltv-chart-dist"></canvas></div></div>
+        <div class="panel"><div class="panel-head"><div class="panel-title">Top Clientes — Evolução</div></div><div class="ltv-chart-wrap"><canvas id="matteo-ltv-chart-ev"></canvas></div></div>
+        <div class="panel"><div class="panel-head"><div class="panel-title">Distribuição de Constância</div></div><div class="ltv-chart-wrap"><canvas id="matteo-ltv-chart-dist"></canvas></div></div>
       </div>
       <div class="panel" style="padding:0">
         <div style="padding:.9rem 1.1rem;border-bottom:1px solid var(--line);display:flex;justify-content:space-between">
@@ -3008,29 +3008,29 @@ tr:last-child td{border-bottom:none}
         <div class="ltv-row header" style="grid-template-columns:32px 28px 1fr 90px 80px 80px 70px 80px">
           <div></div><div>#</div><div>Cliente</div><div style="text-align:right">LTV</div><div style="text-align:right">Média</div><div style="text-align:right">Constância</div><div>Crescimento</div><div>Coleções</div>
         </div>
-        <div id="aramisnext-ltv-body" style="max-height:55vh;overflow-y:auto"></div>
+        <div id="matteo-ltv-body" style="max-height:55vh;overflow-y:auto"></div>
       </div>
     </div>
   </div>
-  <div id="aramisnext-sub-bi" class="marca-sub" style="display:none">
+  <div id="matteo-sub-bi" class="marca-sub" style="display:none">
     <div class="bi-filters" style="position:relative;top:0">
-      <div class="bi-filter-group"><span>Coleções:</span><select id="aramisnext-bi-col-filter" multiple size="1" style="height:34px;min-width:140px"><option value="__todas__" selected>Todas</option></select></div>
-      <div class="bi-filter-group"><span>Cidade:</span><select id="aramisnext-bi-cidade-filter"><option value="">Todas</option></select></div>
-      <button class="btn btn-secondary btn-sm" onclick="renderMarcaBI('aramisnext')">Atualizar</button>
+      <div class="bi-filter-group"><span>Coleções:</span><select id="matteo-bi-col-filter" multiple size="1" style="height:34px;min-width:140px"><option value="__todas__" selected>Todas</option></select></div>
+      <div class="bi-filter-group"><span>Cidade:</span><select id="matteo-bi-cidade-filter"><option value="">Todas</option></select></div>
+      <button class="btn btn-secondary btn-sm" onclick="renderMarcaBI('matteo')">Atualizar</button>
     </div>
     <div class="page-content">
-      <div class="bi-kpi-row" id="aramisnext-bi-kpis"></div>
+      <div class="bi-kpi-row" id="matteo-bi-kpis"></div>
       <div class="bi-grid-3" style="margin-bottom:1rem">
-        <div class="bi-panel"><div class="bi-panel-head"><div class="bi-panel-title">Evolução por Coleção</div></div><div class="bi-chart-wrap"><canvas id="aramisnext-bi-chart-ev"></canvas></div></div>
-        <div class="bi-panel"><div class="bi-panel-head"><div class="bi-panel-title">Top Cidades</div></div><div class="bi-chart-wrap"><canvas id="aramisnext-bi-chart-cidades"></canvas></div></div>
+        <div class="bi-panel"><div class="bi-panel-head"><div class="bi-panel-title">Evolução por Coleção</div></div><div class="bi-chart-wrap"><canvas id="matteo-bi-chart-ev"></canvas></div></div>
+        <div class="bi-panel"><div class="bi-panel-head"><div class="bi-panel-title">Top Cidades</div></div><div class="bi-chart-wrap"><canvas id="matteo-bi-chart-cidades"></canvas></div></div>
       </div>
       <div class="bi-panel" style="margin-bottom:1rem">
         <div class="bi-panel-head"><div class="bi-panel-title">Meta por Coleção</div></div>
-        <div class="bi-chart-wrap"><canvas id="aramisnext-bi-chart-meta"></canvas></div>
+        <div class="bi-chart-wrap"><canvas id="matteo-bi-chart-meta"></canvas></div>
       </div>
       <div class="bi-grid-2">
-        <div class="bi-panel"><div class="bi-panel-head"><div class="bi-panel-title">Ranking Clientes (LTV)</div></div><div id="aramisnext-bi-rank-list" style="max-height:320px;overflow-y:auto"></div></div>
-        <div class="bi-panel"><div class="bi-panel-head"><div class="bi-panel-title">Comparativo Coleções</div></div><div class="bi-chart-tall"><canvas id="aramisnext-bi-chart-comp"></canvas></div></div>
+        <div class="bi-panel"><div class="bi-panel-head"><div class="bi-panel-title">Ranking Clientes (LTV)</div></div><div id="matteo-bi-rank-list" style="max-height:320px;overflow-y:auto"></div></div>
+        <div class="bi-panel"><div class="bi-panel-head"><div class="bi-panel-title">Comparativo Coleções</div></div><div class="bi-chart-tall"><canvas id="matteo-bi-chart-comp"></canvas></div></div>
       </div>
     </div>
   </div>
@@ -3093,7 +3093,7 @@ tr:last-child td{border-bottom:none}
               <option value="lofty">Aramis Calçados</option>
               <option value="nike">Nike</option>
               
-              <option value="aramisnext">Aramis Next</option>
+              <option value="matteo">Matteo</option>
             </select>
             <div id="ped-marca-badge" style="margin-top:.3rem;height:1.4rem"></div>
           </div>
@@ -3150,7 +3150,7 @@ tr:last-child td{border-bottom:none}
           <option value="lofty">Aramis Calçados</option>
               <option value="nike">Nike</option>
           
-          <option value="aramisnext">Aramis Next</option>
+          <option value="matteo">Matteo</option>
         </select>
         <select class="select" id="ped-filter-gestor" onchange="renderPedLista()">
           <option value="">Todos os gestores</option>
@@ -3207,16 +3207,16 @@ tr:last-child td{border-bottom:none}
       </div>
     </div>
   </div>
-  <div id="aramisnext-sub-crm" class="marca-sub" style="display:none">
+  <div id="matteo-sub-crm" class="marca-sub" style="display:none">
     <div style="padding:.75rem 1.5rem;background:var(--bg-card);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem">
       <div style="display:flex;gap:.3rem;background:var(--bg-soft);padding:.3rem;border-radius:8px">
-        <button class="crm-tab active" id="aramisnext-crm-tab-prospeccao" onclick="switchMarcaCrmTab('aramisnext','prospeccao')">Prospecção</button>
-        <button class="crm-tab" id="aramisnext-crm-tab-ativos" onclick="switchMarcaCrmTab('aramisnext','ativos')">Pipeline Ativos</button>
+        <button class="crm-tab active" id="matteo-crm-tab-prospeccao" onclick="switchMarcaCrmTab('matteo','prospeccao')">Prospecção</button>
+        <button class="crm-tab" id="matteo-crm-tab-ativos" onclick="switchMarcaCrmTab('matteo','ativos')">Pipeline Ativos</button>
       </div>
-      <button class="btn btn-primary btn-sm" onclick="abrirModalMarcaCRM('aramisnext')">+ Adicionar</button>
+      <button class="btn btn-primary btn-sm" onclick="abrirModalMarcaCRM('matteo')">+ Adicionar</button>
     </div>
     <div style="overflow-x:auto;padding:1rem 1.5rem">
-      <div id="aramisnext-crm-cols" style="display:flex;gap:.75rem;min-width:max-content;padding-bottom:.5rem"></div>
+      <div id="matteo-crm-cols" style="display:flex;gap:.75rem;min-width:max-content;padding-bottom:.5rem"></div>
     </div>
   </div>
 </div>
@@ -6037,7 +6037,7 @@ function pedOnMarcaChange(){
   const badge=document.getElementById('ped-marca-badge');
   if(!badge) return;
   if(!mid){badge.innerHTML='';return;}
-  const nomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next'};
+  const nomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Matteo'};
   badge.innerHTML=`<button class="btn btn-ghost btn-sm" style="color:var(--gold-deep);font-size:.75rem" onclick="navToMarca('${mid}')">↗ Ir para dashboard ${nomes[mid]||mid}</button>`;
 }
 
@@ -6133,7 +6133,7 @@ function renderPedLista(){
     body.innerHTML='<div style="padding:2.5rem;text-align:center;color:var(--ink-muted)">Nenhum pedido encontrado.<br><button class="btn btn-primary" style="margin-top:.75rem" onclick="pedSwitchTab(\'novo\')">+ Novo Pedido</button></div>';
     return;
   }
-  const nomesMarcas={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next'};
+  const nomesMarcas={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Matteo'};
   body.innerHTML=filtrados.map(p=>{
     const marcaNome=nomesMarcas[p.marca]||p.marca||'—';
     const marcaLink=p.marca?`<span class="ped-badge-col" style="cursor:pointer;background:var(--gold-soft);color:var(--gold-deep)" onclick="navToMarca('${p.marca}')" title="Ir para dashboard ${marcaNome}">${marcaNome} ↗</span>`:`<span style="color:var(--ink-muted);font-size:.75rem">—</span>`;
@@ -6161,7 +6161,7 @@ function pedVerDetalhe(id){
     <td style="text-align:right;padding:.45rem .7rem;font-family:var(--mono)">${fmtK(i.vunit)}</td>
     <td style="text-align:right;padding:.45rem .7rem;font-family:var(--mono);font-weight:600">${fmtK(i.vtotal)}</td>
   </tr>`).join('');
-  const nomesMarcasDet={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next'};
+  const nomesMarcasDet={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Matteo'};
   const html=`<div style="margin-bottom:.75rem">
     <strong style="font-size:1rem">${p.nomeCli}</strong><br>
     <span style="font-size:.78rem;color:var(--ink-muted)">${p.cnpj} · ${p.colecao} · ${p.data}</span>
@@ -6404,7 +6404,7 @@ window.addEventListener('load', function(){
 
 
 // ═══════════ MULTI-MARCA ═══════════
-const MARCAS_CONFIG = [{"id": "reserva", "nome": "Reserva", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "reservago", "nome": "Reserva Go", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "oficina", "nome": "Oficina", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "foxton", "nome": "Foxton", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Verão 27", "Perfumes "]}, {"id": "ankor", "nome": "Ankor", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "aramis", "nome": "Aramis", "pub": "M", "emoji": "🟦", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "urban", "nome": "Urban", "pub": "M", "emoji": "🟦", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "cacay", "nome": "Cacay", "pub": "F", "emoji": "🟣", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "indesense", "nome": "Indesense", "pub": "F", "emoji": "🩷", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "lofty", "nome": "Lofty", "pub": "F", "emoji": "🟣", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "aramisnext", "nome": "Aramis Next", "pub": "I", "emoji": "🟢", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "nike", "nome": "Nike", "pub": "U", "emoji": "⚫", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}];
+const MARCAS_CONFIG = [{"id": "reserva", "nome": "Reserva", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "reservago", "nome": "Reserva Go", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "oficina", "nome": "Oficina", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "foxton", "nome": "Foxton", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Verão 27", "Perfumes "]}, {"id": "ankor", "nome": "Ankor", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "aramis", "nome": "Aramis", "pub": "M", "emoji": "🟦", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "urban", "nome": "Urban", "pub": "M", "emoji": "🟦", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "cacay", "nome": "Cacay", "pub": "F", "emoji": "🟣", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "indesense", "nome": "Indesense", "pub": "F", "emoji": "🩷", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "lofty", "nome": "Lofty", "pub": "F", "emoji": "🟣", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "matteo", "nome": "Matteo", "pub": "M", "emoji": "🟤", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "nike", "nome": "Nike", "pub": "U", "emoji": "⚫", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}];
 
 // Estado por marca
 const marcaState = {};
@@ -6420,9 +6420,9 @@ MARCAS_CONFIG.forEach(m => {
 // ── Gestor responsável por cada marca (mude aqui p/ reorganizar o menu) ──
 const GESTOR_POR_MARCA = {
   reserva:'Mauricio', reservago:'Mauricio', oficina:'Mauricio',
-  aramis:'Vainer', urban:'Vainer', aramisnext:'Vainer', lofty:'Vainer',
+  aramis:'Vainer', urban:'Vainer', lofty:'Vainer',
   cacay:'Eduarda', indesense:'Eduarda',
-  nike:'Showroom'
+  nike:'Showroom', matteo:'Showroom'
 };
 MARCAS_CONFIG.forEach(m => { m.gestor = GESTOR_POR_MARCA[m.id] || 'Showroom'; });
 // ── Padrão de coleções por marca (correção aplicada UMA vez; depois é livre) ──
@@ -6977,6 +6977,8 @@ function projSaveLocal(mid,cfg){ try{ localStorage.setItem('und_proj_'+mid, JSON
 function projSave(mid,cfg){
   projSaveLocal(mid,cfg);
   try{
+    // Só grava no Firebase depois de ter lido a projeção de lá — evita sobrescrever o trabalho da equipe com dados antigos deste aparelho.
+    if(window._db && !_projFBOk[mid]){ try{ toast('Projeção ainda carregando do Firebase — confira e lance de novo','' ); }catch(e){} _projFBLoaded[mid]=false; projLoadFB(mid); return; }
     if(window._db){
       if(window._indicarSalvando) window._indicarSalvando();
       window._fbSetDoc(window._fbDoc(window._db,'sistema','proj_'+mid), {data:cfg, at:new Date().toISOString()})
@@ -6985,18 +6987,24 @@ function projSave(mid,cfg){
     }
   }catch(e){}
 }
-let _projFBLoaded={};
+let _projFBLoaded={}, _projFBOk={};
 function projLoadFB(mid){
   if(!window._db || _projFBLoaded[mid]) return; _projFBLoaded[mid]=true;
   try{
     window._fbGetDoc(window._fbDoc(window._db,'sistema','proj_'+mid)).then(function(sn){
+      _projFBOk[mid]=true;
       if(sn.exists() && sn.data().data){
         projSaveLocal(mid, sn.data().data);
-        try{ const h=document.getElementById(mid+'-proj-host'); if(h && h.offsetParent!==null) renderMarcaProj(mid); }catch(e){}
       }
-    }).catch(function(){});
-  }catch(e){}
+      try{ const h=document.getElementById(mid+'-proj-host'); if(h && h.offsetParent!==null) renderMarcaProj(mid); }catch(e){}
+    }).catch(function(){ _projFBLoaded[mid]=false; }); // recusado (ex.: antes do login): tenta de novo na próxima vez
+  }catch(e){ _projFBLoaded[mid]=false; }
 }
+// Ao fazer login, recarrega as projeções que não conseguiram ser lidas antes
+(function projAuthHook(){
+  if(!window._fbOnAuth){ setTimeout(projAuthHook,300); return; } // o Firebase carrega depois deste script
+  window._fbOnAuth(function(u){ if(!u) return; try{ MARCAS_CONFIG.forEach(function(m){ if(!_projFBOk[m.id]){ _projFBLoaded[m.id]=false; const h=document.getElementById(m.id+'-proj-host'); if(h && h.offsetParent!==null) renderMarcaProj(m.id); } }); }catch(e){} });
+})();
 
 // Coleções da marca
 function projCols(mid){ const mc=MARCAS_CONFIG.find(m=>m.id===mid); return (mc&&mc.cols)||COLS; }
@@ -7146,12 +7154,15 @@ function projExport(mid){
   aoa.push(['PROJEÇÃO DE COLEÇÃO — '+mc.nome]);
   aoa.push(['Base: '+String(base).trim(), 'Alvo: '+String(col).trim(), 'Crescimento: '+g+'%', 'Gerado: '+new Date().toLocaleDateString('pt-BR')]);
   aoa.push([]);
-  aoa.push(['#','Cliente','Cidade','Realizado '+String(base).trim(),'Proj. calc. (+'+g+'%)','Projeção real','Realizado '+String(col).trim(),'Gap (real - plano)','Observações']);
-  rows.forEach(function(r,i){ aoa.push([i+1, (r.isAbertura?r.nome+' (abertura)':r.nome), r.cidade, (r.isAbertura?'':Math.round(r.real)), (r.isAbertura?'':Math.round(r.calc)), (r.projReal!=null?Math.round(r.projReal):''), Math.round(r.alvo), Math.round(r.gap), r.note||'']); });
+  const temMeta=projTemMeta(mid), metas=temMeta?projMetaGet(mid,col):{};
+  const metaTot=temMeta?rows.reduce(function(s,r){return s+(num(metas[r.cnpj])||0);},0):0;
+  const comMeta=function(arr,v){ if(temMeta) arr.splice(5,0,v); return arr; }; // coluna logo após a Proj. calc.
+  aoa.push(comMeta(['#','Cliente','Cidade','Realizado '+String(base).trim(),'Proj. calc. (+'+g+'%)','Projeção real','Realizado '+String(col).trim(),'Gap (real - plano)','Observações'],'Meta da marca'));
+  rows.forEach(function(r,i){ aoa.push(comMeta([i+1, (r.isAbertura?r.nome+' (abertura)':r.nome), r.cidade, (r.isAbertura?'':Math.round(r.real)), (r.isAbertura?'':Math.round(r.calc)), (r.projReal!=null?Math.round(r.projReal):''), Math.round(r.alvo), Math.round(r.gap), r.note||''], (metas[r.cnpj]!=null?Math.round(metas[r.cnpj]):''))); });
   aoa.push([]);
-  aoa.push(['','TOTAL','', Math.round(realTot), Math.round(calcTot), Math.round(projTot), Math.round(alvoTot), Math.round(gapTot), '']);
+  aoa.push(comMeta(['','TOTAL','', Math.round(realTot), Math.round(calcTot), Math.round(projTot), Math.round(alvoTot), Math.round(gapTot), ''], Math.round(metaTot)));
   const ws=XLSX.utils.aoa_to_sheet(aoa);
-  ws['!cols']=[{wch:5},{wch:30},{wch:16},{wch:16},{wch:16},{wch:14},{wch:16},{wch:16},{wch:40}];
+  ws['!cols']=comMeta([{wch:5},{wch:30},{wch:16},{wch:16},{wch:16},{wch:14},{wch:16},{wch:16},{wch:40}],{wch:16});
   const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Projeção');
   const fn='Projecao_'+String(mc.nome).replace(/[^a-z0-9]/gi,'_')+'_'+String(col).replace(/[^a-z0-9]/gi,'_')+'.xlsx';
   try{ XLSX.writeFile(wb,fn); try{toast('Projeção exportada: '+fn,'ok');}catch(e){} }catch(err){ try{toast('Erro ao exportar','');}catch(e){} }
@@ -7202,13 +7213,51 @@ function renderProjCards(mid,host){
   host.innerHTML=intro+'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.9rem">'+cards+'</div>';
 }
 
+// ── Meta da marca (preenchida manualmente) — vale para todas as marcas ──
+// Fica num documento próprio (sistema/proj_meta_marca → {mid:{coleção:{cnpj:valor}}}); não altera proj_<marca> nem compras.
+function projTemMeta(mid){ return MARCAS_CONFIG.some(function(m){return m.id===mid;}); }
+let _projMeta=null, _projMetaFB=false;
+function projMetaAll(){
+  if(!_projMeta){ try{ _projMeta=JSON.parse(localStorage.getItem('und_proj_meta_marca')||'{}')||{}; }catch(e){ _projMeta={}; } }
+  if(!_projMetaFB && window._db){
+    _projMetaFB=true;
+    window._fbGetDoc(window._fbDoc(window._db,'sistema','proj_meta_marca')).then(function(sn){
+      if(!sn.exists()) return;
+      _projMeta=sn.data().metas||{};
+      try{ localStorage.setItem('und_proj_meta_marca', JSON.stringify(_projMeta)); }catch(e){}
+      MARCAS_CONFIG.forEach(function(mc){ const m=mc.id; try{ const h=document.getElementById(m+'-proj-host'); if(h && h.offsetParent!==null) renderMarcaProj(m); }catch(e){} });
+    }).catch(function(e){ console.warn('[proj meta]',e); _projMetaFB=false; });
+  }
+  return _projMeta;
+}
+function projMetaGet(mid,col){ const a=projMetaAll(); return (a[mid]&&a[mid][col])||{}; }
+function projSetMetaMarca(mid,cnpj,val){
+  const c=projMigrate(mid,projLoad(mid)); const t=c.openCol; if(!t) return;
+  const a=projMetaAll(); if(!a[mid]) a[mid]={}; if(!a[mid][t]) a[mid][t]={};
+  const n=parseFloat(String(val).replace(/\./g,'').replace(',','.'));
+  const v=(val===''||isNaN(n))?null:n;
+  if(v===null) delete a[mid][t][cnpj]; else a[mid][t][cnpj]=v;
+  try{ localStorage.setItem('und_proj_meta_marca', JSON.stringify(a)); }catch(e){}
+  if(window._db){
+    const upd={metas:{}, at:new Date().toISOString()}; upd.metas[mid]={}; upd.metas[mid][t]={}; upd.metas[mid][t][cnpj]=v;
+    if(window._indicarSalvando) window._indicarSalvando();
+    window._fbSetDoc(window._fbDoc(window._db,'sistema','proj_meta_marca'), upd, {merge:true})
+      .then(function(){ if(window._indicarSalvo) window._indicarSalvo(); })
+      .catch(function(e){ console.warn('[proj meta] salvar',e); if(window._indicarErroSalvar) window._indicarErroSalvar(); });
+  }
+  renderMarcaProj(mid);
+}
+
 // Detalhe de uma coleção (tabela por cliente) — preserva foco e rolagem ao redesenhar
 function renderProjDetail(mid,host,col){
   const D=projComputeCol(mid,col); if(!D){ host.innerHTML=''; return; }
   const mc=D.mc, base=D.base, g=D.g, fator=D.fator, rows=D.rows;
   const realTot=D.realTot, calcTot=D.calcTot, projTot=D.projTot, alvoTot=D.alvoTot, gapTot=D.gapTot;
   const cols=projCols(mid);
-  const GC='30px 1.4fr 100px 100px 124px 124px 108px 210px';
+  const temMeta=projTemMeta(mid);
+  const metas=temMeta?projMetaGet(mid,col):{};
+  const metaTot=temMeta?rows.reduce(function(s,r){return s+(num(metas[r.cnpj])||0);},0):0;
+  const GC=temMeta?'30px 1.4fr 100px 100px 124px 124px 124px 108px 210px':'30px 1.4fr 100px 100px 124px 124px 108px 210px';
 
   // preservar foco e rolagem antes de reconstruir
   const ae=document.activeElement;
@@ -7239,6 +7288,7 @@ function renderProjDetail(mid,host,col){
     '<div style="display:flex;gap:.7rem;flex-wrap:wrap;margin-bottom:1rem">'+
       kpi('Realizado — '+String(base).trim(), fmtK(realTot), '', rows.length+' clientes')+
       kpi('Projeção calculada (+'+g+'%)', fmtK(calcTot), 'var(--gold-deep)', 'Base × '+fator.toFixed(2))+
+      (temMeta?kpi('Meta da marca', fmtK(metaTot), 'var(--accent,#0071E3)', 'Preenchida manualmente'):'')+
       kpi('Projeção real', fmtK(projTot), 'var(--blue)', 'Seu plano')+
       kpi('Realizado — '+col.trim(), fmtK(alvoTot), 'var(--green)', 'Vendas lançadas')+
       kpi('Gap (real − plano)', (gapTot>=0?'+':'−')+fmtK(Math.abs(gapTot)), gapCls, 'Realizado alvo − Projeção real')+
@@ -7256,6 +7306,7 @@ function renderProjDetail(mid,host,col){
       '<div><div style="font-weight:600;font-size:.82rem">'+r.nome+(r.isAbertura?' <span style="background:var(--blue-soft);color:var(--blue);border-radius:100px;font-size:.58rem;font-weight:700;padding:.05rem .4rem;vertical-align:middle">ABERTURA</span> <span onclick="projDelAbertura(\''+mid+'\',\''+r.cnpj+'\')" title="Remover abertura" style="cursor:pointer;color:var(--red);font-size:.72rem">✕</span>':'')+'</div><div style="font-size:.68rem;color:var(--ink-muted)">'+r.cidade+'</div></div>'+
       '<div style="text-align:right;font-family:var(--mono);font-size:.8rem" title="Dado fechado — não editável">'+(r.isAbertura?'<span style="color:var(--ink-muted)">—</span>':fmtK(r.real))+'</div>'+
       '<div style="text-align:right;font-family:var(--mono);font-size:.8rem;color:var(--gold-deep)" title="Projeção calculada — não editável">'+(r.isAbertura?'<span style="color:var(--ink-muted)">—</span>':fmtK(r.calc))+'</div>'+
+      (temMeta?'<div style="text-align:right"><input type="number" min="0" data-pk="'+r.cnpj+'|meta" class="form-input" title="Meta da marca — preenchida manualmente" style="width:104px;text-align:right;font-family:var(--mono);font-size:.8rem;'+(metas[r.cnpj]!=null?'border-color:var(--accent,#0071E3)':'')+'" value="'+(metas[r.cnpj]!=null?Math.round(metas[r.cnpj]):'')+'" placeholder="—" onchange="projSetMetaMarca(\''+mid+'\',\''+r.cnpj+'\',this.value)"></div>':'')+
       '<div style="text-align:right;display:flex;align-items:center;gap:.3rem;justify-content:flex-end">'+
         (r.hasManual?'<span title="Ajuste manual" style="color:var(--blue);font-size:.7rem">●</span>':'')+
         '<input type="number" data-pk="'+r.cnpj+'|real" class="form-input" style="width:104px;text-align:right;font-family:var(--mono);font-size:.8rem;border-color:'+(r.hasManual?'var(--blue)':'var(--line-strong)')+'" value="'+(r.hasManual?Math.round(r.projReal):'')+'" placeholder="'+Math.round(r.calc)+'" onchange="projSetReal(\''+mid+'\',\''+r.cnpj+'\',this.value)"></div>'+
@@ -7270,6 +7321,7 @@ function renderProjDetail(mid,host,col){
       '<div>#</div><div>Cliente</div>'+
       '<div style="text-align:right">Realizado '+String(base).trim()+'</div>'+
       '<div style="text-align:right">Proj. calc.</div>'+
+      (temMeta?'<div style="text-align:right">Meta da marca</div>':'')+
       '<div style="text-align:right">Projeção real</div>'+
       '<div style="text-align:right">Realizado '+col.trim()+'</div>'+
       '<div style="text-align:right">Gap</div>'+
@@ -7280,6 +7332,7 @@ function renderProjDetail(mid,host,col){
       '<div></div><div>TOTAL</div>'+
       '<div style="text-align:right;font-family:var(--mono)">'+fmtK(realTot)+'</div>'+
       '<div style="text-align:right;font-family:var(--mono);color:var(--gold-deep)">'+fmtK(calcTot)+'</div>'+
+      (temMeta?'<div style="text-align:right;font-family:var(--mono);color:var(--accent,#0071E3)">'+fmtK(metaTot)+'</div>':'')+
       '<div style="text-align:right;font-family:var(--mono);color:var(--blue)">'+fmtK(projTot)+'</div>'+
       '<div style="text-align:right;font-family:var(--mono);color:var(--green)">'+fmtK(alvoTot)+'</div>'+
       '<div style="text-align:right;font-family:var(--mono);color:'+gapCls+'">'+(gapTot>=0?'+':'−')+fmtK(Math.abs(gapTot))+'</div>'+
@@ -7292,7 +7345,7 @@ function renderProjDetail(mid,host,col){
         '<div style="font-family:var(--serif);font-size:1rem">Projeção por cliente — '+mc.nome+'</div>'+
         '<span style="font-size:.72rem;color:var(--ink-muted)">'+String(base).trim()+' → '+col.trim()+' · +'+g+'%</span>'+
       '</div>'+
-      '<div style="overflow-x:auto"><div style="min-width:1040px">'+
+      '<div style="overflow-x:auto"><div style="min-width:'+(temMeta?1170:1040)+'px">'+
         tableHead +
         '<div data-proj-scroll style="max-height:52vh;overflow-y:auto">'+body+'</div>'+
         totalRow +
@@ -7464,7 +7517,7 @@ function renderEscritorio() {
   if(c2){if(escChartCid2)escChartCid2.destroy();escChartCid2=new Chart(c2,{type:'doughnut',data:{labels:topCid.map(c=>c[0]),datasets:[{data:topCid.map(c=>c[1]),backgroundColor:['#0071E3','#30B0C7','#3d6b47','#2c4a7c','#9A6700','#9e3a30','#7a7a72','#ccc9c0']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:10},boxWidth:10}}}}});}
 
   // Gráfico resultado por marca (pedidos)
-  const marcasNomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next'};
+  const marcasNomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Matteo'};
   const pedMarca={};
   Object.keys(marcasNomes).forEach(m=>pedMarca[m]=0);
   (typeof pedidos!=='undefined'?pedidos:[]).forEach(p=>{if(p.marca&&pedMarca[p.marca]!==undefined) pedMarca[p.marca]+=p.totalGeral||0;});
@@ -7582,11 +7635,16 @@ function carregarColecoesMarca(){
       MARCAS_CONFIG.forEach(mc=>{ if(Array.isArray(map[mc.id]) && map[mc.id].length) mc.cols=map[mc.id]; });
       if(lv < COLS_VERSION) aplicarPadraoColecoes(); }
   }catch(e){}
+  // Se o sistema abriu antes do login, a leitura abaixo é recusada: tenta de novo assim que o login acontecer.
+  if(!window._colsAuthHook){ window._colsAuthHook=true; (function hook(){ if(!window._fbOnAuth){ setTimeout(hook,300); return; } window._fbOnAuth(function(u){ if(u && !window._marcaColsOk) carregarColecoesMarca(); }); })(); }
   if(window._db){
     try{ window._fbGetDoc(window._fbDoc(window._db,'sistema','marca_cols')).then(snap=>{
+      window._marcaColsOk=true;
       let ver=0;
       if(snap.exists()){ const d=snap.data(); ver=d.v||0;
-        if(d.map){ MARCAS_CONFIG.forEach(mc=>{ if(Array.isArray(d.map[mc.id]) && d.map[mc.id].length) mc.cols=d.map[mc.id]; }); }
+        if(d.map){ MARCAS_CONFIG.forEach(mc=>{ if(Array.isArray(d.map[mc.id]) && d.map[mc.id].length) mc.cols=d.map[mc.id]; });
+          // guarda as coleções de marcas que saíram do sistema (ex.: Aramis Next) para não apagá-las ao salvar
+          window._marcaColsFora={}; Object.keys(d.map).forEach(id=>{ if(!MARCAS_CONFIG.some(mc=>mc.id===id)) window._marcaColsFora[id]=d.map[id]; }); }
       }
       // Correção única das regras (Oficina/Perfumes/Aramis Calçados) sobre dados antigos
       if(ver < COLS_VERSION){ aplicarPadraoColecoes(); try{ salvarColecoesMarca(); }catch(e){} }
@@ -7596,9 +7654,11 @@ function carregarColecoesMarca(){
 }
 function salvarColecoesMarca(){
   try{
-    const map={}; MARCAS_CONFIG.forEach(mc=>map[mc.id]=mc.cols);
+    const map=Object.assign({}, window._marcaColsFora||{}); MARCAS_CONFIG.forEach(mc=>map[mc.id]=mc.cols);
     const v = (typeof COLS_VERSION!=='undefined')?COLS_VERSION:1;
     localStorage.setItem('und_marca_cols',JSON.stringify({map, v}));
+    // Só grava no Firebase depois de ter lido a lista de lá — evita sobrescrever as coleções da equipe com a lista padrão.
+    if(window._db && !window._marcaColsOk){ try{ toast('Coleções ainda carregando do Firebase — tente de novo em instantes',''); }catch(e){} carregarColecoesMarca(); return; }
     if(window._db) window._fbSetDoc(window._fbDoc(window._db,'sistema','marca_cols'),{map, v, at:new Date().toISOString()}).catch(()=>{});
   }catch(e){}
 }
@@ -7845,7 +7905,7 @@ function renderEscBI(){
   }
 
   // Chart marcas (pedidos)
-  const marcasNomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next'};
+  const marcasNomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Matteo'};
   const pedMarca={};
   Object.keys(marcasNomes).forEach(m=>pedMarca[m]=0);
   (typeof pedidos!=='undefined'?pedidos:[]).forEach(p=>{if(p.marca&&pedMarca[p.marca]!==undefined)pedMarca[p.marca]+=p.totalGeral||0;});
@@ -7880,7 +7940,7 @@ function renderEscBI(){
 const MARCAS_NOMES_DG = {
   reserva:'Reserva', reservago:'Reserva Go', oficina:'Oficina',
   foxton:'Foxton', ankor:'Ankor', aramis:'Aramis', urban:'Urban',
-  cacay:'Cacay', indesense:'Indesense', lofty:'Aramis Calçados', nike:'Nike', aramisnext:'Aramis Next'
+  cacay:'Cacay', indesense:'Indesense', lofty:'Aramis Calçados', nike:'Nike', aramisnext:'Aramis Next', matteo:'Matteo'
 };
 
 function getAllDemandas(filtroMarca, filtroStatus, filtroTopico){
@@ -8420,7 +8480,7 @@ const B64_INAD="PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InB0LUJSIj4KPGhlYWQ+CjxtZXRh
         <option value="lofty">Aramis Calçados</option>
               <option value="nike">Nike</option>
         
-        <option value="aramisnext">Aramis Next</option>
+        <option value="matteo">Matteo</option>
       </select>
       <select class="select" id="dg-filtro-status" onchange="renderDemandasGeral()" style="font-size:.8rem">
         <option value="">Todos os status</option>
@@ -8525,7 +8585,7 @@ const B64_INAD="PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InB0LUJSIj4KPGhlYWQ+CjxtZXRh
 /* ═══════════ GESTÃO DE PÓS-VENDAS (customizável) ═══════════ */
 const PV_GROUPS=[
   {key:'reserva', nome:'Reserva', marcas:['Reserva','Oficina','Reserva Go']},
-  {key:'aramis',  nome:'Aramis',  marcas:['Aramis','Aramis Next','Aramis Calçados','Urban']},
+  {key:'aramis',  nome:'Aramis',  marcas:['Aramis','Aramis Calçados','Urban']},
   {key:'cacay',   nome:'Cacay',   marcas:['Cacay','Lofty']},
   {key:'foxton',  nome:'Foxton',  marcas:['Foxton']},
   {key:'ankor',   nome:'Ankor',   marcas:['Ankor']},
@@ -11357,7 +11417,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
     {'CNPJ':'demo-urbano','Nome da Loja':'Urbano Store','Cidade':'Florianópolis - SC'},
     {'CNPJ':'demo-costa','Nome da Loja':'Costa & Filhos','Cidade':'Joinville - SC'}
   ];
-  var DEMO_MARCAS=[{id:'reserva',nome:'Reserva'},{id:'reservago',nome:'Reserva Go'},{id:'oficina',nome:'Oficina'},{id:'foxton',nome:'Foxton'},{id:'ankor',nome:'Ankor'},{id:'aramis',nome:'Aramis'},{id:'urban',nome:'Urban'},{id:'cacay',nome:'Cacay'},{id:'indesense',nome:'Indesense'},{id:'lofty',nome:'Lofty'},{id:'aramisnext',nome:'Aramis Next'},{id:'nike',nome:'Nike'}];
+  var DEMO_MARCAS=[{id:'reserva',nome:'Reserva'},{id:'reservago',nome:'Reserva Go'},{id:'oficina',nome:'Oficina'},{id:'foxton',nome:'Foxton'},{id:'ankor',nome:'Ankor'},{id:'aramis',nome:'Aramis'},{id:'urban',nome:'Urban'},{id:'cacay',nome:'Cacay'},{id:'indesense',nome:'Indesense'},{id:'lofty',nome:'Lofty'},{id:'nike',nome:'Nike'},{id:'matteo',nome:'Matteo'}];
   var ACESSOS_DEFAULT={ 'antoniokrause06@gmail.com':['reserva','reservago','oficina','cacay','aramis'] };
 
   var ESTOQUE={}, diagCache={}, ACESSOS=null;
@@ -13557,9 +13617,10 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
 <script>
 /* ===== Aba "Cobrar hoje" (add-on isolado, SOMENTE LEITURA da inadimplência) =====
    Lê inadimplencia/{RESERVA,ARAMIS,FOXTON} no Firestore (ou o cache local), junta o
-   mesmo CNPJ entre marcas, prioriza e monta links de WhatsApp. Não altera a inadimplência.
-   A marcação "cobrado hoje" fica só no navegador de quem clicou (localStorage).
-   Única gravação: o nome do contato de cada cliente, num documento próprio (sistema/cobrar_contatos). */
+   mesmo CNPJ entre marcas, prioriza e monta as mensagens (copiar e colar). Não altera a inadimplência.
+   Gravações, cada uma num documento próprio:
+   - sistema/cobrar_hoje: quem foi marcado como "cobrado" hoje (por quem e quando), em tempo real para a equipe;
+   - sistema/cobrar_contatos: o nome do contato de cada cliente. */
 (function(){
   var MARCAS_INAD=['RESERVA','ARAMIS','FOXTON'];
   var ST={verde:'Em dia / Acordo OK',pagando_acordo:'Pagando acordo',sete_dias:'Pagamento em 7 dias',quinze_dias:'Previsão em 15 dias',sem_previsao:'Sem previsão de pgto',internas:'Situações internas',sem_cor:'A definir'};
@@ -13578,8 +13639,42 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
   function diasDesde(d){return d?Math.floor((hojeZero()-d)/MS):null;}
   function diasAtraso(c){if(!c||!c.vencimento)return null;var v=new Date(c.vencimento+'T00:00:00');if(isNaN(v))return null;return Math.floor((hojeZero()-v)/MS);}
 
-  function feitosLoad(){try{var o=JSON.parse(localStorage.getItem(LS_FEITOS)||'{}');return (o&&o.dia===hojeKey())?o:{dia:hojeKey(),ids:{}};}catch(e){return {dia:hojeKey(),ids:{}};}}
-  function feitosSave(o){try{localStorage.setItem(LS_FEITOS,JSON.stringify(o));}catch(e){}}
+  // --- "cobrado hoje": documento sistema/cobrar_hoje {dia, ids:{chave:{por,at}|null}}, compartilhado e em tempo real ---
+  var feitos={dia:hojeKey(),ids:{}}, feitosUnsub=null;
+  function feitosRef(){return window._fbDoc(window._db,'sistema','cobrar_hoje');}
+  function feitosAplicar(d){
+    feitos=(d&&d.dia===hojeKey())?{dia:d.dia,ids:d.ids||{}}:{dia:hojeKey(),ids:{}};
+    try{localStorage.setItem(LS_FEITOS,JSON.stringify(feitos));}catch(e){}
+  }
+  async function feitosLoad(){
+    try{feitosAplicar(JSON.parse(localStorage.getItem(LS_FEITOS)||'null'));}catch(e){feitosAplicar(null);}
+    if(window._db&&window._fbGetDoc){
+      try{var s=await window._fbGetDoc(feitosRef()); feitosAplicar(s.exists()?s.data():null);}catch(e){console.warn('[cobrar] cobrados',e);}
+    }
+  }
+  function feitoInfo(k){var v=feitos.ids[k]; return (v&&v.at)?v:null;}
+  function quemSou(){try{var em=window._auth&&window._auth.currentUser&&window._auth.currentUser.email;return em?em.split('@')[0]:'';}catch(e){return '';}}
+  async function feitoSalvar(k,v){
+    var val=v?{por:quemSou(),at:new Date().toISOString()}:null;
+    feitos.ids[k]=val;
+    try{localStorage.setItem(LS_FEITOS,JSON.stringify(feitos));}catch(e){}
+    if(!(window._db&&window._fbSetDoc))throw new Error('sem conexão');
+    var s=await window._fbGetDoc(feitosRef()), d=s.exists()?s.data():null, upd={dia:hojeKey(),ids:{}};
+    upd.ids[k]=val;
+    if(!d||d.dia!==hojeKey()) await window._fbSetDoc(feitosRef(),upd);          // primeiro registro do dia: começa lista nova
+    else await window._fbSetDoc(feitosRef(),upd,{merge:true});                    // mesmo dia: só atualiza este cliente
+  }
+  function cobrarVisivel(){var p=document.getElementById('page-inadimplencia'),c=document.getElementById('inad-cobrar');return !!(p&&c&&p.style.display!=='none'&&c.style.display!=='none');}
+  function feitosOuvir(){
+    if(feitosUnsub||!window._db||!window._fbOnSnapshot)return;
+    try{
+      feitosUnsub=window._fbOnSnapshot(feitosRef(),function(s){
+        var antes=JSON.stringify(feitos.ids);
+        feitosAplicar(s.exists()?s.data():null);
+        if(JSON.stringify(feitos.ids)!==antes&&cobrarVisivel())renderCobrar(true);
+      },function(e){console.warn('[cobrar] tempo real',e);feitosUnsub=null;});
+    }catch(e){console.warn('[cobrar] tempo real',e);}
+  }
 
   // --- nome do contato (ex.: "Renato"): documento separado, não mexe em nenhum dado existente ---
   var LS_CONTATOS='cobrar_contatos_v1', contatos={};
@@ -13623,28 +13718,6 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
     return r;
   }
 
-  // Índice de telefones do cadastro de clientes
-  function indiceFones(){
-    var porCnpj={},porNome=[];
-    var lista=(typeof clientes!=='undefined'&&Array.isArray(clientes)?clientes:[]).concat(Array.isArray(window._clientesAll)?window._clientesAll:[]);
-    lista.forEach(function(c){
-      if(!c)return; var tel=dig(c.Telefone||c.telefone||c.Celular||c.celular||c.WhatsApp||c.whatsapp); if(tel.length<10)return;
-      var cn=dig(c.CNPJ||c.cnpj); if(cn&&!porCnpj[cn])porCnpj[cn]=tel;
-      [c['Razão Social'],c['Nome da Loja'],c.nome].forEach(function(n){var nn=normNome(n);if(nn.length>=4)porNome.push([nn,tel]);});
-    });
-    return {porCnpj:porCnpj,porNome:porNome};
-  }
-  function acharFone(idx,cnpj,nome){
-    var cn=dig(cnpj); if(cn&&idx.porCnpj[cn])return idx.porCnpj[cn];
-    var nn=normNome(nome); if(nn.length<4)return '';
-    for(var i=0;i<idx.porNome.length;i++){var a=idx.porNome[i][0]; if(a===nn||(nn.length>=8&&a.indexOf(nn)===0)||(a.length>=8&&nn.indexOf(a)===0))return idx.porNome[i][1];}
-    return '';
-  }
-  function linkWhats(tel,txt){
-    var t=dig(tel).replace(/^0+/,''); if(!t)return ''; if(t.length<=11)t='55'+t;
-    return 'https://wa.me/'+t+'?text='+encodeURIComponent(txt);
-  }
-
   // Pergunta principal pelo tempo de atraso (quem já está "Pagando acordo" segue com a mensagem de acordo)
   function tipoPergunta(g){
     if(g.cat==='acordo'||g.atraso===null)return '';
@@ -13669,10 +13742,8 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
   function mensagemAtualizacao(g){
     return saudacao(g)+'! Tudo bem? Aqui é da Underground Representações. Retomando nosso contato sobre as pendências em aberto ('+g.marcas.join(', ')+'), vencidas há '+g.atraso+' dias. Conseguem nos passar uma atualização e uma previsão de pagamento?';
   }
-  function botaoMsg(g,tipo,rotulo,cor){
-    var txt=tipo==='atualizacao'?mensagemAtualizacao(g):mensagem(g);
-    if(g.fone) return '<a class="btn btn-sm" style="background:'+cor+';color:#fff;border:none;text-decoration:none;white-space:nowrap" target="_blank" rel="noopener" href="'+esc(linkWhats(g.fone,txt))+'" onclick="cobrarMarcar(\''+esc(g.key)+'\',true)">WhatsApp '+rotulo+'</a>';
-    return '<button class="btn btn-secondary btn-sm" style="white-space:nowrap" onclick="cobrarCopiar(\''+esc(g.key)+'\',\''+tipo+'\')" title="Sem telefone no cadastro — copia a mensagem">Copiar '+(rotulo||'msg')+'</button>';
+  function botaoMsg(g,tipo,rotulo){
+    return '<button class="btn btn-secondary btn-sm" style="white-space:nowrap" onclick="cobrarCopiar(\''+esc(g.key).replace(/\'/g,'')+'\',\''+tipo+'\')" title="Copia a mensagem para você colar no WhatsApp">📋 Copiar '+rotulo+'</button>';
   }
 
   function classificar(c,diasStatus){
@@ -13687,14 +13758,16 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
   }
   var PESO={promessa:1,novo:2,acordo:3,negociar:4,aguardando:5,ignorar:6};
 
-  async function renderCobrar(){
+  async function renderCobrar(silencioso){
     var el=document.getElementById('cobrar-content'); if(!el)return;
-    el.innerHTML='<div class="panel" style="padding:1.2rem">Carregando inadimplência…</div>';
+    if(!silencioso) el.innerHTML='<div class="panel" style="padding:1.2rem">Carregando inadimplência…</div>';
     try{
       for(var tries=0;tries<25&&!window._db;tries++) await new Promise(function(r){setTimeout(r,200);});
       var marcas=await Promise.all(MARCAS_INAD.map(lerMarca));
       await contatosLoad();
-      var idx=indiceFones(), grupos={}, atualiz=[];
+      if(!feitosUnsub) await feitosLoad();
+      feitosOuvir();
+      var grupos={}, atualiz=[];
       marcas.forEach(function(md,i){
         var mk=MARCAS_INAD[i], mud=ultimasMudancas(md.hist), lu=parseBR(md.meta&&md.meta.lastUpdate);
         atualiz.push({m:mk,dias:diasDesde(lu),fonte:md.fonte});
@@ -13703,17 +13776,15 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
           var dStat=diasDesde(mud[String(c.cliente||'').trim()]||lu);
           var cat=classificar(c,dStat); if(!cat)return;
           var cn=dig(c.cnpj), key=cn.length>=8?('c'+cn.slice(0,8)):('n'+normNome(c.cliente));
-          var g=grupos[key]||(grupos[key]={key:key,nome:c.cliente,cnpj:c.cnpj||'',valor:0,itens:[],marcas:[],cat:cat,fone:'',atraso:null});
+          var g=grupos[key]||(grupos[key]={key:key,nome:c.cliente,cnpj:c.cnpj||'',valor:0,itens:[],marcas:[],cat:cat,atraso:null});
           g.valor+=Number(c.valor)||0;
           g.itens.push({marca:mk,c:c,cat:cat,dStat:dStat});
           if(g.marcas.indexOf(mk)<0)g.marcas.push(mk);
           if(PESO[cat]<PESO[g.cat])g.cat=cat;
           var at=diasAtraso(c); if(at!==null&&(g.atraso===null||at>g.atraso))g.atraso=at;
-          if(!g.fone)g.fone=acharFone(idx,c.cnpj,c.cliente);
           if(!g.cnpj&&c.cnpj)g.cnpj=c.cnpj;
         });
       });
-      var feitos=feitosLoad();
       var lista=Object.values(grupos).sort(function(a,b){return (PESO[a.cat]-PESO[b.cat])||(b.valor-a.valor);});
       var secoes=[
         {cat:'promessa',tit:'🔴 Promessa vencida — cobrar hoje',sub:'Estavam em "7 dias" ou "15 dias" e o prazo já passou.',cor:'var(--red)'},
@@ -13725,7 +13796,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
       ];
       var hojeN=lista.filter(function(g){return PESO[g.cat]<=3;});
       var hojeV=hojeN.reduce(function(s,g){return s+g.valor;},0);
-      var feitosN=hojeN.filter(function(g){return feitos.ids[g.key];}).length;
+      var feitosN=hojeN.filter(function(g){return feitoInfo(g.key);}).length;
       var velho=atualiz.filter(function(a){return a.dias!==null&&a.dias>=3;});
       var html='';
       if(velho.length) html+='<div class="panel" style="padding:.8rem 1.1rem;margin-bottom:1rem;border-left:3px solid var(--amber);background:var(--amber-soft)">⚠️ Dados desatualizados: '+velho.map(function(a){return '<b>'+a.m+'</b> há '+a.dias+' dia(s)';}).join(', ')+'. Importe o relatório do sistema na aba <a href="javascript:void(0)" onclick="inadTab(\'painel\')">Painel</a> antes de cobrar — alguém pode já ter pago.</div>';
@@ -13739,7 +13810,9 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
         var tot=gs.reduce(function(a,g){return a+g.valor;},0);
         html+='<details class="panel" style="padding:0;margin-top:1rem"'+(s.fechada?'':' open')+'><summary class="panel-head" style="padding:.9rem 1.1rem;border-bottom:1px solid var(--line);cursor:pointer;list-style:none"><div><div class="panel-title">'+s.tit+' <span class="badge">'+gs.length+'</span></div><div style="font-size:.75rem;color:var(--ink-muted);margin-top:.15rem">'+s.sub+'</div></div><b style="color:'+s.cor+';white-space:nowrap">'+brl(tot)+'</b></summary><div style="padding:.3rem .9rem">';
         gs.forEach(function(g){
-          var feito=!!feitos.ids[g.key];
+          var fi=feitoInfo(g.key), feito=!!fi;
+          var feitoTxt='';
+          if(fi){var hh='';try{hh=new Date(fi.at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}catch(e){} feitoTxt=' <span style="color:var(--green)">✓ '+(fi.por?esc(fi.por)+' ':'')+hh+'</span>';}
           var notas=g.itens.map(function(it){var t=[it.c.situacao,it.c.resposta,it.c.obs].filter(function(x){return x&&String(x).trim()&&String(x).trim()!=='.';}).join(' · ');return '<div style="font-size:.75rem;color:var(--ink-muted)"><b>'+esc(it.marca)+'</b> '+brl(it.c.valor)+' · '+esc(ST[it.c.status]||it.c.status)+(it.dStat!==null?' há '+it.dStat+'d':'')+(t?' — '+esc(t):'')+'</div>';}).join('');
           var doisBotoes=g.atraso!==null&&g.atraso>10;
           var ativo=!(s.cat==='ignorar'||s.cat==='aguardando');
@@ -13748,14 +13821,14 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
             ?'<a href="javascript:void(0)" style="font-size:.75rem;text-decoration:none" onclick="cobrarContato(\''+kq+'\')" title="Alterar nome do contato">👤 '+esc(contatos[g.key])+' ✎</a>'
             :'<a href="javascript:void(0)" style="font-size:.75rem;color:var(--ink-muted)" onclick="cobrarContato(\''+kq+'\')">+ nome do contato</a>';
           var botoes=!ativo?'':
-            (doisBotoes?botaoMsg(g,'principal','1º contato','#25D366')+botaoMsg(g,'atualizacao','Atualização','#128C7E'):botaoMsg(g,'principal','','#25D366'))
-            +'<label style="font-size:.75rem;display:flex;align-items:center;gap:.25rem;cursor:pointer"><input type="checkbox" '+(feito?'checked':'')+' onchange="cobrarMarcar(\''+esc(g.key)+'\',this.checked)"> cobrado</label>';
-          html+='<div class="md-row" style="align-items:flex-start;'+(feito?'opacity:.5':'')+'"><div style="min-width:0;flex:1"><div><strong>'+esc(g.nome)+'</strong>'+(g.marcas.length>1?' <span class="badge" style="background:var(--red-soft);color:var(--red)">'+g.marcas.length+' marcas</span>':'')+'</div><div style="font-size:.78rem;margin:.1rem 0">'+brl(g.valor)+(g.atraso!==null?' · '+g.atraso+' dias de atraso':'')+(g.fone?'':' · <span style="color:var(--amber)">sem telefone no cadastro</span>')+({acordo:' · <span class="badge">pergunta: já iniciou acordo?</span>',recebeu:' · <span class="badge">pergunta: recebeu a mercadoria?</span>'}[tipoPergunta(g)]||'')+'</div>'+(ativo?'<div style="margin:.15rem 0">'+contato+'</div>':'')+notas+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:.35rem">'+botoes+'</div></div>';
+            (doisBotoes?botaoMsg(g,'principal','1º contato')+botaoMsg(g,'atualizacao','atualização'):botaoMsg(g,'principal','mensagem'))
+            +'<label style="font-size:.75rem;display:flex;align-items:center;gap:.25rem;cursor:pointer"><input type="checkbox" '+(feito?'checked':'')+' onchange="cobrarMarcar(\''+kq+'\',this.checked,this)"> cobrado'+feitoTxt+'</label>';
+          html+='<div class="md-row" style="align-items:flex-start;'+(feito?'opacity:.5':'')+'"><div style="min-width:0;flex:1"><div><strong>'+esc(g.nome)+'</strong>'+(g.marcas.length>1?' <span class="badge" style="background:var(--red-soft);color:var(--red)">'+g.marcas.length+' marcas</span>':'')+'</div><div style="font-size:.78rem;margin:.1rem 0">'+brl(g.valor)+(g.atraso!==null?' · '+g.atraso+' dias de atraso':'')+({acordo:' · <span class="badge">pergunta: já iniciou acordo?</span>',recebeu:' · <span class="badge">pergunta: recebeu a mercadoria?</span>'}[tipoPergunta(g)]||'')+'</div>'+(ativo?'<div style="margin:.15rem 0">'+contato+'</div>':'')+notas+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:.35rem">'+botoes+'</div></div>';
         });
         html+='</div></details>';
       });
       if(!lista.length) html+='<div class="panel" style="padding:1.2rem">Nada para cobrar 🎉</div>';
-      html+='<div style="font-size:.72rem;color:var(--ink-muted);margin:1rem .2rem">Esta tela só lê a Inadimplência — para mudar status ou anotações, use a aba <a href="javascript:void(0)" onclick="inadTab(\'painel\')">Painel</a>. A marcação "cobrado" vale só para hoje e só neste navegador.</div>';
+      html+='<div style="font-size:.72rem;color:var(--ink-muted);margin:1rem .2rem">Esta tela só lê a Inadimplência — para mudar status ou anotações, use a aba <a href="javascript:void(0)" onclick="inadTab(\'painel\')">Painel</a>. A marcação "cobrado" é compartilhada com toda a equipe e recomeça a cada dia.</div>';
       window._cobrarGrupos=grupos;
       el.innerHTML=html;
     }catch(e){console.warn('[cobrar]',e);el.innerHTML='<div class="panel" style="padding:1.2rem;color:var(--red)">Não foi possível montar a lista agora. Detalhes no console (F12).</div>';}
@@ -13769,7 +13842,12 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
     document.querySelectorAll('#inad-tabs .tab').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-inadtab')===t);});
     if(t==='cobrar')renderCobrar(); else { try{loadFrame('frame-inad','inad');}catch(e){} }
   };
-  window.cobrarMarcar=function(k,v){var f=feitosLoad();if(v)f.ids[k]=1;else delete f.ids[k];feitosSave(f);setTimeout(renderCobrar,300);};
+  window.cobrarMarcar=async function(k,v,cb){
+    if(cb)cb.disabled=true;
+    try{await feitoSalvar(k,v);}
+    catch(e){console.warn('[cobrar] salvar cobrado',e);alert('Não foi possível salvar no Firebase agora — a marcação ficou só neste aparelho. Verifique a internet e tente de novo.');}
+    renderCobrar(true);
+  };
   window.cobrarContato=async function(k){
     var atual=contatos[k]||'';
     var nome=prompt('Nome da pessoa que vai receber a mensagem (ex.: Renato). Deixe em branco para remover.',atual);
@@ -13778,7 +13856,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
     renderCobrar();
   };
 
-  window.cobrarCopiar=function(k,tipo){var g=(window._cobrarGrupos||{})[k];if(!g)return;var t=tipo==='atualizacao'?mensagemAtualizacao(g):mensagem(g);try{navigator.clipboard.writeText(t).then(function(){alert('Mensagem copiada. Cole no WhatsApp do cliente.');},function(){prompt('Copie a mensagem:',t);});}catch(e){prompt('Copie a mensagem:',t);}};
+  window.cobrarCopiar=function(k,tipo){var g=(window._cobrarGrupos||{})[k];if(!g)return;var t=tipo==='atualizacao'?mensagemAtualizacao(g):mensagem(g);try{navigator.clipboard.writeText(t).then(function(){alert('Mensagem copiada. Agora é só colar na conversa do cliente.');},function(){prompt('Copie a mensagem:',t);});}catch(e){prompt('Copie a mensagem:',t);}};
 })();
 </script>
 
