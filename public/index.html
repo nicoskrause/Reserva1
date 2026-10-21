@@ -711,6 +711,8 @@ tr:last-child td{border-bottom:none}
 .crm-tabs{display:flex;gap:.4rem;margin-bottom:1rem;background:var(--bg-soft);padding:.3rem;border-radius:8px}
 .crm-tab{flex:1;padding:.5rem;text-align:center;border-radius:5px;cursor:pointer;font-size:.8rem;font-weight:500;color:var(--ink-muted);border:none;background:transparent;font-family:inherit;transition:all .15s}
 .crm-tab.active{background:var(--bg-card);color:var(--ink);box-shadow:0 1px 4px rgba(15,15,14,.08)}
+#crm-under-tabs{overflow-x:auto;scrollbar-width:thin}
+#crm-under-tabs .crm-tab{flex:0 0 auto;white-space:nowrap;padding:.5rem .8rem}
 
 /* Modal CRM */
 .crm-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
@@ -1020,6 +1022,11 @@ tr:last-child td{border-bottom:none}
       <span class="ndot" style="background:var(--green)"></span>
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg>
       Pós-Vendas
+    </button>
+    <button class="nav-item" data-page="crm" onclick="navToPage('crm');switchCrmTab(crmTab)">
+      <span class="ndot" style="background:var(--gold)"></span>
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>
+      CRM Under
     </button>
     <button class="nav-item" data-page="config" style="display:none" onclick="navToPage('config');renderConfig()">
       <span class="ndot" style="background:var(--gold)"></span>
@@ -3306,11 +3313,18 @@ tr:last-child td{border-bottom:none}
 <div class="page" id="page-crm">
   <div class="topbar"><h1>CRM UNDER</h1><div class="topbar-actions" id="crm-topbar-actions"></div></div>
   <div class="page-content">
-    <div class="crm-tabs">
+    <div class="crm-tabs" id="crm-under-tabs">
       <button class="crm-tab active" id="crm-tab-prospeccao" onclick="switchCrmTab('prospeccao')">Prospecção</button>
       <button class="crm-tab" id="crm-tab-ativos" onclick="switchCrmTab('ativos')">Pipeline Ativos</button>
+      <!-- Módulos novos do CRM Under (app em /crm, usando os dados deste sistema) -->
+      <button class="crm-tab crm-mod" data-rota="/tarefas" onclick="crmModulo(this)">Tarefas do dia</button>
+      <button class="crm-tab crm-mod" data-rota="/clientes" onclick="crmModulo(this)">Clientes</button>
+      <button class="crm-tab crm-mod" data-rota="/painel" onclick="crmModulo(this)">Painel</button>
+      <button class="crm-tab crm-mod" data-rota="/faturamento" onclick="crmModulo(this)">Faturamento e comissões</button>
+      <button class="crm-tab crm-mod" data-rota="/configuracoes" onclick="crmModulo(this)">Configurações</button>
     </div>
     <div id="crm-under-content"></div>
+    <iframe id="frame-crm" title="CRM Under" style="display:none;width:100%;height:calc(100vh - 170px);border:none;background:transparent"></iframe>
   </div>
 </div>
 
@@ -4453,7 +4467,18 @@ function switchCrmTab(tab){
   crmTab=tab;
   document.querySelectorAll('.crm-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('crm-tab-'+tab).classList.add('active');
+  const fr=document.getElementById('frame-crm'), ct=document.getElementById('crm-under-content');
+  if(fr) fr.style.display='none'; if(ct) ct.style.display='';
   renderCRM();
+}
+// Abas novas do CRM Under: abrem o módulo correspondente do CRM Showroom (app em /crm) logo abaixo das abas
+function crmModulo(btn){
+  document.querySelectorAll('#crm-under-tabs .crm-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  const fr=document.getElementById('frame-crm'), ct=document.getElementById('crm-under-content');
+  if(ct) ct.style.display='none';
+  const tb=document.getElementById('crm-topbar-actions'); if(tb) tb.innerHTML='';
+  if(fr){ fr.style.display='block'; fr.src='/crm'+btn.dataset.rota+'?abas=0'; }
 }
 
 function renderCRM(){
@@ -8579,6 +8604,24 @@ const B64_INAD="PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InB0LUJSIj4KPGhlYWQ+CjxtZXRh
     <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal('modal-pv-cfg')">Fechar</button></div>
   </div>
 </div>
+<!-- ✨ ASSISTENTE DE IA: botão em todas as telas + painel lateral (conversa em /crm/assistente, usa a ponte UNDER) -->
+<style>
+#ia-btn{position:fixed;right:20px;bottom:88px;z-index:1500;height:44px;padding:0 1rem;border-radius:999px;border:none;background:#111;color:#fff;font-weight:600;font-size:.88rem;box-shadow:0 6px 18px rgba(0,0,0,.28);cursor:pointer;font-family:inherit}
+#ia-painel{position:fixed;top:0;right:0;height:100vh;width:min(440px,100vw);background:#fff;z-index:2000;box-shadow:-8px 0 30px rgba(0,0,0,.18);transform:translateX(105%);transition:transform .2s ease;display:flex;flex-direction:column}
+#ia-painel.aberto{transform:none}
+#ia-painel iframe{flex:1;border:none;width:100%}
+#ia-fechar{position:absolute;top:8px;right:10px;z-index:1;border:none;background:transparent;font-size:1.4rem;cursor:pointer;color:#666;line-height:1}
+</style>
+<button id="ia-btn" onclick="iaAbrir()" title="Perguntar ao assistente sobre clientes, vendas, metas, pedidos e inadimplência">✨ Assistente</button>
+<div id="ia-painel" aria-label="Assistente">
+  <button id="ia-fechar" onclick="iaFechar()" aria-label="Fechar assistente">×</button>
+  <iframe id="ia-frame" title="Assistente"></iframe>
+</div>
+<script>
+function iaAbrir(){ var f=document.getElementById('ia-frame'); if(f && !f.src) f.src='/crm/assistente'; document.getElementById('ia-painel').classList.add('aberto'); }
+function iaFechar(){ document.getElementById('ia-painel').classList.remove('aberto'); }
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') iaFechar(); });
+</script>
 </div><!-- /main-app -->
 
 <script>
@@ -9790,6 +9833,7 @@ body.sb-collapsed .nav-item:hover::after{content:attr(data-tip);position:absolut
     pipeline:function(){try{loadFrame('frame-pipeline','pipeline');}catch(e){}},
     inadimplencia:function(){try{loadFrame('frame-inad','inad');}catch(e){}},
     cobrar:function(){try{navToPage('inadimplencia');inadTab('cobrar');}catch(e){}},
+    crm:function(){try{switchCrmTab(crmTab);}catch(e){}},
     posvendas:function(){try{loadPosVenda();}catch(e){}}
   };
   function _applyHash(){
@@ -13857,6 +13901,87 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
   };
 
   window.cobrarCopiar=function(k,tipo){var g=(window._cobrarGrupos||{})[k];if(!g)return;var t=tipo==='atualizacao'?mensagemAtualizacao(g):mensagem(g);try{navigator.clipboard.writeText(t).then(function(){alert('Mensagem copiada. Agora é só colar na conversa do cliente.');},function(){prompt('Copie a mensagem:',t);});}catch(e){prompt('Copie a mensagem:',t);}};
+})();
+</script>
+<script>
+/* ===== PONTE DO CRM UNDER =====
+   O CRM Under (app em /crm, aberto dentro desta página) usa os dados DESTE sistema através destas funções.
+   Leitura: entrega cópias dos dados já carregados aqui (clientes, compras, pedidos, carteira, agenda...).
+   Gravação: só pelas rotinas do próprio sistema (ex.: saveAgendaEvs), para nada ser sobrescrito por engano. */
+(function(){
+  function copia(o){ try{ return JSON.parse(JSON.stringify(o)); }catch(e){ return o; } }
+  function quem(){ try{ return (window._auth&&window._auth.currentUser&&window._auth.currentUser.email)||''; }catch(e){ return ''; } }
+  window.UNDER={
+    versao:1,
+    pronto:function(){ return !!(window._auth&&window._auth.currentUser) && typeof clientes!=='undefined' && clientes.length>0; },
+    quem:quem,
+    marcas:function(){ return MARCAS_CONFIG.map(function(m){ return {id:m.id,nome:m.nome,gestor:m.gestor||'',pub:m.pub||'',cols:(m.cols||[]).slice()}; }); },
+    gestores:function(){ return (typeof ORDEM_GESTORES!=='undefined'?ORDEM_GESTORES:[]).slice(); },
+    clientes:function(){
+      return clientes.map(function(c){ return {cnpj:c.CNPJ, nome:c['Nome da Loja']||c['Razão Social']||c.CNPJ, razao:c['Razão Social']||'', cidade:c.Cidade||'', bairro:c.Bairro||'', telefone:(c.Telefone&&c.Telefone!=='undefined')?String(c.Telefone):'', email:c.Email||c['E-mail']||''}; });
+    },
+    // { cnpj: { 'marca__Coleção': valor } } — só valores maiores que zero
+    compras:function(){
+      var out={};
+      (compras||[]).forEach(function(r){ if(!r||!r.CNPJ) return; var o={}; Object.keys(r).forEach(function(k){ if(k.indexOf('__')>0){ var v=num(r[k]); if(v>0) o[k]=v; } }); out[r.CNPJ]=o; });
+      return out;
+    },
+    // { cnpj: { vendedores:[...], grupo, nivel, risco } } e a lista de vendedores
+    carteira:function(){
+      try{ if(typeof cartLoad_once==='function') cartLoad_once(); }catch(e){}
+      var c=(typeof CART!=='undefined'&&CART)?CART:{vendedores:[],carteira:{}};
+      return {vendedores:copia(c.vendedores||[]), porCliente:copia(c.carteira||{})};
+    },
+    grupo:function(cnpj){ return (typeof membrosDe==='function')?membrosDe(cnpj):[cnpj]; },
+    pedidos:function(){
+      return (pedidos||[]).map(function(p){ return {id:String(p.id), cnpj:p.cnpj||'', cliente:p.nomeCli||'', marca:p.marca||'', colecao:p.colecao||'', gestor:p.gestor||'', data:p.data||'', valor:num(p.totalGeral), obs:p.obs||''}; });
+    },
+    agenda:function(){ return (typeof getAgendaEvs==='function')?copia(getAgendaEvs()):[]; },
+    // Cria/atualiza um compromisso na Agenda do sistema (origem "crm")
+    agendar:function(ev){
+      if(typeof getAgendaEvs!=='function'||typeof saveAgendaEvs!=='function') return false;
+      var evs=getAgendaEvs(), id=ev.id||('crm_'+Date.now()), i=evs.findIndex(function(e){return e.id===id;});
+      var novo={id:id,titulo:ev.titulo,data:ev.data,cliente:ev.cliente||'',notas:ev.notas||'',origem:'crm',criadoEm:(i>=0&&evs[i].criadoEm)||new Date().toISOString(),criadoPor:quem()};
+      if(i>=0) evs[i]=Object.assign({},evs[i],novo); else evs.push(novo);
+      saveAgendaEvs(evs); try{ if(typeof renderAgenda==='function') renderAgenda(); }catch(e){}
+      return id;
+    },
+    prefs:function(){ return (typeof cfgGetPrefs==='function')?copia(cfgGetPrefs()):{}; },
+    adminEmail:function(){ return (typeof CFG_ADMIN_EMAIL!=='undefined'?CFG_ADMIN_EMAIL:'').toLowerCase(); },
+    // Meta em R$ da marca na coleção (a mesma da aba Metas)
+    meta:function(mid,col){ try{ return (typeof metaM==='function')?(+metaM(mid,col)||0):0; }catch(e){ return 0; } },
+    // Lança um pedido exatamente como a tela Pedidos: grava o pedido, soma nas Compras e atualiza o Pós-Vendas
+    novoPedido:function(o){
+      var cli=getCli(o.cnpj); if(!cli) return {ok:false,erro:'Cliente não encontrado'};
+      var valor=num(o.valor); if(!(valor>0)) return {ok:false,erro:'Informe o valor do pedido'};
+      var nomeCli=cli['Nome da Loja']||o.cnpj, data=o.data||new Date().toISOString().split('T')[0];
+      var pedido={id:Date.now().toString(),cnpj:o.cnpj,nomeCli:nomeCli,colecao:o.colecao,marca:o.marca,gestor:o.gestor||'',data:data,obs:o.obs||'',itens:[],totalGeral:valor,totalPecas:0,origem:'crm',criadoPor:quem()};
+      pedidos.push(pedido); pedSalvarStorage();
+      var comp=getComp(o.cnpj); if(!comp){ comp={CNPJ:o.cnpj,'Nome da Loja':nomeCli}; compras.push(comp); }
+      var chave=o.marca+'__'+o.colecao; comp[chave]=(num(comp[chave])||0)+valor; save();
+      try{ var mn=(MARCAS_CONFIG.find(function(m){return m.id===o.marca;})||{}).nome||o.marca; if(typeof pvFromProjecao==='function') pvFromProjecao({cliente:nomeCli,marca:mn,colecao:String(o.colecao||'').trim(),valor:num(comp[chave])}); }catch(e){}
+      ['renderMarcaDashboard','renderMarcaCompras','renderMarcaProj','renderMarcaLTV','renderMarcaRankings'].forEach(function(f){ try{ if(typeof window[f]==='function') window[f](o.marca); }catch(e){} });
+      try{ renderEscritorio(); }catch(e){} try{ if(window.renderMeuDia) renderMeuDia(); }catch(e){} try{ renderPedLista(); }catch(e){}
+      return {ok:true,id:pedido.id};
+    },
+    // Marca o cliente como "cobrado hoje" na aba Cobrar hoje (mesma chave que ela usa)
+    marcarCobrado:function(chave){ try{ if(typeof window.cobrarMarcar==='function'){ window.cobrarMarcar(chave,true); return true; } }catch(e){} return false; },
+    // Biblioteca de planilhas já carregada pelo sistema (para importar/exportar Excel no CRM)
+    xlsx:function(){ return window.XLSX||null; },
+    // Em que tela o usuário está (para o assistente entender "esse cliente", "essa marca")
+    telaAtual:function(){
+      var pg=[].slice.call(document.querySelectorAll('.page')).find(function(p){ return p.style.display!=='none' && p.offsetParent!==null; });
+      var id=pg?pg.id.replace(/^page-/,''):'';
+      var titulo=pg?((pg.querySelector('.topbar h1, .topbar')||{}).innerText||'').split('\n')[0].trim():'';
+      var marca=(typeof MARCAS_CONFIG!=='undefined')?MARCAS_CONFIG.find(function(m){return m.id===id;}):null;
+      var cnpj=(id==='detalhe'&&typeof cliAtualCNPJ!=='undefined')?cliAtualCNPJ:'';
+      var cli=cnpj?getCli(cnpj):null;
+      return { pagina:id, titulo:titulo, marca:marca?marca.nome:'', clienteCnpj:cnpj||'', cliente:cli?(cli['Nome da Loja']||cli['Razão Social']||''):'' };
+    },
+    // Abre a ficha do cliente no sistema
+    abrirCliente:function(cnpj){ try{ if(typeof verCliente==='function') verCliente(cnpj); }catch(e){} },
+    abrirInadimplencia:function(){ try{ navToPage('inadimplencia'); if(typeof inadTab==='function') inadTab('painel'); }catch(e){} }
+  };
 })();
 </script>
 
