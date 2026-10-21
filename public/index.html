@@ -1039,7 +1039,7 @@ tr:last-child td{border-bottom:none}
   <!-- Conhecimento -->
   <div class="nav-section">
     <div class="nav-label">Conhecimento</div>
-    <button class="nav-item" data-page="assistente" onclick="navToPage('assistente');renderAssistente()">
+    <button class="nav-item" data-page="assistente" onclick="navToPage('assistente');iaCompras()">
       <span class="ndot" style="background:var(--gold)"></span>
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l1.7 4.3L18 9l-4.3 1.7L12 15l-1.7-4.3L6 9l4.3-1.7z"/><path d="M5 15l.9 2.1L8 18l-2.1.9L5 21l-.9-2.1L2 18l2.1-.9z"/></svg>
       Assistente de Compras
@@ -1109,8 +1109,10 @@ tr:last-child td{border-bottom:none}
 
 <!-- ===== ASSISTENTE DE COMPRAS ===== -->
 <div class="page" id="page-assistente" style="display:none">
-  <div class="topbar"><h1>Assistente de Compras</h1><div class="topbar-actions"><span id="assist-marca" class="badge blue"></span></div></div>
-  <div class="page-content" style="max-width:900px">
+  <div class="topbar"><h1>Assistente de Compras</h1><div class="topbar-actions"><span id="assist-marca" class="badge blue" style="display:none"></span></div></div>
+  <!-- Assistente com IA (mesmo da ponte UNDER), ocupando a tela -->
+  <iframe id="ia-compras" title="Assistente de Compras" style="width:100%;height:calc(100vh - 70px);border:none;display:block;background:#fff"></iframe>
+  <div class="page-content" style="max-width:900px;display:none">
     <div class="assist-shell">
       <div id="assist-log" class="assist-log"></div>
       <div class="assist-suggest" id="assist-suggest"></div>
@@ -1127,6 +1129,7 @@ tr:last-child td{border-bottom:none}
   <div class="topbar">
     <h1>Copiloto do Comprador</h1>
     <div class="topbar-actions">
+      <button class="btn btn-primary btn-sm" onclick="iaAbrir()" title="Perguntar ao assistente de IA sobre clientes, vendas, metas, pedidos e inadimplência">✨ Perguntar ao assistente</button>
       <span id="co-syncbadge" class="badge blue" style="font-size:.65rem">—</span>
       <button class="btn btn-secondary btn-sm" id="co-acessos-btn" style="display:none" onclick="coAcessos()">🔒 Acessos</button>
       <button class="btn btn-secondary btn-sm" onclick="coExport()">⭳ Exportar</button>
@@ -1238,7 +1241,7 @@ tr:last-child td{border-bottom:none}
 </div>
 
 <div class="page" id="page-escritorio" style="display:none">
-  <div class="topbar"><h1>Escritório — Visão Consolidada</h1><div class="topbar-actions"><button class="btn btn-secondary btn-sm" onclick="migrarClientesNuvem()" title="Copia os clientes para o novo modelo (1 documento por cliente)">☁️ Migrar clientes</button><button class="btn btn-secondary btn-sm" onclick="reimportarClientes()" title="Forçar recarga dos clientes da planilha importada">Reimportar clientes</button><button class="btn btn-secondary btn-sm" onclick="abrirGerenciarColecoes()">Coleções</button><button class="btn btn-secondary btn-sm" onclick="zerarTodoLTV()" style="color:var(--red);border-color:var(--red)">Zerar todo LTV</button><span style="font-size:.75rem;color:var(--gold-deep);background:var(--gold-soft);padding:.3rem .75rem;border-radius:6px;font-family:var(--mono)">Todas as marcas</span></div></div>
+  <div class="topbar"><h1>Escritório — Visão Consolidada</h1><div class="topbar-actions"><button class="btn btn-primary btn-sm" onclick="iaAbrir()" title="Perguntar ao assistente de IA sobre clientes, vendas, metas, pedidos e inadimplência">✨ Perguntar ao assistente</button><button class="btn btn-secondary btn-sm" onclick="migrarClientesNuvem()" title="Copia os clientes para o novo modelo (1 documento por cliente)">☁️ Migrar clientes</button><button class="btn btn-secondary btn-sm" onclick="reimportarClientes()" title="Forçar recarga dos clientes da planilha importada">Reimportar clientes</button><button class="btn btn-secondary btn-sm" onclick="abrirGerenciarColecoes()">Coleções</button><button class="btn btn-secondary btn-sm" onclick="zerarTodoLTV()" style="color:var(--red);border-color:var(--red)">Zerar todo LTV</button><span style="font-size:.75rem;color:var(--gold-deep);background:var(--gold-soft);padding:.3rem .75rem;border-radius:6px;font-family:var(--mono)">Todas as marcas</span></div></div>
   <!-- Abas do escritório -->
   <div style="padding:0 1.5rem;background:var(--bg-card);border-bottom:1px solid var(--line)" id="esc-tabs">
     <button class="tab active" onclick="switchEscTab('visao')">Visão Geral</button>
@@ -3232,6 +3235,7 @@ tr:last-child td{border-bottom:none}
   <div class="topbar">
     <h1>Gestao de Carteira por Vendedor</h1>
     <div class="topbar-actions">
+      <button class="btn btn-primary btn-sm" onclick="iaAbrir()" title="Perguntar ao assistente de IA sobre clientes, vendas, metas, pedidos e inadimplência">✨ Perguntar ao assistente</button>
       <button class="btn btn-secondary btn-sm" onclick="cartManageVend()">Gerenciar vendedores</button>
       <span style="font-size:.72rem;color:var(--gold-deep);background:var(--gold-soft);padding:.3rem .7rem;border-radius:6px;font-family:var(--mono)">Sincronizado &middot; Firebase</span>
     </div>
@@ -3321,6 +3325,7 @@ tr:last-child td{border-bottom:none}
       <button class="crm-tab crm-mod" data-rota="/clientes" onclick="crmModulo(this)">Clientes</button>
       <button class="crm-tab crm-mod" data-rota="/painel" onclick="crmModulo(this)">Painel</button>
       <button class="crm-tab crm-mod" data-rota="/faturamento" onclick="crmModulo(this)">Faturamento e comissões</button>
+      <button class="crm-tab crm-mod" data-rota="/assistente" onclick="crmModulo(this)">✨ Assistente</button>
       <button class="crm-tab crm-mod" data-rota="/configuracoes" onclick="crmModulo(this)">Configurações</button>
     </div>
     <div id="crm-under-content"></div>
@@ -8604,21 +8609,22 @@ const B64_INAD="PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InB0LUJSIj4KPGhlYWQ+CjxtZXRh
     <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal('modal-pv-cfg')">Fechar</button></div>
   </div>
 </div>
-<!-- ✨ ASSISTENTE DE IA: botão em todas as telas + painel lateral (conversa em /crm/assistente, usa a ponte UNDER) -->
+<!-- ✨ ASSISTENTE DE IA: painel lateral aberto pelos botões das telas de gestão (conversa em /crm/assistente, usa a ponte UNDER) -->
 <style>
-#ia-btn{position:fixed;right:20px;bottom:88px;z-index:1500;height:44px;padding:0 1rem;border-radius:999px;border:none;background:#111;color:#fff;font-weight:600;font-size:.88rem;box-shadow:0 6px 18px rgba(0,0,0,.28);cursor:pointer;font-family:inherit}
 #ia-painel{position:fixed;top:0;right:0;height:100vh;width:min(440px,100vw);background:#fff;z-index:2000;box-shadow:-8px 0 30px rgba(0,0,0,.18);transform:translateX(105%);transition:transform .2s ease;display:flex;flex-direction:column}
 #ia-painel.aberto{transform:none}
+/* na tela do Assistente de Compras (e com o painel aberto) o botão "+" esconderia o enviar */
+body:has(#page-assistente[style*="block"]) #fab-wrap, body:has(#ia-painel.aberto) #fab-wrap{display:none}
 #ia-painel iframe{flex:1;border:none;width:100%}
 #ia-fechar{position:absolute;top:8px;right:10px;z-index:1;border:none;background:transparent;font-size:1.4rem;cursor:pointer;color:#666;line-height:1}
 </style>
-<button id="ia-btn" onclick="iaAbrir()" title="Perguntar ao assistente sobre clientes, vendas, metas, pedidos e inadimplência">✨ Assistente</button>
 <div id="ia-painel" aria-label="Assistente">
   <button id="ia-fechar" onclick="iaFechar()" aria-label="Fechar assistente">×</button>
   <iframe id="ia-frame" title="Assistente"></iframe>
 </div>
 <script>
 function iaAbrir(){ var f=document.getElementById('ia-frame'); if(f && !f.src) f.src='/crm/assistente'; document.getElementById('ia-painel').classList.add('aberto'); }
+function iaCompras(){ var f=document.getElementById('ia-compras'); if(f && !f.src) f.src='/crm/assistente'; }
 function iaFechar(){ document.getElementById('ia-painel').classList.remove('aberto'); }
 document.addEventListener('keydown',function(e){ if(e.key==='Escape') iaFechar(); });
 </script>
@@ -9834,6 +9840,7 @@ body.sb-collapsed .nav-item:hover::after{content:attr(data-tip);position:absolut
     inadimplencia:function(){try{loadFrame('frame-inad','inad');}catch(e){}},
     cobrar:function(){try{navToPage('inadimplencia');inadTab('cobrar');}catch(e){}},
     crm:function(){try{switchCrmTab(crmTab);}catch(e){}},
+    assistente:function(){try{iaCompras();}catch(e){}},
     posvendas:function(){try{loadPosVenda();}catch(e){}}
   };
   function _applyHash(){
