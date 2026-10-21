@@ -178,7 +178,17 @@ module.exports = async function handler(req, res) {
     const d = await r.json().catch(() => ({}));
     if (!r.ok) {
       console.error('[ia] OpenAI', r.status, d && d.error && d.error.message);
-      const msg = r.status === 401 ? 'Chave da OpenAI inválida — confira na Vercel.' : r.status === 429 ? 'Limite de uso da IA atingido (ou muitas perguntas seguidas). Tente em instantes.' : 'A IA está indisponível agora.';
+      const codigo = d && d.error && d.error.code;
+      const msg =
+        codigo === 'insufficient_quota'
+          ? 'O Roberto está sem créditos: adicione saldo na conta da OpenAI (platform.openai.com → Billing).'
+          : r.status === 401
+            ? 'Chave da OpenAI inválida — confira na Vercel.'
+            : codigo === 'model_not_found'
+              ? 'O modelo configurado (OPENAI_MODEL) não existe na sua conta da OpenAI — confira o nome na Vercel.'
+              : r.status === 429
+                ? 'Muitas perguntas seguidas ou limite de gasto atingido. Tente em instantes.'
+                : 'A IA está indisponível agora.';
       return res.status(502).json({ erro: msg });
     }
     const msg = d.choices && d.choices[0] && d.choices[0].message;
