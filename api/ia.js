@@ -11,7 +11,8 @@
 //   OPENAI_MODEL    (opcional; padrão abaixo)
 
 const FIREBASE_WEB_KEY = 'AIzaSyAVXZ_zKL2IRKicLTjP1l58OSVJq-VbZF8'; // chave pública do app web (a mesma do site)
-const MODELO_PADRAO = 'gpt-4o-mini';
+// Modelos tentados, em ordem, quando OPENAI_MODEL não estiver definido ou não for aceito pela conta
+const MODELOS_RESERVA = ['gpt-5.4-mini', 'gpt-5-mini', 'gpt-4.1-mini', 'gpt-4o-mini'];
 const MAX_MENSAGENS = 40;
 const MAX_TEXTO = 24000;
 
@@ -165,17 +166,25 @@ module.exports = async function handler(req, res) {
   const tela = String(corpo.tela || '').slice(0, 600);
 
   try {
-    const r = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env.OPENAI_API_KEY },
-      body: JSON.stringify({
-        model: process.env.OPENAI_MODEL || MODELO_PADRAO,
-        messages: [{ role: 'system', content: SISTEMA + (tela ? '\n\nO usuário está agora em: ' + tela : '') + '\nHoje é ' + new Date().toLocaleDateString('pt-BR') + '.' }, ...mensagens],
-        tools: FERRAMENTAS,
-        user: email, // ajuda a OpenAI a identificar abuso por usuário (não é exibido)
-      }),
-    });
-    const d = await r.json().catch(() => ({}));
+    // Tenta o modelo configurado; se ele não existir/não for aceito na conta, tenta os "mini" mais comuns.
+    const modelos = [...new Set([String(process.env.OPENAI_MODEL || '').trim(), ...MODELOS_RESERVA].filter(Boolean))];
+    let r, d;
+    for (const model of modelos) {
+      r = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env.OPENAI_API_KEY },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: 'system', content: SISTEMA + (tela ? '\n\nO usuário está agora em: ' + tela : '') + '\nHoje é ' + new Date().toLocaleDateString('pt-BR') + '.' }, ...mensagens],
+          tools: FERRAMENTAS,
+          user: email, // ajuda a OpenAI a identificar abuso por usuário (não é exibido)
+        }),
+      });
+      d = await r.json().catch(() => ({}));
+      const erroDeModelo = !r.ok && (r.status === 404 || (d && d.error && (d.error.code === 'model_not_found' || /model/i.test(String(d.error.param || '') + ' ' + String(d.error.message || '')))));
+      if (!erroDeModelo) break;
+      console.error('[ia] modelo recusado:', model, r.status, d && d.error && d.error.message);
+    }
     if (!r.ok) {
       console.error('[ia] OpenAI', r.status, d && d.error && d.error.message);
       const codigo = d && d.error && d.error.code;
@@ -189,7 +198,8 @@ module.exports = async function handler(req, res) {
               : r.status === 429
                 ? 'Muitas perguntas seguidas ou limite de gasto atingido. Tente em instantes.'
                 : 'A IA está indisponível agora.';
-      return res.status(502).json({ erro: msg });
+      // o código ajuda a diagnosticar (não contém dados nem a chave)
+      return res.status(502).json({ erro: msg + ' [' + r.status + (codigo ? ' · ' + codigo : '') + ']' });
     }
     const msg = d.choices && d.choices[0] && d.choices[0].message;
     if (!msg) return res.status(502).json({ erro: 'A IA não respondeu.' });
