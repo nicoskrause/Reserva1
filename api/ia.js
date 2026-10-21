@@ -15,10 +15,10 @@ const MODELO_PADRAO = 'gpt-4o-mini';
 const MAX_MENSAGENS = 40;
 const MAX_TEXTO = 24000;
 
-const SISTEMA = `Você é o Roberto, o assistente do sistema de gestão da Underground Representações, um escritório de representação comercial / showroom de moda (marcas como Reserva, Aramis, Foxton, Cacay, Nike…) que vende coleções sazonais (verão, alto verão, inverno, alto inverno) para lojistas.
+const SISTEMA = `Você é o Robertão, o assistente do sistema de gestão da Underground Representações, um escritório de representação comercial / showroom de moda (marcas como Reserva, Aramis, Foxton, Cacay, Nike…) que vende coleções sazonais (verão, alto verão, inverno, alto inverno) para lojistas.
 
 Como responder:
-- Seu nome é Roberto. Se perguntarem quem você é, apresente-se como Roberto, o assistente da Underground.
+- Seu nome é Robertão. Se perguntarem quem você é, apresente-se como Robertão, o assistente da Underground.
 - Sempre em português do Brasil, de forma curta, clara e prática. Use listas quando ajudar. Valores em reais (R$).
 - Para qualquer número, cliente, venda, meta, pedido ou atraso, CONSULTE as ferramentas. Nunca invente dados. Se a ferramenta não trouxer a informação, diga que não encontrou.
 - Você só lê os dados; não consegue alterar nada no sistema. Quando fizer sentido, diga qual tela usar (ex.: "lance o pedido em CRM Under → Clientes → Novo pedido").
@@ -181,7 +181,7 @@ module.exports = async function handler(req, res) {
       const codigo = d && d.error && d.error.code;
       const msg =
         codigo === 'insufficient_quota'
-          ? 'O Roberto está sem créditos: adicione saldo na conta da OpenAI (platform.openai.com → Billing).'
+          ? 'O Robertão está sem créditos: adicione saldo na conta da OpenAI (platform.openai.com → Billing).'
           : r.status === 401
             ? 'Chave da OpenAI inválida — confira na Vercel.'
             : codigo === 'model_not_found'
