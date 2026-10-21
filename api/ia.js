@@ -189,7 +189,7 @@ module.exports = async function handler(req, res) {
       console.error('[ia] OpenAI', r.status, d && d.error && d.error.message);
       const codigo = d && d.error && d.error.code;
       const msg =
-        codigo === 'insufficient_quota'
+        codigo === 'insufficient_quota' || codigo === 'credit_balance_exhausted' || codigo === 'billing_hard_limit_reached'
           ? 'O Robertão está sem créditos: adicione saldo na conta da OpenAI (platform.openai.com → Billing).'
           : r.status === 401
             ? 'Chave da OpenAI inválida — confira na Vercel.'
