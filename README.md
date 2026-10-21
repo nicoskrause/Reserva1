@@ -149,3 +149,16 @@ O `vercel.json` inclui headers HTTP de segurança:
 ## Licença
 
 Uso interno — Underground Representações. Todos os direitos reservados.
+
+---
+
+## Assistente de IA (ChatGPT)
+
+Aparece no **Assistente de Compras**, na aba **✨ Assistente** do **CRM Under** e no botão "✨ Perguntar ao assistente" do **Dashboard Geral**, **Carteira por Vendedor** e **Copiloto do Comprador**.
+
+- Função privada: `api/ia.js` (só responde a usuários logados; a chave nunca vai para o site).
+- As consultas aos dados rodam no navegador de quem está logado (`crm-showroom/src/lib/ferramentasIA.ts`), com as permissões dele; CNPJ e telefone não são enviados à IA.
+- Configuração na Vercel → Settings → Environment Variables (Production e Preview):
+  - `OPENAI_API_KEY` — chave da API da OpenAI (obrigatória)
+  - `OPENAI_MODEL` — modelo a usar (opcional)
+- Depois de criar ou trocar uma variável, é preciso publicar de novo para ela valer.
