@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Underground Representações</title>
+<script>window._hashInicial=location.hash||'';</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -3587,6 +3588,8 @@ async function init(){
   try{ renderMarcasNav(); }catch(e){}
   try{ montarBuscaGlobal(); }catch(e){}
   renderAll();
+  // Ao atualizar a página, volta para a tela em que estava (o endereço #page/... guarda a tela); sem isso, abre a tela inicial
+  if(window._hashInicial && window._aplicarHash){ var _hi=window._hashInicial; window._hashInicial=''; try{ window._aplicarHash(_hi); }catch(e){} return; }
   try{ var _lp=(window.cfgGetPrefs?(cfgGetPrefs().landing||'meudia'):'meudia'); if(_lp==='escritorio'){ navToPage('escritorio'); try{renderEscritorio();}catch(e){} } else { navToPage('meudia'); if(window.renderMeuDia) renderMeuDia(); } }catch(e){}
 }
 
@@ -9841,7 +9844,8 @@ body.sb-collapsed .nav-item:hover::after{content:attr(data-tip);position:absolut
     cobrar:function(){try{navToPage('inadimplencia');inadTab('cobrar');}catch(e){}},
     crm:function(){try{switchCrmTab(crmTab);}catch(e){}},
     assistente:function(){try{iaCompras();}catch(e){}},
-    posvendas:function(){try{loadPosVenda();}catch(e){}}
+    posvendas:function(){try{loadPosVenda();}catch(e){}},
+    viagens:function(){try{vgOpen();}catch(e){}}
   };
   function _applyHash(){
     var h=location.hash||''; if(!h) return;
@@ -9855,8 +9859,9 @@ body.sb-collapsed .nav-item:hover::after{content:attr(data-tip);position:absolut
     setTimeout(function(){_routing=false;},60);
   }
   window.addEventListener('hashchange',_applyHash);
-  // deep-link no carregamento (após o app estabilizar)
-  if(location.hash) setTimeout(_applyHash,700);
+  window._aplicarHash=function(h){ if(h && location.hash!==h){ try{ history.replaceState(null,'',h); }catch(e){ location.hash=h; return; } } _applyHash(); };
+  // deep-link no carregamento (após o app estabilizar) — usa o endereço de quando a página abriu
+  setTimeout(function(){ if(window._hashInicial) window._aplicarHash(window._hashInicial); },700);
 })();
 </script>
 <style id="ext-vg-css">
@@ -10050,6 +10055,9 @@ body.sb-collapsed .nav-item:hover::after{content:attr(data-tip);position:absolut
   function vgRender(){
     var page=document.getElementById('page-viagens'); if(!page) return;
     if(!_vgCur || !_cur()){
+      var abaDV=window._dvAba||'viagens';
+      var abasDV='<div class="vg-etabs" style="margin-bottom:1rem"><button class="vg-etab'+(abaDV==='viagens'?' active':'')+'" onclick="dvAba(\'viagens\')">Viagens de prospecção</button><button class="vg-etab'+(abaDV==='despesas'?' active':'')+'" onclick="dvAba(\'despesas\')">Despesas do showroom</button></div>';
+      if(abaDV==='despesas'){ page.innerHTML='<div class="topbar"><h1>Despesas e Viagens</h1><div class="topbar-actions"><button class="btn btn-primary" onclick="dvNova()">+ Nova despesa</button></div></div><div class="page-content">'+abasDV+'<div id="dv-host"></div></div>'; if(window.dvRender) window.dvRender(); return; }
       var ativas=window.VIAGENS.filter(function(v){return (v.status||'')!=='concluída';});
       var conclu=window.VIAGENS.filter(function(v){return (v.status||'')==='concluída';});
       var htmlList;
@@ -10058,7 +10066,7 @@ body.sb-collapsed .nav-item:hover::after{content:attr(data-tip);position:absolut
         htmlList = ativas.length? '<div class="vg-cards">'+ativas.map(_vgCardHtml).join('')+'</div>' : '<div style="color:var(--ink-muted);padding:.5rem 0 1rem;font-size:.85rem">Nenhuma viagem em aberto.</div>';
         if(conclu.length){ htmlList += '<div style="margin:1.5rem 0 .7rem;font-family:var(--serif);font-size:1.05rem;display:flex;align-items:center;gap:.5rem">Viagens concluídas <span class="badge">'+conclu.length+'</span></div><div class="vg-stack">'+conclu.map(_vgCardHtml).join('')+'</div>'; }
       }
-      page.innerHTML='<div class="topbar"><h1>Viagens de Prospecção</h1><div class="topbar-actions"><button class="btn btn-primary" onclick="vgNew()">+ Nova viagem</button></div></div><div class="page-content">'+htmlList+'</div>';
+      page.innerHTML='<div class="topbar"><h1>Despesas e Viagens</h1><div class="topbar-actions"><button class="btn btn-primary" onclick="vgNew()">+ Nova viagem</button></div></div><div class="page-content">'+abasDV+htmlList+'</div>';
       return;
     }
     var v=_cur();
@@ -10209,8 +10217,8 @@ body.sb-collapsed .nav-item:hover::after{content:attr(data-tip);position:absolut
       if(main){ var pg=document.createElement('div'); pg.className='page'; pg.id='page-viagens'; pg.style.display='none'; main.appendChild(pg); }
     }
     if(!document.querySelector('.nav-item[data-page="viagens"]')){
-      var b=document.createElement('button'); b.className='nav-item'; b.setAttribute('data-page','viagens'); b.setAttribute('onclick','vgOpen()'); b.setAttribute('data-tip','Viagens de Prospecção');
-      b.innerHTML='<span class="ndot" style="background:var(--blue)"></span><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Viagens de Prospecção';
+      var b=document.createElement('button'); b.className='nav-item'; b.setAttribute('data-page','viagens'); b.setAttribute('onclick','vgOpen()'); b.setAttribute('data-tip','Despesas e Viagens');
+      b.innerHTML='<span class="ndot" style="background:var(--blue)"></span><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Despesas e Viagens';
       b.addEventListener('click',function(){document.body.classList.remove('sb-open');});
       var pv=document.querySelector('.nav-item[data-page="posvendas"]');
       if(pv && pv.parentNode){ pv.parentNode.insertBefore(b, pv.nextSibling); }
@@ -13285,6 +13293,9 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
     if(!a.length) return '';
     return '<div class="pv2-alerts">'+a.map(function(x){ return '<button class="pv2-alert '+x[0]+'" onclick="pv2C(\''+key+'\',\''+x[3]+'\',\''+x[4]+'\')"><b>'+x[1]+'</b><span>'+x[2]+'</span></button>'; }).join('')+'</div>';
   }
+  // Agrupa itens do mesmo cliente com o mesmo gestor (mantém a ordem do primeiro de cada grupo)
+  function chaveCG(p){ return (p.cnpj||norm(p.cliente))+'|'+(p.gestor||''); }
+  function juntarCG(arr){ var m={}, ordem=[]; arr.forEach(function(p){ var k=chaveCG(p); if(!m[k]){ m[k]=[]; ordem.push(k); } m[k].push(p); }); return ordem.map(function(k){ return m[k]; }); }
   function taskHTML(cls,icon,title,desc,acts){ return '<div class="pv2-task '+cls+'"><div class="ic">'+icon+'</div><div><div class="ti">'+title+'</div><div class="ds">'+desc+'</div></div><div class="ac">'+acts+'</div></div>'; }
   function filaHTML(key,list,sem,comMarca){
     var h='', grupos=[];
@@ -13296,27 +13307,38 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
     var pend=list.filter(function(p){return p.pendente&&!p.vencido60&&p.level!=='red';});
     var prox=list.filter(function(p){return p.prox60&&!p.pendente&&p.level!=='red';}).sort(function(a,b){return a.dias60-b.dias60;});
     var recomp=list.filter(function(p){ if(!(p.recompra==='sim'||p.recompra==='talvez')||!p.cnpj||!window.PIPELINE||!window.PIPELINE.existe) return false; var nx=proxCol(p.mid,p.colecao); return nx&&!window.PIPELINE.existe(p.mid,p.cnpj,nx); });
-    if(venc.length) grupos.push(['Acompanhamento 60 dias vencido',venc.map(function(p){ return taskHTML('r','⏰',esc(p.cliente),mk(p)+' · venceu em '+toBR(p.due)+' ('+Math.abs(p.dias60)+'d atrás)'+(p.last.contato?' · '+esc(p.last.contato):''),btnFicha(p)+btnAbrir(p,'Registrar contato',1)); })]);
-    if(crit.length) grupos.push(['Situação crítica',crit.map(function(p){ return taskHTML('r','🔴',esc(p.cliente),mk(p)+' · '+esc((p.reasons.filter(function(r){return r.l==='bad';})[0]||{}).t||''),btnFicha(p)+btnAbrir(p,'Plano de ação',1)); })]);
-    if(sem.length) grupos.push(['Compraram e ainda não têm pós-venda',[
-      '<div style="display:flex;justify-content:flex-end;margin-bottom:.2rem"><button class="btn btn-secondary btn-sm" onclick="pv2CriarTodos(\''+key+'\')">Criar pendentes para todos ('+sem.length+')</button></div>'].concat(sem.slice(0,40).map(function(s){ return taskHTML('b','🛍',esc(s.nome),(comMarca?esc((marca(s.mid)||{}).nome)+' · ':'')+esc(String(s.col).trim())+' · compra de '+R(s.valor)+(s.cidade?' · '+esc(s.cidade):''),'<button class="btn btn-primary btn-sm" onclick="pv2NovoDe('+ref(s)+')">Iniciar pós-venda</button>'); })).concat(sem.length>40?['<div class="pv2-hint" style="text-align:center">+ '+(sem.length-40)+' clientes · filtre por marca/coleção para ver todos</div>']:[])]);
-    if(pend.length) grupos.push(['A completar',pend.map(function(p){ return taskHTML('y','📝',esc(p.cliente),mk(p)+' · '+(p.total?'pedido de '+R(p.total):'sem valor')+' · criado automaticamente',btnAbrir(p,'Completar',1)); })]);
-    if(prox.length) grupos.push(['Acompanhamentos próximos (15 dias)',prox.map(function(p){ return taskHTML('g','📅',esc(p.cliente),mk(p)+' · até '+toBR(p.due)+' (em '+p.dias60+'d)',btnAbrir(p,'Abrir')); })]);
-    if(recomp.length) grupos.push(['Recompra sinalizada · levar para o Pipeline',recomp.map(function(p){ var nx=proxCol(p.mid,p.colecao); return taskHTML('g','↻',esc(p.cliente),mk(p)+' · recompra: '+REC[p.recompra]+' · próxima coleção '+esc(String(nx).trim()),'<button class="btn btn-primary btn-sm" onclick="pv2PraPipeline('+ref(p)+')">Criar oportunidade</button>'); })]);
+    // Cliente que compra mais de uma marca com o MESMO gestor aparece uma vez só, com uma linha e um botão por marca
+    var nomeM=function(p){ return esc((marca(p.mid)||{}).nome||p.marca||''); };
+    var grp=function(cls,icon,arr,desc,acao,ficha){
+      return juntarCG(arr).map(function(ps){
+        var p0=ps[0], varias=ps.length>1;
+        var titulo=esc(p0.cliente)+(varias?' <span class="pv2-pill blue">'+ps.length+' marcas · '+esc(p0.gestor||'')+'</span>':'');
+        var acts=(ficha?btnFicha(p0):'')+ps.map(function(p){ return acao(p,varias?nomeM(p):null); }).join(' ');
+        return taskHTML(cls,icon,titulo,ps.map(desc).join('<br>'),acts);
+      });
+    };
+    if(venc.length) grupos.push(['Acompanhamento 60 dias vencido',grp('r','⏰',venc,function(p){ return mk(p)+' · venceu em '+toBR(p.due)+' ('+Math.abs(p.dias60)+'d atrás)'+(p.last.contato?' · '+esc(p.last.contato):''); },function(p,m){ return btnAbrir(p,m?'Contato · '+m:'Registrar contato',1); },true)]);
+    if(crit.length) grupos.push(['Situação crítica',grp('r','🔴',crit,function(p){ return mk(p)+' · '+esc((p.reasons.filter(function(r){return r.l==='bad';})[0]||{}).t||''); },function(p,m){ return btnAbrir(p,m?'Plano · '+m:'Plano de ação',1); },true)]);
+    if(sem.length){ var semTodos=juntarCG(sem.map(function(s){ return Object.assign({},s,{cliente:s.nome,gestor:(marca(s.mid)||{}).gestor||''}); })); var semG=semTodos.slice(0,40);
+      grupos.push(['Compraram e ainda não têm pós-venda',[
+      '<div style="display:flex;justify-content:flex-end;margin-bottom:.2rem"><button class="btn btn-secondary btn-sm" onclick="pv2CriarTodos(\''+key+'\')">Criar pendentes para todos ('+sem.length+')</button></div>'].concat(semG.map(function(ss){ var s0=ss[0], varias=ss.length>1; return taskHTML('b','🛍',esc(s0.nome)+(varias?' <span class="pv2-pill blue">'+ss.length+' marcas · '+esc(s0.gestor)+'</span>':''),ss.map(function(s){ return (comMarca||varias?esc((marca(s.mid)||{}).nome)+' · ':'')+esc(String(s.col).trim())+' · compra de '+R(s.valor)+(s.cidade?' · '+esc(s.cidade):''); }).join('<br>'),ss.map(function(s){ return '<button class="btn btn-primary btn-sm" onclick="pv2NovoDe('+ref(s)+')">'+(varias?'Iniciar · '+esc((marca(s.mid)||{}).nome):'Iniciar pós-venda')+'</button>'; }).join(' ')); })).concat(semTodos.length>40?['<div class="pv2-hint" style="text-align:center">+ '+(semTodos.length-40)+' clientes · filtre por marca/coleção para ver todos</div>']:[])]); }
+    if(pend.length) grupos.push(['A completar',grp('y','📝',pend,function(p){ return mk(p)+' · '+(p.total?'pedido de '+R(p.total):'sem valor')+' · criado automaticamente'; },function(p,m){ return btnAbrir(p,m?'Completar · '+m:'Completar',1); },false)]);
+    if(prox.length) grupos.push(['Acompanhamentos próximos (15 dias)',grp('g','📅',prox,function(p){ return mk(p)+' · até '+toBR(p.due)+' (em '+p.dias60+'d)'; },function(p,m){ return btnAbrir(p,m?'Abrir · '+m:'Abrir'); },false)]);
+    if(recomp.length) grupos.push(['Recompra sinalizada · levar para o Pipeline',grp('g','↻',recomp,function(p){ var nx=proxCol(p.mid,p.colecao); return mk(p)+' · recompra: '+REC[p.recompra]+' · próxima coleção '+esc(String(nx).trim()); },function(p,m){ return '<button class="btn btn-primary btn-sm" onclick="pv2PraPipeline('+ref(p)+')">'+(m?'Oportunidade · '+m:'Criar oportunidade')+'</button>'; },false)]);
     if(!grupos.length) return '<div class="panel pv2-empty">Nenhuma ação pendente com esses filtros. 🎉</div>';
     grupos.forEach(function(g){ h+='<div class="pv2-group">'+g[0]+' · '+g[1].filter(function(x){return x.indexOf('pv2-task')>=0;}).length+'</div><div class="pv2-fila">'+g[1].join('')+'</div>'; });
     return h;
   }
   function agrupadoHTML(list,campo,comMarca){
     var map={};
-    list.forEach(function(p){ var k=campo==='marca'?(p.mid||p.marca||'—'):(p.cnpj||norm(p.cliente)); var g=map[k]||(map[k]={nome:campo==='marca'?(((marca(p.mid)||{}).nome)||p.marca||'—'):p.cliente,mid:p.mid,cnpj:p.cnpj,sub:campo==='marca'?((marca(p.mid)||{}).gestor||''):p.cidade,tot:0,fat:0,n:0,g:0,y:0,r:0,v60:0,rec:0,recN:0}); g.tot+=p.total; g.fat+=Math.min(p.faturado,p.total||p.faturado); g.n++; if(p.level==='green')g.g++; if(p.level==='yellow')g.y++; if(p.level==='red')g.r++; if(p.vencido60)g.v60++; if(p.recompra){g.recN++; if(p.recompra==='sim')g.rec++;} });
+    list.forEach(function(p){ var k=campo==='marca'?(p.mid||p.marca||'—'):chaveCG(p); var g=map[k]||(map[k]={nome:campo==='marca'?(((marca(p.mid)||{}).nome)||p.marca||'—'):p.cliente,mid:p.mid,cnpj:p.cnpj,sub:campo==='marca'?((marca(p.mid)||{}).gestor||''):[p.gestor,p.cidade].filter(Boolean).join(' · '),marcas:{},tot:0,fat:0,n:0,g:0,y:0,r:0,v60:0,rec:0,recN:0}); g.marcas[(marca(p.mid)||{}).nome||p.marca||'']=1; g.tot+=p.total; g.fat+=Math.min(p.faturado,p.total||p.faturado); g.n++; if(p.level==='green')g.g++; if(p.level==='yellow')g.y++; if(p.level==='red')g.r++; if(p.vencido60)g.v60++; if(p.recompra){g.recN++; if(p.recompra==='sim')g.rec++;} });
     var arr=Object.keys(map).map(function(k){return map[k];}).sort(function(a,b){return b.tot-a.tot;});
     if(!arr.length) return '<div class="panel pv2-empty">Nenhum pós-venda com esses filtros.</div>';
     var h='<div class="panel" style="padding:0"><div class="table-wrap" style="max-height:66vh"><table class="pv2-table"><thead><tr><th>'+(campo==='marca'?'Marca':'Cliente')+'</th><th style="text-align:right">Pedidos</th><th style="text-align:right">Carteira</th><th style="text-align:right">Faturado</th><th>Saúde</th><th style="text-align:right">60d vencidos</th><th style="text-align:right">Recompra</th><th></th></tr></thead><tbody>';
     arr.forEach(function(g){
       var pct=g.tot?Math.round(g.fat/g.tot*100):0, lvl=g.r?'red':g.y?'yellow':g.g?'green':'none';
       var act=campo==='marca'?(g.mid?'<button class="btn btn-secondary btn-sm" onclick="navToMarca(\''+g.mid+'\');switchMarcaTab(\''+g.mid+'\',\'posvenda\')">Abrir marca</button>':''):(g.cnpj&&getCli(g.cnpj)?'<button class="btn btn-secondary btn-sm" onclick="verCliente(\''+esc(g.cnpj)+'\')">Ficha</button>':'');
-      h+='<tr><td class="w">'+dotHTML(lvl)+'<b>'+esc(g.nome)+'</b><div style="font-size:.66rem;color:var(--ink-muted);padding-left:1rem">'+esc(g.sub||'')+'</div></td><td style="text-align:right">'+g.n+'</td><td style="text-align:right;font-family:var(--mono)">'+R(g.tot)+'</td><td style="text-align:right;font-family:var(--mono)">'+R(g.fat)+'<span class="pv2-mini"><i style="width:'+pct+'%"></i></span></td>'+
+      h+='<tr><td class="w">'+dotHTML(lvl)+'<b>'+esc(g.nome)+'</b><div style="font-size:.66rem;color:var(--ink-muted);padding-left:1rem">'+esc(g.sub||'')+(campo==='cliente'?' · <b>'+Object.keys(g.marcas).filter(Boolean).map(esc).join(', ')+'</b>':'')+'</div></td><td style="text-align:right">'+g.n+'</td><td style="text-align:right;font-family:var(--mono)">'+R(g.tot)+'</td><td style="text-align:right;font-family:var(--mono)">'+R(g.fat)+'<span class="pv2-mini"><i style="width:'+pct+'%"></i></span></td>'+
         '<td><span class="pv2-pill green">'+g.g+'</span> <span class="pv2-pill yellow">'+g.y+'</span> <span class="pv2-pill red">'+g.r+'</span></td><td style="text-align:right;color:'+(g.v60?'var(--pv-r)':'var(--ink-muted)')+'">'+g.v60+'</td><td style="text-align:right">'+(g.recN?Math.round(g.rec/g.recN*100)+'%':'—')+'</td><td>'+act+'</td></tr>';
     });
     return h+'</tbody></table></div></div>';
@@ -13325,9 +13347,15 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
     if(!list.length) return '<div class="panel pv2-empty">Nenhum pedido com esses filtros.</div>';
     var ord={red:0,yellow:1,none:2,green:3};
     list=list.slice().sort(function(a,b){ return (b.vencido60-a.vencido60)||(ord[a.level]-ord[b.level])||((b.data||0)-(a.data||0)); });
+    // pedidos do mesmo cliente com o mesmo gestor ficam juntos, com um cabeçalho do grupo
+    var gruposCG={}; juntarCG(list).forEach(function(ps){ gruposCG[chaveCG(ps[0])]=ps; }); list=[].concat.apply([],juntarCG(list));
+    var ultimoCG=null;
     var pg=Math.max(0,Math.min(ctx.pg||0,Math.ceil(list.length/PAGE)-1)), ini=pg*PAGE;
     var h='<div class="panel" style="padding:0"><div class="table-wrap" style="max-height:66vh"><table class="pv2-table"><thead><tr><th>Cliente</th>'+(comMarca?'<th>Marca</th>':'')+'<th>Coleção / nº</th><th style="text-align:right">Pedido</th><th style="text-align:right">Faturado</th><th>Saúde</th><th>Giro</th><th>Recompra</th><th>Acomp. 60d</th><th></th></tr></thead><tbody>';
     list.slice(ini,ini+PAGE).forEach(function(p){
+      var kcg=chaveCG(p), gcg=gruposCG[kcg]||[p];
+      if(kcg!==ultimoCG && gcg.length>1){ var mset={}; gcg.forEach(function(x){ mset[(marca(x.mid)||{}).nome||x.marca||'']=1; }); var mn=Object.keys(mset).filter(Boolean); h+='<tr style="background:var(--bg-soft)"><td colspan="'+(comMarca?10:9)+'" style="font-size:.75rem"><b>'+esc(p.cliente)+'</b> · '+esc(p.gestor||'')+' · '+gcg.length+' pedidos'+(mn.length>1?' em '+mn.length+' marcas: '+mn.map(esc).join(', '):'')+'</td></tr>'; }
+      ultimoCG=kcg;
       var c60='—';
       if(p.due){ c60=p.feito60?'<span class="pv2-pill green">✓ '+esc(((SEG60.o.find(function(o){return o[0]===p.st.g60;})||[0,'feito'])[1]).replace('Feita · ',''))+'</span>':p.vencido60?'<span class="pv2-pill red">venceu '+toBR(p.due)+'</span>':'<span class="pv2-pill'+(p.prox60?' yellow':'')+'">'+toBR(p.due)+' · '+p.dias60+'d</span>'; }
       h+='<tr'+(p.pendente?' style="background:var(--gold-soft)"':'')+'><td class="w">'+dotHTML(p.level)+'<a href="javascript:void(0)" onclick="pv2AbrirPedido('+ref(p)+')" style="font-weight:600;color:var(--ink)">'+esc(p.cliente)+'</a>'+(p.pendente?' <span class="pv2-pill blue">a completar</span>':'')+(p.inad?' <span class="pv2-pill red">inadimplente</span>':'')+'<div style="font-size:.66rem;color:var(--ink-muted);padding-left:1rem">'+esc(p.cidade||'')+(p.gestor?' · '+esc(p.gestor):'')+'</div></td>'+
@@ -13908,6 +13936,130 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
   };
 
   window.cobrarCopiar=function(k,tipo){var g=(window._cobrarGrupos||{})[k];if(!g)return;var t=tipo==='atualizacao'?mensagemAtualizacao(g):mensagem(g);try{navigator.clipboard.writeText(t).then(function(){alert('Mensagem copiada. Agora é só colar na conversa do cliente.');},function(){prompt('Copie a mensagem:',t);});}catch(e){prompt('Copie a mensagem:',t);}};
+})();
+</script>
+<script>
+/* ===== DESPESAS DO SHOWROOM (aba dentro de "Despesas e Viagens") =====
+   Cada compra: produto, categoria, valor, data da compra e quanto tempo dura (para saber quando repor).
+   Lista agrupada por semana (segunda a domingo). Gravado em sistema/despesas_showroom → {itens:{id:{...}}},
+   um item por vez (merge), para duas pessoas lançando ao mesmo tempo não apagarem uma à outra. */
+(function(){
+  var DSP={}; var dvMes=null; var dvSub=false;
+  var CATS=['Café e copa','Limpeza','Escritório','Manutenção','Marketing','Eventos e showroom','Outros'];
+  var UNID={dias:1,semanas:7,meses:30};
+  function e(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function brl(v){ return (Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
+  function hoje(){ var d=new Date(); d.setHours(0,0,0,0); return d; }
+  function dt(iso){ var d=new Date(iso+'T12:00:00'); return isNaN(d)?null:d; }
+  function iso(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  function br(isoS){ var d=dt(isoS); return d?d.toLocaleDateString('pt-BR'):'—'; }
+  function inicioSemana(d){ var x=new Date(d); x.setHours(12,0,0,0); var dia=(x.getDay()+6)%7; x.setDate(x.getDate()-dia); return x; } // segunda-feira
+  function fimDuracao(it){ var d=dt(it.data); if(!d||!(Number(it.duracao)>0)) return null; var x=new Date(d); x.setDate(x.getDate()+Number(it.duracao)*(UNID[it.unidade]||1)); return x; }
+  function quem(){ try{ return (window._auth&&window._auth.currentUser&&window._auth.currentUser.email)||''; }catch(_){ return ''; } }
+  function ref(){ return window._fbDoc(window._db,'sistema','despesas_showroom'); }
+  function lista(){ return Object.keys(DSP).map(function(k){ return DSP[k]; }).filter(function(x){ return x&&x.id; }); }
+
+  // Lê e acompanha em tempo real (cache local se estiver sem internet)
+  try{ DSP=JSON.parse(localStorage.getItem('und_despesas')||'{}')||{}; }catch(_){ DSP={}; }
+  (function ouvir(){
+    if(!(window._db&&window._fbOnSnapshot&&window._fbDoc)){ setTimeout(ouvir,400); return; }
+    window._fbOnSnapshot(ref(),function(sn){
+      DSP=(sn.exists()&&sn.data().itens)||{};
+      try{ localStorage.setItem('und_despesas',JSON.stringify(DSP)); }catch(_){}
+      var host=document.getElementById('dv-host'); if(host && !document.getElementById('dv-modal')) dvRender();
+    },function(err){ console.warn('[despesas]',err); });
+  })();
+  function gravar(id,valor){
+    var upd={itens:{},at:new Date().toISOString(),por:quem()}; upd.itens[id]=valor;
+    DSP[id]=valor; try{ localStorage.setItem('und_despesas',JSON.stringify(DSP)); }catch(_){}
+    if(window._db&&window._fbSetDoc) return window._fbSetDoc(ref(),upd,{merge:true}).catch(function(err){ console.warn('[despesas] salvar',err); try{toast('Não foi possível salvar no Firebase — confira a internet','');}catch(_){} });
+  }
+
+  function dvRender(){
+    var host=document.getElementById('dv-host'); if(!host) return;
+    var todos=lista();
+    var meses={}; todos.forEach(function(it){ if(it.data) meses[it.data.slice(0,7)]=1; });
+    var mesAtual=iso(hoje()).slice(0,7); meses[mesAtual]=1;
+    var opcoesMes=Object.keys(meses).sort().reverse();
+    if(!dvMes||opcoesMes.indexOf(dvMes)<0) dvMes=mesAtual;
+    var nomeMes=function(ym){ var p=ym.split('-'); return new Date(+p[0],+p[1]-1,1).toLocaleDateString('pt-BR',{month:'long',year:'numeric'}); };
+    var doMes=todos.filter(function(it){ return (it.data||'').slice(0,7)===dvMes; }).sort(function(a,b){ return (b.data||'').localeCompare(a.data||''); });
+    var total=doMes.reduce(function(s,it){ return s+(Number(it.valor)||0); },0);
+
+    // Semanas do mês (segunda a domingo)
+    var semanas={};
+    doMes.forEach(function(it){ var ini=inicioSemana(dt(it.data)); var k=iso(ini); (semanas[k]=semanas[k]||[]).push(it); });
+    var chaves=Object.keys(semanas).sort().reverse();
+
+    // Para repor: a compra mais recente de cada produto que acaba em até 7 dias (ou já acabou)
+    var ultimo={}; todos.forEach(function(it){ var k=String(it.produto||'').trim().toLowerCase(); if(!k) return; if(!ultimo[k]||(it.data||'')>(ultimo[k].data||'')) ultimo[k]=it; });
+    var h0=hoje(), repor=Object.keys(ultimo).map(function(k){ var it=ultimo[k], f=fimDuracao(it); if(!f) return null; var dias=Math.round((f-h0)/864e5); return dias<=7?{it:it,dias:dias,fim:f}:null; }).filter(Boolean).sort(function(a,b){ return a.dias-b.dias; });
+
+    var h='<div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem">'+
+      '<select class="select" onchange="dvSetMes(this.value)">'+opcoesMes.map(function(m){ return '<option value="'+m+'"'+(m===dvMes?' selected':'')+'>'+e(nomeMes(m))+'</option>'; }).join('')+'</select>'+
+      '<span style="flex:1"></span><button class="btn btn-secondary btn-sm" onclick="dvExportar()">⬇ Exportar Excel</button></div>';
+    h+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.7rem;margin-bottom:1rem">'+
+      '<div class="panel" style="padding:.8rem 1rem"><div style="font-size:.7rem;color:var(--ink-muted);text-transform:uppercase">Gasto no mês</div><div style="font-family:var(--serif);font-size:1.5rem">'+brl(total)+'</div><div style="font-size:.72rem;color:var(--ink-muted)">'+doMes.length+' compra(s)</div></div>'+
+      '<div class="panel" style="padding:.8rem 1rem"><div style="font-size:.7rem;color:var(--ink-muted);text-transform:uppercase">Média por semana</div><div style="font-family:var(--serif);font-size:1.5rem">'+brl(chaves.length?total/chaves.length:0)+'</div><div style="font-size:.72rem;color:var(--ink-muted)">'+chaves.length+' semana(s) com gasto</div></div>'+
+      '<div class="panel" style="padding:.8rem 1rem;'+(repor.length?'border-left:3px solid var(--amber)':'')+'"><div style="font-size:.7rem;color:var(--ink-muted);text-transform:uppercase">Para repor (7 dias)</div><div style="font-family:var(--serif);font-size:1.5rem">'+repor.length+'</div><div style="font-size:.72rem;color:var(--ink-muted)">pela duração de cada produto</div></div></div>';
+
+    if(repor.length){
+      h+='<div class="panel" style="padding:.8rem 1rem;margin-bottom:1rem;background:var(--amber-soft,#FBF0D9)"><div style="font-weight:600;margin-bottom:.4rem">Para repor</div>'+repor.map(function(r){ return '<div style="font-size:.82rem;display:flex;justify-content:space-between;gap:.5rem;padding:.15rem 0"><span><b>'+e(r.it.produto)+'</b> · comprado em '+br(r.it.data)+' · dura '+e(r.it.duracao+' '+r.it.unidade)+'</span><span style="color:'+(r.dias<0?'var(--red)':'var(--amber)')+';white-space:nowrap">'+(r.dias<0?'acabou há '+(-r.dias)+' dia(s)':r.dias===0?'acaba hoje':'acaba em '+r.dias+' dia(s)')+'</span></div>'; }).join('')+'</div>';
+    }
+
+    if(!chaves.length){ h+='<div class="panel" style="padding:2rem;text-align:center;color:var(--ink-muted)">Nenhuma despesa em '+e(nomeMes(dvMes))+'. Clique em <b>+ Nova despesa</b>.</div>'; }
+    chaves.forEach(function(k){
+      var its=semanas[k], ini=dt(k), fim=new Date(ini); fim.setDate(fim.getDate()+6);
+      var tot=its.reduce(function(s,it){ return s+(Number(it.valor)||0); },0);
+      h+='<div class="panel" style="padding:0;margin-bottom:.8rem"><div class="panel-head" style="padding:.7rem 1rem;border-bottom:1px solid var(--line);display:flex;justify-content:space-between"><div class="panel-title">Semana de '+ini.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' a '+fim.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+'</div><b>'+brl(tot)+'</b></div>'+
+        '<div class="table-wrap"><table><thead><tr><th>Data da compra</th><th>Produto</th><th>Categoria</th><th style="text-align:right">Valor</th><th>Duração</th><th>Acaba em</th><th></th></tr></thead><tbody>'+
+        its.map(function(it){ var f=fimDuracao(it), dias=f?Math.round((f-h0)/864e5):null;
+          return '<tr><td>'+br(it.data)+'</td><td><b>'+e(it.produto)+'</b>'+(it.obs?'<div style="font-size:.7rem;color:var(--ink-muted)">'+e(it.obs)+'</div>':'')+'</td><td>'+e(it.categoria||'—')+'</td><td style="text-align:right;font-family:var(--mono)">'+brl(it.valor)+'</td><td>'+(Number(it.duracao)>0?e(it.duracao+' '+it.unidade):'—')+'</td><td>'+(f?f.toLocaleDateString('pt-BR')+(dias!=null&&dias<=7?' <span class="badge" style="background:'+(dias<0?'var(--red-soft);color:var(--red)':'var(--amber-soft);color:var(--amber)')+'">'+(dias<0?'acabou':'repor')+'</span>':''):'—')+'</td>'+
+            '<td style="white-space:nowrap"><button class="btn btn-secondary btn-sm" onclick="dvEditar(\''+e(it.id)+'\')">Editar</button> <button class="btn btn-secondary btn-sm" style="color:var(--red)" onclick="dvExcluir(\''+e(it.id)+'\')">×</button></td></tr>'; }).join('')+
+        '</tbody></table></div></div>';
+    });
+    host.innerHTML=h;
+  }
+
+  function dvForm(it){
+    document.getElementById('dv-modal')&&document.getElementById('dv-modal').remove();
+    it=it||{data:iso(hoje()),unidade:'dias'};
+    var md=document.createElement('div'); md.className='modal-backdrop open'; md.id='dv-modal';
+    md.innerHTML='<div class="modal" style="max-width:520px"><div class="modal-head"><div class="modal-title">'+(it.id?'Editar despesa':'Nova despesa')+'</div><button class="close-btn" onclick="dvFechar()">×</button></div><div class="modal-body"><div class="form-grid">'+
+      '<div class="form-field full"><label class="form-label">Produto / serviço *</label><input class="form-input" id="dv-produto" list="dv-produtos" value="'+e(it.produto)+'" placeholder="Ex.: café em grão, papel A4, faxina"><datalist id="dv-produtos">'+Object.keys(lista().reduce(function(o,x){ if(x.produto) o[x.produto]=1; return o; },{})).map(function(p){ return '<option value="'+e(p)+'">'; }).join('')+'</datalist></div>'+
+      '<div class="form-field"><label class="form-label">Valor gasto (R$) *</label><input class="form-input" id="dv-valor" type="number" min="0" step="0.01" value="'+e(it.valor)+'"></div>'+
+      '<div class="form-field"><label class="form-label">Data da compra *</label><input class="form-input" id="dv-data" type="date" value="'+e(it.data)+'"></div>'+
+      '<div class="form-field"><label class="form-label">Quanto tempo dura</label><div style="display:flex;gap:.4rem"><input class="form-input" id="dv-duracao" type="number" min="0" step="1" style="width:90px" value="'+e(it.duracao)+'" placeholder="ex.: 30"><select class="form-input" id="dv-unidade">'+['dias','semanas','meses'].map(function(u){ return '<option'+(it.unidade===u?' selected':'')+'>'+u+'</option>'; }).join('')+'</select></div></div>'+
+      '<div class="form-field"><label class="form-label">Categoria</label><select class="form-input" id="dv-categoria"><option value="">—</option>'+CATS.map(function(c){ return '<option'+(it.categoria===c?' selected':'')+'>'+c+'</option>'; }).join('')+'</select></div>'+
+      '<div class="form-field full"><label class="form-label">Observação</label><input class="form-input" id="dv-obs" value="'+e(it.obs)+'" placeholder="Onde comprou, quantidade…"></div>'+
+      '</div></div><div class="modal-foot"><button class="btn btn-secondary" onclick="dvFechar()">Cancelar</button><button class="btn btn-primary" id="dv-salvar">Salvar</button></div></div>';
+    document.body.appendChild(md);
+    document.getElementById('dv-salvar').onclick=function(){
+      var v=function(id){ return (document.getElementById(id).value||'').trim(); };
+      var produto=v('dv-produto'), valor=parseFloat(v('dv-valor').replace(',','.')), data=v('dv-data');
+      if(!produto){ try{toast('Informe o produto','');}catch(_){} return; }
+      if(!(valor>=0)||v('dv-valor')===''){ try{toast('Informe o valor gasto','');}catch(_){} return; }
+      if(!data){ try{toast('Informe a data da compra','');}catch(_){} return; }
+      var dur=parseInt(v('dv-duracao'),10);
+      var novo={id:it.id||('d'+Date.now()+Math.random().toString(36).slice(2,6)),produto:produto,valor:Math.round(valor*100)/100,data:data,categoria:v('dv-categoria'),duracao:dur>0?dur:0,unidade:v('dv-unidade')||'dias',obs:v('dv-obs'),criadoEm:it.criadoEm||new Date().toISOString(),criadoPor:it.criadoPor||quem(),atualizadoEm:new Date().toISOString()};
+      gravar(novo.id,novo); dvMes=data.slice(0,7); dvFechar(); try{toast('Despesa salva','ok');}catch(_){}
+    };
+    setTimeout(function(){ var p=document.getElementById('dv-produto'); if(p) p.focus(); },50);
+  }
+
+  window.dvRender=dvRender;
+  window.dvAba=function(a){ window._dvAba=a; if(typeof vgRender==='function') vgRender(); };
+  window.dvSetMes=function(m){ dvMes=m; dvRender(); };
+  window.dvNova=function(){ dvForm(null); };
+  window.dvEditar=function(id){ dvForm(DSP[id]); };
+  window.dvFechar=function(){ var m=document.getElementById('dv-modal'); if(m) m.remove(); dvRender(); };
+  window.dvExcluir=function(id){ var it=DSP[id]; if(!it) return; if(!confirm('Excluir a despesa "'+it.produto+'" de '+brl(it.valor)+'?')) return; delete DSP[id]; gravar(id,null); dvRender(); };
+  window.dvExportar=function(){
+    if(typeof XLSX==='undefined'){ try{toast('Biblioteca Excel não carregada','');}catch(_){} return; }
+    var linhas=lista().sort(function(a,b){ return (a.data||'').localeCompare(b.data||''); }).map(function(it){ var ini=inicioSemana(dt(it.data)), f=fimDuracao(it);
+      return {'Semana (início)':ini.toLocaleDateString('pt-BR'),'Data da compra':br(it.data),'Produto':it.produto,'Categoria':it.categoria||'','Valor (R$)':Number(it.valor)||0,'Duração':Number(it.duracao)>0?it.duracao+' '+it.unidade:'','Acaba em':f?f.toLocaleDateString('pt-BR'):'','Observação':it.obs||''}; });
+    var wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(linhas),'Despesas'); XLSX.writeFile(wb,'Despesas_showroom_'+iso(hoje())+'.xlsx');
+  };
 })();
 </script>
 <script>
