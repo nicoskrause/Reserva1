@@ -13297,6 +13297,10 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
   // Agrupa itens do mesmo cliente com o mesmo gestor (mantém a ordem do primeiro de cada grupo)
   function chaveCG(p){ return (p.cnpj||norm(p.cliente))+'|'+(p.gestor||''); }
   function juntarCG(arr){ var m={}, ordem=[]; arr.forEach(function(p){ var k=chaveCG(p); if(!m[k]){ m[k]=[]; ordem.push(k); } m[k].push(p); }); return ordem.map(function(k){ return m[k]; }); }
+  // Itens para o lançamento em grupo (um pós-venda gravado em todas as marcas do cliente)
+  function itemP(p){ return {key:p.key,mid:p.mid,col:p.colecao,cnpj:p.cnpj,cliente:p.cliente,numPedido:p.numPedido||'',total:p.total,pendId:((p.lancs||[]).find(function(l){return l.pendente;})||{}).id||null}; }
+  function itemS(s){ return {key:null,mid:s.mid,col:s.col,cnpj:s.cnpj,cliente:s.nome,numPedido:'',total:s.valor,pendId:null}; }
+  function btnGrupo(itens,prim){ return '<button class="btn '+(prim?'btn-primary':'btn-secondary')+' btn-sm" onclick="pv2LancarGrupo('+ref(itens)+')">Lançar para as '+itens.length+' marcas</button>'; }
   function taskHTML(cls,icon,title,desc,acts){ return '<div class="pv2-task '+cls+'"><div class="ic">'+icon+'</div><div><div class="ti">'+title+'</div><div class="ds">'+desc+'</div></div><div class="ac">'+acts+'</div></div>'; }
   function filaHTML(key,list,sem,comMarca){
     var h='', grupos=[];
@@ -13310,11 +13314,11 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
     var recomp=list.filter(function(p){ if(!(p.recompra==='sim'||p.recompra==='talvez')||!p.cnpj||!window.PIPELINE||!window.PIPELINE.existe) return false; var nx=proxCol(p.mid,p.colecao); return nx&&!window.PIPELINE.existe(p.mid,p.cnpj,nx); });
     // Cliente que compra mais de uma marca com o MESMO gestor aparece uma vez só, com uma linha e um botão por marca
     var nomeM=function(p){ return esc((marca(p.mid)||{}).nome||p.marca||''); };
-    var grp=function(cls,icon,arr,desc,acao,ficha){
+    var grp=function(cls,icon,arr,desc,acao,ficha,semGrupo){
       return juntarCG(arr).map(function(ps){
         var p0=ps[0], varias=ps.length>1;
         var titulo=esc(p0.cliente)+(varias?' <span class="pv2-pill blue">'+ps.length+' marcas · '+esc(p0.gestor||'')+'</span>':'');
-        var acts=(ficha?btnFicha(p0):'')+ps.map(function(p){ return acao(p,varias?nomeM(p):null); }).join(' ');
+        var acts=(ficha?btnFicha(p0):'')+(varias&&!semGrupo?btnGrupo(ps.map(itemP),true)+' ':'')+ps.map(function(p){ return acao(p,varias?nomeM(p):null); }).join(' ');
         return taskHTML(cls,icon,titulo,ps.map(desc).join('<br>'),acts);
       });
     };
@@ -13322,10 +13326,10 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
     if(crit.length) grupos.push(['Situação crítica',grp('r','🔴',crit,function(p){ return mk(p)+' · '+esc((p.reasons.filter(function(r){return r.l==='bad';})[0]||{}).t||''); },function(p,m){ return btnAbrir(p,m?'Plano · '+m:'Plano de ação',1); },true)]);
     if(sem.length){ var semTodos=juntarCG(sem.map(function(s){ return Object.assign({},s,{cliente:s.nome,gestor:(marca(s.mid)||{}).gestor||''}); })); var semG=semTodos.slice(0,40);
       grupos.push(['Compraram e ainda não têm pós-venda',[
-      '<div style="display:flex;justify-content:flex-end;margin-bottom:.2rem"><button class="btn btn-secondary btn-sm" onclick="pv2CriarTodos(\''+key+'\')">Criar pendentes para todos ('+sem.length+')</button></div>'].concat(semG.map(function(ss){ var s0=ss[0], varias=ss.length>1; return taskHTML('b','🛍',esc(s0.nome)+(varias?' <span class="pv2-pill blue">'+ss.length+' marcas · '+esc(s0.gestor)+'</span>':''),ss.map(function(s){ return (comMarca||varias?esc((marca(s.mid)||{}).nome)+' · ':'')+esc(String(s.col).trim())+' · compra de '+R(s.valor)+(s.cidade?' · '+esc(s.cidade):''); }).join('<br>'),ss.map(function(s){ return '<button class="btn btn-primary btn-sm" onclick="pv2NovoDe('+ref(s)+')">'+(varias?'Iniciar · '+esc((marca(s.mid)||{}).nome):'Iniciar pós-venda')+'</button>'; }).join(' ')); })).concat(semTodos.length>40?['<div class="pv2-hint" style="text-align:center">+ '+(semTodos.length-40)+' clientes · filtre por marca/coleção para ver todos</div>']:[])]); }
+      '<div style="display:flex;justify-content:flex-end;margin-bottom:.2rem"><button class="btn btn-secondary btn-sm" onclick="pv2CriarTodos(\''+key+'\')">Criar pendentes para todos ('+sem.length+')</button></div>'].concat(semG.map(function(ss){ var s0=ss[0], varias=ss.length>1; return taskHTML('b','🛍',esc(s0.nome)+(varias?' <span class="pv2-pill blue">'+ss.length+' marcas · '+esc(s0.gestor)+'</span>':''),ss.map(function(s){ return (comMarca||varias?esc((marca(s.mid)||{}).nome)+' · ':'')+esc(String(s.col).trim())+' · compra de '+R(s.valor)+(s.cidade?' · '+esc(s.cidade):''); }).join('<br>'),(varias?btnGrupo(ss.map(itemS),true)+' ':'')+ss.map(function(s){ return '<button class="btn btn-primary btn-sm" onclick="pv2NovoDe('+ref(s)+')">'+(varias?'Iniciar · '+esc((marca(s.mid)||{}).nome):'Iniciar pós-venda')+'</button>'; }).join(' ')); })).concat(semTodos.length>40?['<div class="pv2-hint" style="text-align:center">+ '+(semTodos.length-40)+' clientes · filtre por marca/coleção para ver todos</div>']:[])]); }
     if(pend.length) grupos.push(['A completar',grp('y','📝',pend,function(p){ return mk(p)+' · '+(p.total?'pedido de '+R(p.total):'sem valor')+' · criado automaticamente'; },function(p,m){ return btnAbrir(p,m?'Completar · '+m:'Completar',1); },false)]);
     if(prox.length) grupos.push(['Acompanhamentos próximos (15 dias)',grp('g','📅',prox,function(p){ return mk(p)+' · até '+toBR(p.due)+' (em '+p.dias60+'d)'; },function(p,m){ return btnAbrir(p,m?'Abrir · '+m:'Abrir'); },false)]);
-    if(recomp.length) grupos.push(['Recompra sinalizada · levar para o Pipeline',grp('g','↻',recomp,function(p){ var nx=proxCol(p.mid,p.colecao); return mk(p)+' · recompra: '+REC[p.recompra]+' · próxima coleção '+esc(String(nx).trim()); },function(p,m){ return '<button class="btn btn-primary btn-sm" onclick="pv2PraPipeline('+ref(p)+')">'+(m?'Oportunidade · '+m:'Criar oportunidade')+'</button>'; },false)]);
+    if(recomp.length) grupos.push(['Recompra sinalizada · levar para o Pipeline',grp('g','↻',recomp,function(p){ var nx=proxCol(p.mid,p.colecao); return mk(p)+' · recompra: '+REC[p.recompra]+' · próxima coleção '+esc(String(nx).trim()); },function(p,m){ return '<button class="btn btn-primary btn-sm" onclick="pv2PraPipeline('+ref(p)+')">'+(m?'Oportunidade · '+m:'Criar oportunidade')+'</button>'; },false,true)]);
     if(!grupos.length) return '<div class="panel pv2-empty">Nenhuma ação pendente com esses filtros. 🎉</div>';
     grupos.forEach(function(g){ h+='<div class="pv2-group">'+g[0]+' · '+g[1].filter(function(x){return x.indexOf('pv2-task')>=0;}).length+'</div><div class="pv2-fila">'+g[1].join('')+'</div>'; });
     return h;
@@ -13355,7 +13359,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
     var h='<div class="panel" style="padding:0"><div class="table-wrap" style="max-height:66vh"><table class="pv2-table"><thead><tr><th>Cliente</th>'+(comMarca?'<th>Marca</th>':'')+'<th>Coleção / nº</th><th style="text-align:right">Pedido</th><th style="text-align:right">Faturado</th><th>Saúde</th><th>Giro</th><th>Recompra</th><th>Acomp. 60d</th><th></th></tr></thead><tbody>';
     list.slice(ini,ini+PAGE).forEach(function(p){
       var kcg=chaveCG(p), gcg=gruposCG[kcg]||[p];
-      if(kcg!==ultimoCG && gcg.length>1){ var mset={}; gcg.forEach(function(x){ mset[(marca(x.mid)||{}).nome||x.marca||'']=1; }); var mn=Object.keys(mset).filter(Boolean); h+='<tr style="background:var(--bg-soft)"><td colspan="'+(comMarca?10:9)+'" style="font-size:.75rem"><b>'+esc(p.cliente)+'</b> · '+esc(p.gestor||'')+' · '+gcg.length+' pedidos'+(mn.length>1?' em '+mn.length+' marcas: '+mn.map(esc).join(', '):'')+'</td></tr>'; }
+      if(kcg!==ultimoCG && gcg.length>1){ var mset={}; gcg.forEach(function(x){ mset[(marca(x.mid)||{}).nome||x.marca||'']=1; }); var mn=Object.keys(mset).filter(Boolean); h+='<tr style="background:var(--bg-soft)"><td colspan="'+(comMarca?10:9)+'" style="font-size:.75rem"><b>'+esc(p.cliente)+'</b> · '+esc(p.gestor||'')+' · '+gcg.length+' pedidos'+(mn.length>1?' em '+mn.length+' marcas: '+mn.map(esc).join(', '):'')+' '+btnGrupo(gcg.map(itemP),false)+'</td></tr>'; }
       ultimoCG=kcg;
       var c60='—';
       if(p.due){ c60=p.feito60?'<span class="pv2-pill green">✓ '+esc(((SEG60.o.find(function(o){return o[0]===p.st.g60;})||[0,'feito'])[1]).replace('Feita · ',''))+'</span>':p.vencido60?'<span class="pv2-pill red">venceu '+toBR(p.due)+'</span>':'<span class="pv2-pill'+(p.prox60?' yellow':'')+'">'+toBR(p.due)+' · '+p.dias60+'d</span>'; }
@@ -13470,6 +13474,9 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
     var cli=acharCli(o.cliente||base.cliente,o.cnpj||base.cnpj);
     F={id:l?l.id:null, pendente:!!(l&&l.pendente), st:Object.assign({},(l||ultimo||{}).st||{}), cnpj:cli?cli.CNPJ:(o.cnpj||'')};
     if(!l&&ultimo){ delete F.st.g60; }
+    F.grupo=(o.grupo&&o.grupo.length)?o.grupo:null;
+    var grupoHTML=F.grupo?'<div class="pv2-sec">Lançar também nas outras marcas do cliente</div><div class="pv2-hint">A situação, a data, o contato, o acompanhamento e as observações valem para todas as marcas marcadas. Informe o faturado de cada uma.</div>'+
+      F.grupo.map(function(g,ix){ var gm=marca(g.mid)||{}; return '<div style="display:flex;gap:.6rem;align-items:center;margin-top:.35rem"><label class="pv2-check" style="flex:1;margin:0"><input type="checkbox" id="pvf-g'+ix+'" checked> <b>'+esc(gm.nome||g.mid)+'</b> · '+esc(String(g.col||'').trim())+(g.numPedido?' · nº '+esc(g.numPedido):'')+(g.total?' · pedido '+R(g.total):'')+'</label><input class="form-input" id="pvf-gfat'+ix+'" type="number" min="0" step="0.01" placeholder="Faturado (R$)" style="width:140px"></div>'; }).join(''):'';
     var dataISO=l?toISO(parseD(l.dataISO||l.data)):toISO(hoje());
     var md=document.createElement('div'); md.className='modal-backdrop open pv2-modal pv2'; md.id='modal-pv2';
     var dl='<datalist id="pv2-dl">'+(clientes||[]).map(function(c){return '<option value="'+esc(c['Nome da Loja']||'')+'">'+esc((c.Cidade||'')+' · '+c.CNPJ)+'</option>';}).join('')+'</datalist>';
@@ -13501,6 +13508,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
         '<div class="pv2-f"><label>Condição / parcelas</label><input class="form-input" id="pvf-cond" value="'+esc(base.condicao||'')+'" placeholder="30/60/90"></div>'+
         '<div class="pv2-f"><label>Previsão de entrega</label><input class="form-input" id="pvf-ent" type="date" value="'+esc(toISO(parseD(base.entrega)))+'"></div>'+
       '</div>'+
+      grupoHTML+
       '<div class="pv2-sec">Situação do cliente</div><div class="pv2-g2">'+SEGS.map(function(d){return segHTML(d,F.st[d.k]);}).join('')+'</div>'+
       '<div class="pv2-g2" style="margin-top:.6rem">'+
         '<div class="pv2-f"><label>Produtos de destaque</label><textarea class="form-input" id="pvf-dest" rows="2">'+esc(l?l.destaque:'')+'</textarea></div>'+
@@ -13608,15 +13616,28 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
       // conclui pendentes automáticos do mesmo pedido
       S.lancamentos.forEach(function(x){ if(x!==l&&x.pendente&&x.key===key){ x.pendente=false; } });
     }
+    // Lançamento em grupo: grava o mesmo pós-venda nas outras marcas marcadas do cliente
+    var extras=[];
+    (F.grupo||[]).forEach(function(g,ix){
+      var cb=document.getElementById('pvf-g'+ix); if(!cb||!cb.checked) return;
+      var gm=marca(g.mid)||{}, gNome=gm.nome||g.mid, gCli=g.cliente||nome, gKey=g.key||pedKey(gCli,gNome,g.col,g.numPedido||'');
+      if(gKey===key) return;
+      if(g.total>0&&!S.pedidoTotals[gKey]) S.pedidoTotals[gKey]=g.total;
+      var gd=Object.assign({},dados,{key:gKey,cliente:gCli,cnpj:g.cnpj||dados.cnpj,marca:gNome,mid:g.mid,colecao:g.col,numPedido:g.numPedido||'',pedidoTotal:S.pedidoTotals[gKey]||g.total||0,faturado:parseFloat(fv('pvf-gfat'+ix))||0,gestor:dados.gestor||gm.gestor||'',st:Object.assign({},F.st)});
+      var pend=g.pendId&&S.lancamentos.find(function(x){return x.id===g.pendId;});
+      if(pend){ Object.assign(pend,gd,{pendente:false}); delete pend.origem; }
+      else { var sq=S.lancamentos.reduce(function(mx,x){return Math.max(mx,x.seq||0);},0)+1; var nl=Object.assign({id:'L'+sq+'_'+Date.now().toString(36)+'g'+ix,seq:sq,criadoEm:new Date().toISOString()},gd); S.lancamentos.push(nl); S.lancamentos.forEach(function(x){ if(x!==nl&&x.pendente&&x.key===gKey) x.pendente=false; }); }
+      extras.push(gKey);
+    });
     if(typeof pvStoreSave==='function') pvStoreSave();
     limpar();
     // agenda 60 dias
-    try{ syncAgenda60(key); }catch(e){}
+    try{ syncAgenda60(key); extras.forEach(function(k){ syncAgenda60(k); }); }catch(e){}
     // pipeline
     try{ var pc=document.getElementById('pvf-pipe'); if(pc&&pc.checked&&document.getElementById('pvf-pipewrap').style.display!=='none'){ var nx=proxCol(mid,col); if(window.PIPELINE.adicionar({mid:mid,colecao:nx,cliente:nome,cnpj:F.cnpj,cidade:dados.cidade,obs:'Recompra sinalizada no pós-venda de '+String(col).trim()+' ('+REC[F.st.recompra]+')'})&&typeof toast==='function') toast('Oportunidade criada no Pipeline · '+nx.trim(),'ok'); } }catch(e){}
     try{ if(window._auditLog) window._auditLog(F.cnpj,mid,'Pós-venda',F.id?'edição':'novo',classificar(F.st,null).level); }catch(e){}
     document.getElementById('modal-pv2')?.remove(); F=null;
-    if(typeof toast==='function') toast('Pós-venda salvo','ok');
+    if(typeof toast==='function') toast(extras.length?'Pós-venda salvo em '+(extras.length+1)+' marcas':'Pós-venda salvo','ok');
     rerender();
   };
   function syncAgenda60(key){
@@ -13635,6 +13656,8 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
   window.pv2Novo=function(mid){ abrirForm({mid:mid||''}); };
   window.pv2Editar=function(id){ abrirForm({id:id}); };
   window.pv2AbrirPedido=function(i){ var p=REFS[i]; if(!p) return; var pend=p.lancs.find(function(l){return l.pendente;}); if(pend) abrirForm({id:pend.id}); else abrirForm({key:p.key,mid:p.mid,col:p.colecao,cnpj:p.cnpj,cliente:p.cliente,numPedido:p.numPedido,total:p.total}); };
+  window.pv2LancarGrupo=function(i){ var it=REFS[i]; if(!it||!it.length) return; var g0=it[0], resto=it.slice(1);
+    if(g0.pendId) abrirForm({id:g0.pendId,grupo:resto}); else abrirForm({key:g0.key,mid:g0.mid,col:g0.col,cnpj:g0.cnpj,cliente:g0.cliente,numPedido:g0.numPedido,total:g0.total,grupo:resto}); };
   window.pv2NovoDe=function(i){ var s=REFS[i]; if(!s) return; abrirForm({mid:s.mid,col:s.col,cnpj:s.cnpj,cliente:s.nome,total:s.valor}); };
   window.pv2PraPipeline=function(i){ var p=REFS[i]; if(!p||!window.PIPELINE) return; var nx=proxCol(p.mid,p.colecao); if(window.PIPELINE.adicionar({mid:p.mid,colecao:nx,cliente:p.cliente,cnpj:p.cnpj,cidade:p.cidade,obs:'Recompra sinalizada no pós-venda de '+String(p.colecao).trim()})){ if(typeof toast==='function') toast('Oportunidade criada no Pipeline · '+nx.trim(),'ok'); } rerender(); };
   window.pv2CriarTodos=function(key){
