@@ -9937,6 +9937,7 @@ body.sb-collapsed .nav-item:hover::after{content:attr(data-tip);position:absolut
   }
   function vgOpen(){ document.body.classList.remove('sb-open'); navToPage('viagens'); _vgCur=null; vgRender(); }
   window.vgOpen=vgOpen; window.vgNew=vgNew;
+  window.vgCustoTotal=function(v){ _normCustos(v); return _custosTot(v); }; // usado na aba Despesas do showroom
   window.vgSel=function(id){ _vgCur=id; _vgTab='plan'; vgRender(); };
   window.vgBack=function(){ _vgCur=null; vgRender(); };
   window.vgTab=function(t){ _vgTab=t; vgRender(); };
@@ -13958,6 +13959,15 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
   function quem(){ try{ return (window._auth&&window._auth.currentUser&&window._auth.currentUser.email)||''; }catch(_){ return ''; } }
   function ref(){ return window._fbDoc(window._db,'sistema','despesas_showroom'); }
   function lista(){ return Object.keys(DSP).map(function(k){ return DSP[k]; }).filter(function(x){ return x&&x.id; }); }
+  // Viagens de prospecção entram na lista como despesa (custo total do orçamento, na data de início da viagem)
+  function viagens(){
+    return (window.VIAGENS||[]).map(function(v){
+      var data=v.dataIni||(v.criadoEm||'').slice(0,10); if(!data) return null;
+      var dias=0; if(v.dataIni&&v.dataFim){ var a=dt(v.dataIni), b=dt(v.dataFim); if(a&&b) dias=Math.max(1,Math.round((b-a)/864e5)+1); }
+      var valor=0; try{ valor=window.vgCustoTotal?window.vgCustoTotal(v):0; }catch(_){}
+      return {id:'viagem:'+v.id, viagemId:v.id, viagem:true, produto:'Viagem: '+(v.nome||'sem nome'), categoria:'Viagem de prospecção', valor:Math.round(valor*100)/100, data:data, dataFim:v.dataFim||'', duracao:dias, unidade:'dias', obs:v.cidades||''};
+    }).filter(Boolean);
+  }
 
   // Lê e acompanha em tempo real (cache local se estiver sem internet)
   try{ DSP=JSON.parse(localStorage.getItem('und_despesas')||'{}')||{}; }catch(_){ DSP={}; }
@@ -13977,7 +13987,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
 
   function dvRender(){
     var host=document.getElementById('dv-host'); if(!host) return;
-    var todos=lista();
+    var todos=lista().concat(viagens());
     var meses={}; todos.forEach(function(it){ if(it.data) meses[it.data.slice(0,7)]=1; });
     var mesAtual=iso(hoje()).slice(0,7); meses[mesAtual]=1;
     var opcoesMes=Object.keys(meses).sort().reverse();
@@ -13985,6 +13995,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
     var nomeMes=function(ym){ var p=ym.split('-'); return new Date(+p[0],+p[1]-1,1).toLocaleDateString('pt-BR',{month:'long',year:'numeric'}); };
     var doMes=todos.filter(function(it){ return (it.data||'').slice(0,7)===dvMes; }).sort(function(a,b){ return (b.data||'').localeCompare(a.data||''); });
     var total=doMes.reduce(function(s,it){ return s+(Number(it.valor)||0); },0);
+    var totViagens=doMes.reduce(function(s,it){ return s+(it.viagem?(Number(it.valor)||0):0); },0);
 
     // Semanas do mês (segunda a domingo)
     var semanas={};
@@ -13992,14 +14003,14 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
     var chaves=Object.keys(semanas).sort().reverse();
 
     // Para repor: a compra mais recente de cada produto que acaba em até 7 dias (ou já acabou)
-    var ultimo={}; todos.forEach(function(it){ var k=String(it.produto||'').trim().toLowerCase(); if(!k) return; if(!ultimo[k]||(it.data||'')>(ultimo[k].data||'')) ultimo[k]=it; });
+    var ultimo={}; todos.forEach(function(it){ if(it.viagem) return; var k=String(it.produto||'').trim().toLowerCase(); if(!k) return; if(!ultimo[k]||(it.data||'')>(ultimo[k].data||'')) ultimo[k]=it; });
     var h0=hoje(), repor=Object.keys(ultimo).map(function(k){ var it=ultimo[k], f=fimDuracao(it); if(!f) return null; var dias=Math.round((f-h0)/864e5); return dias<=7?{it:it,dias:dias,fim:f}:null; }).filter(Boolean).sort(function(a,b){ return a.dias-b.dias; });
 
     var h='<div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem">'+
       '<select class="select" onchange="dvSetMes(this.value)">'+opcoesMes.map(function(m){ return '<option value="'+m+'"'+(m===dvMes?' selected':'')+'>'+e(nomeMes(m))+'</option>'; }).join('')+'</select>'+
       '<span style="flex:1"></span><button class="btn btn-secondary btn-sm" onclick="dvExportar()">⬇ Exportar Excel</button></div>';
     h+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.7rem;margin-bottom:1rem">'+
-      '<div class="panel" style="padding:.8rem 1rem"><div style="font-size:.7rem;color:var(--ink-muted);text-transform:uppercase">Gasto no mês</div><div style="font-family:var(--serif);font-size:1.5rem">'+brl(total)+'</div><div style="font-size:.72rem;color:var(--ink-muted)">'+doMes.length+' compra(s)</div></div>'+
+      '<div class="panel" style="padding:.8rem 1rem"><div style="font-size:.7rem;color:var(--ink-muted);text-transform:uppercase">Gasto no mês</div><div style="font-family:var(--serif);font-size:1.5rem">'+brl(total)+'</div><div style="font-size:.72rem;color:var(--ink-muted)">'+doMes.length+' lançamento(s)'+(totViagens?' · viagens '+brl(totViagens):'')+'</div></div>'+
       '<div class="panel" style="padding:.8rem 1rem"><div style="font-size:.7rem;color:var(--ink-muted);text-transform:uppercase">Média por semana</div><div style="font-family:var(--serif);font-size:1.5rem">'+brl(chaves.length?total/chaves.length:0)+'</div><div style="font-size:.72rem;color:var(--ink-muted)">'+chaves.length+' semana(s) com gasto</div></div>'+
       '<div class="panel" style="padding:.8rem 1rem;'+(repor.length?'border-left:3px solid var(--amber)':'')+'"><div style="font-size:.7rem;color:var(--ink-muted);text-transform:uppercase">Para repor (7 dias)</div><div style="font-family:var(--serif);font-size:1.5rem">'+repor.length+'</div><div style="font-size:.72rem;color:var(--ink-muted)">pela duração de cada produto</div></div></div>';
 
@@ -14014,8 +14025,8 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
       h+='<div class="panel" style="padding:0;margin-bottom:.8rem"><div class="panel-head" style="padding:.7rem 1rem;border-bottom:1px solid var(--line);display:flex;justify-content:space-between"><div class="panel-title">Semana de '+ini.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' a '+fim.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+'</div><b>'+brl(tot)+'</b></div>'+
         '<div class="table-wrap"><table><thead><tr><th>Data da compra</th><th>Produto</th><th>Categoria</th><th style="text-align:right">Valor</th><th>Duração</th><th>Acaba em</th><th></th></tr></thead><tbody>'+
         its.map(function(it){ var f=fimDuracao(it), dias=f?Math.round((f-h0)/864e5):null;
-          return '<tr><td>'+br(it.data)+'</td><td><b>'+e(it.produto)+'</b>'+(it.obs?'<div style="font-size:.7rem;color:var(--ink-muted)">'+e(it.obs)+'</div>':'')+'</td><td>'+e(it.categoria||'—')+'</td><td style="text-align:right;font-family:var(--mono)">'+brl(it.valor)+'</td><td>'+(Number(it.duracao)>0?e(it.duracao+' '+it.unidade):'—')+'</td><td>'+(f?f.toLocaleDateString('pt-BR')+(dias!=null&&dias<=7?' <span class="badge" style="background:'+(dias<0?'var(--red-soft);color:var(--red)':'var(--amber-soft);color:var(--amber)')+'">'+(dias<0?'acabou':'repor')+'</span>':''):'—')+'</td>'+
-            '<td style="white-space:nowrap"><button class="btn btn-secondary btn-sm" onclick="dvEditar(\''+e(it.id)+'\')">Editar</button> <button class="btn btn-secondary btn-sm" style="color:var(--red)" onclick="dvExcluir(\''+e(it.id)+'\')">×</button></td></tr>'; }).join('')+
+          return '<tr><td>'+br(it.data)+'</td><td><b>'+e(it.produto)+'</b>'+(it.obs?'<div style="font-size:.7rem;color:var(--ink-muted)">'+e(it.obs)+'</div>':'')+'</td><td>'+e(it.categoria||'—')+'</td><td style="text-align:right;font-family:var(--mono)">'+brl(it.valor)+'</td><td>'+(Number(it.duracao)>0?e(it.duracao+' '+it.unidade):'—')+'</td><td>'+(it.viagem?(it.dataFim?'volta '+br(it.dataFim):'—'):f?f.toLocaleDateString('pt-BR')+(dias!=null&&dias<=7?' <span class="badge" style="background:'+(dias<0?'var(--red-soft);color:var(--red)':'var(--amber-soft);color:var(--amber)')+'">'+(dias<0?'acabou':'repor')+'</span>':''):'—')+'</td>'+
+            '<td style="white-space:nowrap">'+(it.viagem?'<button class="btn btn-secondary btn-sm" onclick="dvAbrirViagem(\''+e(it.viagemId)+'\')">Abrir viagem</button>':'<button class="btn btn-secondary btn-sm" onclick="dvEditar(\''+e(it.id)+'\')">Editar</button> <button class="btn btn-secondary btn-sm" style="color:var(--red)" onclick="dvExcluir(\''+e(it.id)+'\')">×</button>')+'</td></tr>'; }).join('')+
         '</tbody></table></div></div>';
     });
     host.innerHTML=h;
@@ -14051,13 +14062,14 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
   window.dvAba=function(a){ window._dvAba=a; if(typeof vgRender==='function') vgRender(); };
   window.dvSetMes=function(m){ dvMes=m; dvRender(); };
   window.dvNova=function(){ dvForm(null); };
+  window.dvAbrirViagem=function(id){ window._dvAba='viagens'; if(window.vgSel) vgSel(id); };
   window.dvEditar=function(id){ dvForm(DSP[id]); };
   window.dvFechar=function(){ var m=document.getElementById('dv-modal'); if(m) m.remove(); dvRender(); };
   window.dvExcluir=function(id){ var it=DSP[id]; if(!it) return; if(!confirm('Excluir a despesa "'+it.produto+'" de '+brl(it.valor)+'?')) return; delete DSP[id]; gravar(id,null); dvRender(); };
   window.dvExportar=function(){
     if(typeof XLSX==='undefined'){ try{toast('Biblioteca Excel não carregada','');}catch(_){} return; }
-    var linhas=lista().sort(function(a,b){ return (a.data||'').localeCompare(b.data||''); }).map(function(it){ var ini=inicioSemana(dt(it.data)), f=fimDuracao(it);
-      return {'Semana (início)':ini.toLocaleDateString('pt-BR'),'Data da compra':br(it.data),'Produto':it.produto,'Categoria':it.categoria||'','Valor (R$)':Number(it.valor)||0,'Duração':Number(it.duracao)>0?it.duracao+' '+it.unidade:'','Acaba em':f?f.toLocaleDateString('pt-BR'):'','Observação':it.obs||''}; });
+    var linhas=lista().concat(viagens()).sort(function(a,b){ return (a.data||'').localeCompare(b.data||''); }).map(function(it){ var ini=inicioSemana(dt(it.data)), f=fimDuracao(it);
+      return {'Semana (início)':ini.toLocaleDateString('pt-BR'),'Data da compra':br(it.data),'Produto':it.produto,'Categoria':it.categoria||'','Valor (R$)':Number(it.valor)||0,'Duração':Number(it.duracao)>0?it.duracao+' '+it.unidade:'','Acaba em':it.viagem?'':f?f.toLocaleDateString('pt-BR'):'','Observação':it.obs||''}; });
     var wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(linhas),'Despesas'); XLSX.writeFile(wb,'Despesas_showroom_'+iso(hoje())+'.xlsx');
   };
 })();
