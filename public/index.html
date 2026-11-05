@@ -73,11 +73,39 @@ window._pedKey = function(p){
   const k = id.replace(/[^a-zA-Z0-9_-]/g,'');
   return k ? ('p_'+k) : ('px_' + Math.random().toString(36).slice(2,10));
 };
+// Foto do que já está no Firebase (id -> JSON estável), mantida pelos listeners.
+// Permite gravar SÓ o que mudou, em vez de regravar a coleção inteira.
+window._fbCache = {};
+window._fbJson = function(v){
+  if(v === undefined) return undefined;
+  if(v === null || typeof v !== 'object') return JSON.stringify(v);
+  if(Array.isArray(v)) return '[' + v.map(x => { const j = window._fbJson(x); return j === undefined ? 'null' : j; }).join(',') + ']';
+  return '{' + Object.keys(v).sort().filter(k => v[k] !== undefined).map(k => JSON.stringify(k) + ':' + window._fbJson(v[k])).join(',') + '}';
+};
+window._fbCacheSet = function(collName, docs){
+  const m = new Map(); docs.forEach(d => { try{ m.set(d.id, window._fbJson(d.data())); }catch(e){} });
+  window._fbCache[collName] = m;
+};
 // Grava um array inteiro numa coleção (1 doc por item) SEM apagar dados por engano.
 window._fbPersistColecao = async function(collName, arr, keyFn){
   if(!window._db || !Array.isArray(arr)) return;
   const wanted = new Map();
   arr.forEach(r => { const k = keyFn(r); if(k && !wanted.has(k)) wanted.set(k, r); });
+  const cache = window._fbCache[collName];
+  if(cache && cache.size > 0 && wanted.size > 0){
+    // Caminho rápido: grava só os registros novos/alterados e apaga só os removidos
+    const ops = [];
+    wanted.forEach((r, k) => { const j = window._fbJson(r); if(cache.get(k) !== j) ops.push(['set', k, r, j]); });
+    cache.forEach((_, k) => { if(!wanted.has(k)) ops.push(['del', k]); });
+    for(let i=0; i<ops.length; i+=400){
+      const parte = ops.slice(i, i+400);
+      const batch = window._fbWriteBatch(window._db);
+      parte.forEach(o => { const ref = window._fbDoc(window._db, collName, o[1]); if(o[0]==='set') batch.set(ref, o[2]); else batch.delete(ref); });
+      await batch.commit();
+      parte.forEach(o => { if(o[0]==='set') cache.set(o[1], o[3]); else cache.delete(o[1]); });
+    }
+    return;
+  }
   const items = Array.from(wanted.entries());
   for(let i=0; i<items.length; i+=400){
     const batch = window._fbWriteBatch(window._db);
@@ -185,6 +213,7 @@ onSnapshot(collection(db,'clientes'), snap => {
 
 onSnapshot(collection(db,'compras'), snap => {
   if(snap.empty) return;   // ainda nao migrado: mantem o que veio do doc antigo
+  try { window._fbCacheSet('compras', snap.docs); } catch(e){}
   compras = snap.docs.map(dc => dc.data());
   try { localStorage.setItem('und_comp', JSON.stringify(compras)); } catch(e){}
   try { renderDashboard?.(); } catch(e){}
@@ -192,6 +221,7 @@ onSnapshot(collection(db,'compras'), snap => {
 
 onSnapshot(collection(db,'pedidos'), snap => {
   if(snap.empty) return;   // ainda nao migrado: mantem o que veio do doc antigo
+  try { window._fbCacheSet('pedidos', snap.docs); } catch(e){}
   pedidos = snap.docs.map(dc => dc.data());
   try { localStorage.setItem('und_pedidos', JSON.stringify(pedidos)); } catch(e){}
   try { pedRenderLista?.(); } catch(e){}
@@ -3564,9 +3594,9 @@ async function init(){
       ]);
       if(colCli && !colCli.empty){ window._clientesAll = colCli.docs.map(d=>d.data()); clientes = window._clientesAll.filter(function(c){ return c && !(window._arquivados && window._arquivados.has && window._arquivados.has(c.CNPJ)); }); }
       else if(snapCli.exists() && snapCli.data().lista?.length) clientes = snapCli.data().lista;
-      if(colComp && !colComp.empty){ compras = colComp.docs.map(d=>d.data()); }
+      if(colComp && !colComp.empty){ compras = colComp.docs.map(d=>d.data()); try{ window._fbCacheSet('compras', colComp.docs); }catch(e){} }
       else if(snapComp.exists() && snapComp.data().lista?.length) compras  = snapComp.data().lista;
-      if(colPed && !colPed.empty){ pedidos = colPed.docs.map(d=>d.data()); }
+      if(colPed && !colPed.empty){ pedidos = colPed.docs.map(d=>d.data()); try{ window._fbCacheSet('pedidos', colPed.docs); }catch(e){} }
       else if(snapPed.exists()  && snapPed.data().lista?.length)  pedidos  = snapPed.data().lista;
     } catch(e){ console.warn('[Firebase] init load error', e); window._fbOffline=true; try{ const lbl=document.getElementById('fb-label'); if(lbl) lbl.textContent='offline — usando cache'; const dot=document.getElementById('fb-dot'); if(dot){ dot.style.background='#9e3a30'; dot.style.boxShadow='0 0 4px #9e3a30'; } }catch(_){} }
   }
