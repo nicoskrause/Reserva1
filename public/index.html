@@ -98,6 +98,18 @@ window._fbPersistColecao = async function(collName, arr, keyFn){
     }catch(e){ console.warn('[FB] reconcilia '+collName, e); }
   }
 };
+// Grava só os registros indicados (rápido: usado na importação de planilhas). Lança erro se falhar.
+window._fbSalvarDocs = async function(collName, arr, keyFn){
+  if(!window._db || !Array.isArray(arr) || !arr.length) return;
+  for(let i=0; i<arr.length; i+=400){
+    const batch = window._fbWriteBatch(window._db);
+    arr.slice(i, i+400).forEach(r => { const k = keyFn(r); if(k) batch.set(window._fbDoc(window._db, collName, k), r); });
+    await batch.commit();
+  }
+};
+// Gravações em andamento: avisa antes de fechar a página para não perder dados
+window._fbPendentes = 0;
+window.addEventListener('beforeunload', e => { if(window._fbPendentes > 0){ e.preventDefault(); e.returnValue = ''; } });
 // Migração one-time (idempotente e não-destrutiva): sistema/<nome>{lista:[...]} -> coleção <nome>
 window._migrarParaColecao = async function(name, keyFn){
   if(!window._db) return;
@@ -3611,10 +3623,12 @@ function save(){
     const at = new Date().toISOString();
     // clientes: agora 1 doc por registro (salvarCliente/excluir/importar/migrar)
     indicarSalvando();
-    Promise.all([
+    window._fbPendentes = (window._fbPendentes||0) + 1;
+    return Promise.all([
       window._fbPersistColecao('compras', compras, window._compKey),
       window._fbPersistColecao('pedidos', pedidos, window._pedKey)
-    ]).then(()=>indicarSalvo()).catch(e=>{ console.warn('[FB] save',e); indicarErroSalvar(); });
+    ]).then(()=>indicarSalvo()).catch(e=>{ console.warn('[FB] save',e); indicarErroSalvar(); })
+      .finally(()=>{ window._fbPendentes = Math.max(0, (window._fbPendentes||1) - 1); });
   }
 }
 
@@ -8378,7 +8392,7 @@ function importForecast(ev, mid){
       if(!(await confirmar(_resumo, 'Confirmar importação'))){ ev.target.value=''; return; }
       backupAutomatico('antes-import-'+mid);
       const idx={}, cnpjIdx={}; clientes.forEach(c=>{ const k=fcNormNome(c['Nome da Loja']); if(k && !idx[k]) idx[k]=c; const d=_dig(c.CNPJ); if(d.length>=11 && !cnpjIdx[d]) cnpjIdx[d]=c; });
-      let atualizados=0, novos=0, valoresSet=0; const novosNomes=[]; const novosCli=[];
+      let atualizados=0, novos=0, valoresSet=0; const novosNomes=[]; const novosCli=[]; const tocados=new Set();
       rows.forEach(r=>{
         const nome=String(r[kCli]==null?'':r[kCli]).trim(); if(!nome) return;
         const dc=kCnpj?_dig(r[kCnpj]):'';
@@ -8392,12 +8406,27 @@ function importForecast(ev, mid){
         } else { atualizados++; }
         let comp=getComp(cli.CNPJ);
         if(!comp){ comp={CNPJ:cli.CNPJ,'Nome da Loja':cli['Nome da Loja']}; compras.push(comp); }
-        mapCols.forEach(mcol=>{ const val=biVal(r[mcol.origem]); if(val>0){ comp[mid+'__'+mcol.alvo]=val; valoresSet++; } });
+        mapCols.forEach(mcol=>{ const val=biVal(r[mcol.origem]); if(val>0){ comp[mid+'__'+mcol.alvo]=val; valoresSet++; tocados.add(comp); } });
       });
-      save();
-      if(window._fbSalvarCliente) novosCli.forEach(c=>window._fbSalvarCliente(c));
+      // Salva e ESPERA a nuvem confirmar antes de dizer que terminou (grava só os clientes da planilha)
+      try{ localStorage.setItem('und_cli',JSON.stringify(clientes)); localStorage.setItem('und_comp',JSON.stringify(compras)); }catch(e){}
+      let okNuvem=true;
+      if(window._db){
+        const aviso=document.createElement('div'); aviso.id='fc-salvando';
+        aviso.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:99999;display:flex;align-items:center;justify-content:center';
+        aviso.innerHTML='<div style="background:var(--bg-card,#fff);padding:1.2rem 1.6rem;border-radius:12px;font-size:.95rem;box-shadow:0 10px 30px rgba(0,0,0,.2)"><b>Salvando no Firebase…</b><br><span style="font-size:.8rem;color:var(--ink-muted,#666)">Não feche nem atualize a página.</span></div>';
+        document.body.appendChild(aviso);
+        indicarSalvando(); window._fbPendentes=(window._fbPendentes||0)+1;
+        try{
+          await window._fbSalvarDocs('compras', Array.from(tocados), window._compKey);
+          for(const c of novosCli){ await window._fbSetDoc(window._fbDoc(window._db,'clientes',window._cliKey(c.CNPJ)), c); }
+          indicarSalvo();
+        }catch(err){ okNuvem=false; console.warn('[import] salvar', err); indicarErroSalvar(); }
+        finally{ window._fbPendentes=Math.max(0,window._fbPendentes-1); aviso.remove(); }
+      }
       try{renderMarcaCompras(mid);}catch(e){} try{renderMarcaDashboard(mid);}catch(e){} try{renderEscritorio();}catch(e){}
-      alert('Importação concluída ('+(mc?mc.nome:mid)+').\n'
+      if(!okNuvem){ alert('ATENÇÃO: os dados foram lidos, mas NÃO foram salvos no Firebase (sem internet ou sem permissão).\nNão feche a página: confira a internet e importe a planilha de novo.'); ev.target.value=''; return; }
+      alert('Importação concluída e salva ('+(mc?mc.nome:mid)+').\n'
         +'Coleções mapeadas: '+mapCols.map(m=>m.origem+' → '+m.alvo).join(', ')+'\n'
         +atualizados+' cliente(s) atualizado(s), '+novos+' novo(s), '+valoresSet+' valor(es) preenchido(s).');
     }catch(err){ alert('Erro ao ler a planilha: '+err.message); }
