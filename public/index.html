@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Underground Representações</title>
-<script>window._hashInicial=location.hash||'';</script>
+<script>window._hashInicial=window._hashBoot=location.hash||'';</script>
 <script>
 /* TEMA: segue o sistema por padrão; a escolha do usuário fica salva neste navegador */
 (function(){ try{ var t=localStorage.getItem('und_tema'); if(t==='dark'||t==='light') document.documentElement.setAttribute('data-theme',t); }catch(e){} })();
@@ -7796,6 +7796,8 @@ window.addEventListener('load', function() {
   carregarColecoesMarca();
   // Inicializar mostrando a última marca/aba usada (ou a primeira)
   setTimeout(() => {
+    // se a página foi aberta/atualizada (F5) numa tela específica, fica nela — não pula para a última marca
+    if(window._hashBoot) return;
     let um=null, ua=null;
     try{ um=localStorage.getItem('und_ultima_marca'); ua=localStorage.getItem('und_ultima_aba'); }catch(e){}
     const marcaInicial = MARCAS_CONFIG.some(m=>m.id===um) ? um : 'reserva';
@@ -14246,6 +14248,8 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
     if(fr)fr.style.display=(t==='cobrar')?'none':'block';
     if(cb)cb.style.display=(t==='cobrar')?'block':'none';
     document.querySelectorAll('#inad-tabs .tab').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-inadtab')===t);});
+    // guarda a aba no endereço para o F5 voltar nela
+    try{ var h=(t==='cobrar')?'#page/cobrar':'#page/inadimplencia'; if(location.hash!==h) history.replaceState(null,'',h); }catch(e){}
     if(t==='cobrar')renderCobrar(); else { try{loadFrame('frame-inad','inad');}catch(e){} }
   };
   window.cobrarMarcar=async function(k,v,cb){
