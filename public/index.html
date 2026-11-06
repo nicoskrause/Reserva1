@@ -9427,7 +9427,10 @@ function _inadSetup(){
     Object.keys(_INAD_DOC).forEach(function(mid){
       try{ window._fbOnSnapshot(window._fbDoc(window._db,'inadimplencia',_INAD_DOC[mid]),function(snap){
         var map={};
-        if(snap.exists()){ var arr=(snap.data().data)||[]; arr.forEach(function(e){ var n=_inadNorm(e.cliente); if(n.length>=4) map[n]={valor:num(e.valor),status:e.status||'',raw:e.cliente,situacao:e.situacao||'',cidade:e.cidade||''}; }); }
+        if(snap.exists()){ var arr=(snap.data().data)||[]; arr.forEach(function(e,i){ var n=_inadNorm(e.cliente); var k=n.length>=4?n:('_'+i); var v=num(e.valor);
+          // mesmo cliente com vários contratos: SOMA os valores (antes ficava só o último)
+          if(map[k]){ map[k].valor+=v; map[k].qtd++; if(e.status==='internas'){ map[k].status='internas'; map[k].situacao=e.situacao||map[k].situacao; } }
+          else map[k]={valor:v,status:e.status||'',raw:e.cliente,situacao:e.situacao||'',cidade:e.cidade||'',qtd:1}; }); }
         window.INAD_MAP[mid]=map;
         try{ window.renderPainelInfo && window.renderPainelInfo(); }catch(e){}
         try{ if(typeof marcaAtual!=='undefined'&&marcaAtual===mid){ var t=(marcaState[mid]&&marcaState[mid].currentTab)||'dashboard'; renderMarcaTab(mid,t); } }catch(e){}
