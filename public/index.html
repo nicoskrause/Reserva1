@@ -14580,11 +14580,15 @@ input.money-in{text-align:right;font-family:var(--sans)!important;font-variant-n
   }
   function varrer(raiz){ try{ (raiz||document).querySelectorAll('input[type=number][onchange]').forEach(preparar); }catch(e){} }
   // ao entrar no campo: mostra só o número para editar
-  document.addEventListener('focusin',function(e){ var t=e.target; if(t&&t.dataset&&t.dataset.money){ var n=window._moneyParse(t.value); t.value=isNaN(n)?'':editavel(n); try{ t.select(); }catch(_){} } },true);
+  document.addEventListener('focusin',function(e){ var t=e.target; if(window._moneySair) return; if(t&&t.dataset&&t.dataset.money){ var n=window._moneyParse(t.value); t.value=isNaN(n)?'':editavel(n); try{ t.select(); }catch(_){} } },true);
   // antes de gravar: entrega o número limpo (1234.5) para a função de cada tela
   document.addEventListener('change',function(e){ var t=e.target; if(t&&t.dataset&&t.dataset.money){ var n=window._moneyParse(t.value); t.value=isNaN(n)?'':String(Math.round(n*100)/100); setTimeout(function(){ if(t.isConnected) exibir(t); },0); } },true);
   // Enter grava e já mostra com R$
-  document.addEventListener('keydown',function(e){ var t=e.target; if(e.key==='Enter'&&t&&t.dataset&&t.dataset.money){ t.blur(); } },true);
+  document.addEventListener('keydown',function(e){ var t=e.target; if(e.key==='Enter'&&t&&t.dataset&&t.dataset.money){
+    // a tela pode se redesenhar e devolver o cursor ao mesmo campo: tira o foco de novo e mostra em R$
+    window._moneySair=true; t.blur();
+    setTimeout(function(){ var a=document.activeElement; if(a&&a.dataset&&a.dataset.money){ a.blur(); exibir(a); } document.querySelectorAll('input.money-in').forEach(function(x){ if(x!==document.activeElement) exibir(x); }); window._moneySair=false; },90);
+  } },true);
   document.addEventListener('focusout',function(e){ var t=e.target; if(t&&t.dataset&&t.dataset.money){ setTimeout(function(){ if(t.isConnected && document.activeElement!==t) exibir(t); },0); } },true);
   var pend=false;
   new MutationObserver(function(){ if(pend) return; pend=true; setTimeout(function(){ pend=false; varrer(); },30); }).observe(document.documentElement,{childList:true,subtree:true});
