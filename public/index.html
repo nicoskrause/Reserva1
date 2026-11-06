@@ -9477,6 +9477,54 @@ function renderComprasCards(mid, buyers, cols){
   cards.innerHTML=html;
 }
 window.renderComprasCards=renderComprasCards;
+
+/* ---- Aba Compras em TABELA: 1 linha por cliente, 1 coluna por coleção ---- */
+function _compVista(){ try{ return localStorage.getItem('und_comp_vista')||'tabela'; }catch(e){ return 'tabela'; } }
+window.compSetVista=function(mid,v){ try{ localStorage.setItem('und_comp_vista',v); }catch(e){} renderMarcaCompras(mid); };
+window.compVazias=function(mid,on){ try{ localStorage.setItem('und_comp_vazias',on?'1':''); }catch(e){} renderMarcaCompras(mid); };
+// clique na célula -> campo para editar o valor; Enter/sair grava
+window.compEditarCelula=function(td,cnpj,mid,col){
+  if(td.querySelector('input')) return;
+  var comp=getComp(cnpj)||{}, v=num(comp[mid+'__'+col]);
+  td.innerHTML='<input type="number" step="0.01" class="cell-input numeric" style="width:100%;min-width:90px" value="'+(v||'')+'">';
+  var inp=td.querySelector('input'); inp.focus(); inp.select();
+  var feito=false;
+  function gravar(salvar){ if(feito) return; feito=true; if(salvar && num(inp.value)!==v) editarCompra(cnpj,mid,col,inp.value); renderMarcaCompras(mid); }
+  inp.addEventListener('keydown',function(e){ if(e.key==='Enter') gravar(true); else if(e.key==='Escape') gravar(false); });
+  inp.addEventListener('blur',function(){ gravar(true); });
+};
+function renderComprasTabela(mid, buyers, cols){
+  var anchor=document.getElementById(mid+'-info-comp');
+  var box=document.getElementById(mid+'-comp-tab');
+  if(!box){ box=document.createElement('div'); box.id=mid+'-comp-tab'; if(anchor) anchor.insertAdjacentElement('afterend',box); }
+  box.style.display='block';
+  if(!buyers.length){ box.innerHTML='<div style="padding:1.2rem;text-align:center;color:var(--ink-muted);font-size:.85rem">Nenhum cliente com compra nesta marca.</div>'; return; }
+  var vazias=false; try{ vazias=!!localStorage.getItem('und_comp_vazias'); }catch(e){}
+  var tot=cols.map(function(col){ return buyers.reduce(function(a,b){ return a+num((getComp(b.cli.CNPJ)||{})[mid+'__'+col]); },0); });
+  // por padrão mostra só as coleções que têm algum valor
+  var idx=cols.map(function(c,i){return i;}).filter(function(i){ return vazias || tot[i]>0; });
+  var grand=tot.reduce(function(a,v){return a+v;},0);
+  var h='<div style="display:flex;justify-content:flex-end;align-items:center;gap:.5rem;margin:.2rem 0 .5rem;font-size:.78rem;color:var(--ink-muted)">'
+    +'<label style="display:flex;align-items:center;gap:.3rem;cursor:pointer"><input type="checkbox" '+(vazias?'checked':'')+' onchange="compVazias(\''+mid+'\',this.checked)"> mostrar coleções sem valor</label></div>'
+    +'<div style="overflow:auto;max-height:70vh;border:1px solid var(--line);border-radius:12px;background:var(--bg-card)">'
+    +'<table class="comp-tab" style="width:100%;border-collapse:collapse"><thead><tr>'
+    +'<th style="position:sticky;left:0;top:0;z-index:3;min-width:200px">cliente</th>'
+    +idx.map(function(i){ return '<th style="position:sticky;top:0;z-index:2;text-align:right">'+_escC(cols[i].trim())+'</th>'; }).join('')
+    +'<th style="position:sticky;top:0;z-index:2;text-align:right">total</th></tr></thead><tbody>';
+  h+=buyers.map(function(o){
+    var cli=o.cli, comp=getComp(cli.CNPJ)||{}, cnpj=String(cli.CNPJ).replace(/'/g,"\\'");
+    var info=_inadInfo(mid,cli);
+    return '<tr><td style="position:sticky;left:0;z-index:1;background:var(--bg-card)"><span style="cursor:pointer;font-weight:500" onclick="verCliente(\''+cnpj+'\')" title="Ver perfil">'+_escC(cli['Nome da Loja'])+'</span>'+(info?' <span style="color:var(--red);font-size:.75rem" title="Inadimplente">● inadimplente</span>':'')+'</td>'
+      +idx.map(function(i){ var col=cols[i], v=num(comp[mid+'__'+col]);
+        return '<td style="text-align:right;cursor:text" title="Clique para editar" onclick="compEditarCelula(this,\''+cnpj+'\',\''+mid+'\',\''+String(col).replace(/'/g,"\\'")+'\')">'+(v?fmtBRL(v):'<span style="color:var(--ink-muted)">—</span>')+'</td>'; }).join('')
+      +'<td style="text-align:right;font-weight:600">'+fmtBRL(o.total)+'</td></tr>';
+  }).join('');
+  h+='</tbody><tfoot><tr style="background:var(--bg-soft)"><td style="position:sticky;left:0;background:var(--bg-soft);font-weight:600">total</td>'
+    +idx.map(function(i){ return '<td style="text-align:right;font-weight:600">'+fmtBRL(tot[i])+'</td>'; }).join('')
+    +'<td style="text-align:right;font-weight:700">'+fmtBRL(grand)+'</td></tr></tfoot></table></div>';
+  box.innerHTML=h;
+}
+window.renderComprasTabela=renderComprasTabela;
 function renderMarcaCompras(mid){
   var searchEl=document.getElementById(mid+'-search-comp');
   var s=(searchEl&&searchEl.value||'').toLowerCase();
@@ -9497,7 +9545,13 @@ function renderMarcaCompras(mid){
   var infoEl=document.getElementById(mid+'-info-comp'); var fat=fatMarca(mid); var inSum=_inadResumo(mid);
   if(infoEl) infoEl.innerHTML='<span><strong>'+buyers.length+'</strong> clientes com compra</span><span>Faturamento '+mid+': <strong>'+fmtK(fat)+'</strong></span>'+(inSum?'<span style="color:var(--red)">● '+inSum.n+' inadimplentes ('+fmtK(inSum.total)+')</span>':'');
   var tableWrap=theadEl?theadEl.closest('.editable-table'):null; if(tableWrap)tableWrap.style.display='none';
-  renderComprasCards(mid,buyers,cols);
+  var vista=_compVista();
+  if(infoEl) infoEl.innerHTML+='<span style="margin-left:auto;display:inline-flex;gap:.3rem">'
+    +'<button class="pv2-chip'+(vista==='tabela'?' on':'')+'" onclick="compSetVista(\''+mid+'\',\'tabela\')">tabela</button>'
+    +'<button class="pv2-chip'+(vista==='cartoes'?' on':'')+'" onclick="compSetVista(\''+mid+'\',\'cartoes\')" title="Mostra status do pedido e observações">cartões</button></span>';
+  var tab=document.getElementById(mid+'-comp-tab'), cards=document.getElementById(mid+'-comp-cards');
+  if(vista==='cartoes'){ if(tab) tab.style.display='none'; renderComprasCards(mid,buyers,cols); }
+  else { if(cards) cards.style.display='none'; renderComprasTabela(mid,buyers,cols); }
 }
 window.renderMarcaCompras=renderMarcaCompras;
 function abrirLancarCompra(mid){
