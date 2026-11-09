@@ -14596,6 +14596,8 @@ input.money-in{text-align:right;font-family:var(--sans)!important;font-variant-n
   function preparar(inp){
     if(inp.dataset.money) return;
     var oc=inp.getAttribute('onchange')||''; if(!ALVO.test(oc)) return;
+    // campos de QUANTIDADE (dias, quantidade, km, km por litro) não são dinheiro
+    if(/vgSetCusto\('[^']*\.(dias|quant|km|kmpl)'/.test(oc)) return;
     inp.dataset.money='1';
     var foco=(document.activeElement===inp);
     inp.type='text'; inp.setAttribute('inputmode','decimal'); inp.classList.add('money-in');
