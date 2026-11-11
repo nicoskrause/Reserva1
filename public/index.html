@@ -3027,7 +3027,7 @@ tr:last-child td{border-bottom:none}
   <!-- topbar da marca -->
   <div class="topbar" style="padding:.75rem 1.5rem">
     <div style="display:flex;align-items:center;gap:.75rem">
-      <div style="font-family:var(--serif);font-size:1.3rem;font-weight:400">Matteo</div>
+      <div style="font-family:var(--serif);font-size:1.3rem;font-weight:400">Nike Serra</div>
       <span class="badge blue" style="font-size:.65rem">Masculino</span>
     </div>
     <div class="topbar-actions">
@@ -3210,7 +3210,7 @@ tr:last-child td{border-bottom:none}
               <option value="lofty">Aramis Calçados</option>
               <option value="nike">Nike</option>
               
-              <option value="matteo">Matteo</option>
+              <option value="matteo">Nike Serra</option>
             </select>
             <div id="ped-marca-badge" style="margin-top:.3rem;height:1.4rem"></div>
           </div>
@@ -3267,7 +3267,7 @@ tr:last-child td{border-bottom:none}
           <option value="lofty">Aramis Calçados</option>
               <option value="nike">Nike</option>
           
-          <option value="matteo">Matteo</option>
+          <option value="matteo">Nike Serra</option>
         </select>
         <select class="select" id="ped-filter-gestor" onchange="renderPedLista()">
           <option value="">Todos os gestores</option>
@@ -6237,7 +6237,7 @@ function pedOnMarcaChange(){
   const badge=document.getElementById('ped-marca-badge');
   if(!badge) return;
   if(!mid){badge.innerHTML='';return;}
-  const nomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Matteo'};
+  const nomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Nike Serra'};
   badge.innerHTML=`<button class="btn btn-ghost btn-sm" style="color:var(--gold-deep);font-size:.75rem" onclick="navToMarca('${mid}')">↗ Ir para dashboard ${nomes[mid]||mid}</button>`;
 }
 
@@ -6333,7 +6333,7 @@ function renderPedLista(){
     body.innerHTML='<div style="padding:2.5rem;text-align:center;color:var(--ink-muted)">Nenhum pedido encontrado.<br><button class="btn btn-primary" style="margin-top:.75rem" onclick="pedSwitchTab(\'novo\')">+ Novo Pedido</button></div>';
     return;
   }
-  const nomesMarcas={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Matteo'};
+  const nomesMarcas={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Nike Serra'};
   body.innerHTML=filtrados.map(p=>{
     const marcaNome=nomesMarcas[p.marca]||p.marca||'—';
     const marcaLink=p.marca?`<span class="ped-badge-col" style="cursor:pointer;background:var(--gold-soft);color:var(--gold-deep)" onclick="navToMarca('${p.marca}')" title="Ir para dashboard ${marcaNome}">${marcaNome} ↗</span>`:`<span style="color:var(--ink-muted);font-size:.75rem">—</span>`;
@@ -6361,7 +6361,7 @@ function pedVerDetalhe(id){
     <td style="text-align:right;padding:.45rem .7rem;font-family:var(--mono)">${fmtBRL(i.vunit)}</td>
     <td style="text-align:right;padding:.45rem .7rem;font-family:var(--mono);font-weight:600">${fmtBRL(i.vtotal)}</td>
   </tr>`).join('');
-  const nomesMarcasDet={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Matteo'};
+  const nomesMarcasDet={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Nike Serra'};
   const html=`<div style="margin-bottom:.75rem">
     <strong style="font-size:1rem">${p.nomeCli}</strong><br>
     <span style="font-size:.78rem;color:var(--ink-muted)">${p.cnpj} · ${p.colecao} · ${p.data}</span>
@@ -6604,7 +6604,12 @@ window.addEventListener('load', function(){
 
 
 // ═══════════ MULTI-MARCA ═══════════
-const MARCAS_CONFIG = [{"id": "reserva", "nome": "Reserva", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "reservago", "nome": "Reserva Go", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "oficina", "nome": "Oficina", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "foxton", "nome": "Foxton", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Verão 27", "Perfumes "]}, {"id": "ankor", "nome": "Ankor", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "aramis", "nome": "Aramis", "pub": "M", "emoji": "🟦", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "urban", "nome": "Urban", "pub": "M", "emoji": "🟦", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "cacay", "nome": "Cacay", "pub": "F", "emoji": "🟣", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "indesense", "nome": "Indesense", "pub": "F", "emoji": "🩷", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "lofty", "nome": "Lofty", "pub": "F", "emoji": "🟣", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "matteo", "nome": "Matteo", "pub": "M", "emoji": "🟤", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "nike", "nome": "Nike", "pub": "U", "emoji": "⚫", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}];
+/* Clientes de uma marca: todos, ou — se a marca tem 'regiao' (ex.: Nike Serra) — só os das cidades da região */
+function clientesMarca(mid){ var mc=(typeof MARCAS_CONFIG!=='undefined'?MARCAS_CONFIG:[]).find(function(m){return m.id===mid;}); if(!mc||!Array.isArray(mc.regiao)||!mc.regiao.length) return clientes;
+  var nz=function(x){return String(x||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ');}; var R=mc.regiao;
+  return clientes.filter(function(c){ return R.indexOf(nz(c.Cidade))>=0; }); }
+window.clientesMarca=clientesMarca;
+const MARCAS_CONFIG = [{"id": "reserva", "nome": "Reserva", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "reservago", "nome": "Reserva Go", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "oficina", "nome": "Oficina", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "foxton", "nome": "Foxton", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Verão 27", "Perfumes "]}, {"id": "ankor", "nome": "Ankor", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "aramis", "nome": "Aramis", "pub": "M", "emoji": "🟦", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "urban", "nome": "Urban", "pub": "M", "emoji": "🟦", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "cacay", "nome": "Cacay", "pub": "F", "emoji": "🟣", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "indesense", "nome": "Indesense", "pub": "F", "emoji": "🩷", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "lofty", "nome": "Lofty", "pub": "F", "emoji": "🟣", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "matteo", "nome": "Nike Serra", "pub": "U", "regiao": ["caxias do sul","gramado","bento goncalves","farroupilha","canela","lagoa vermelha","flores da cunha","antonio prado","vacaria","serafina correa","casca","guapore","carlos barbosa","sao marcos","nova prata","veranopolis","picada cafe","nova roma do sul","sao francisco de paula","garibaldi","nova bassano"], "emoji": "🟤", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "nike", "nome": "Nike", "pub": "U", "emoji": "⚫", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}];
 
 // Estado por marca
 const marcaState = {};
@@ -7024,7 +7029,7 @@ function renderMarcaLTV(mid) {
   const selCols = colSel ? [...colSel.selectedOptions].map(o=>o.value) : ['__todas__'];
   const filtCols = (!selCols.length || selCols.includes('__todas__')) ? mcCols : mcCols.filter(c => selCols.includes(c.trim()));
   const filtCid = cidSel ? cidSel.value : '';
-  const baseCli = filtCid ? clientes.filter(c => _cidN(c.Cidade) === _cidN(filtCid)) : clientes;
+  const baseCli = filtCid ? clientesMarca(mid).filter(c => _cidN(c.Cidade) === _cidN(filtCid)) : clientesMarca(mid);
 
   const scored = baseCli.map(cli => {
     const comp = getComp(cli.CNPJ) || {};
@@ -7761,7 +7766,7 @@ function renderEscritorio() {
   if(c2){if(escChartCid2)escChartCid2.destroy();escChartCid2=new Chart(c2,{type:'doughnut',data:{labels:topCid.map(c=>c[0]),datasets:[{data:topCid.map(c=>c[1]),backgroundColor:[_tc('--primary'),_tc('--accent-text'),_tc('--success'),_tc('--accent-text'),_tc('--warning'),_tc('--error'),_tc('--text-secondary'),_tc('--border')]}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:10},boxWidth:10}}}}});}
 
   // Gráfico resultado por marca (pedidos)
-  const marcasNomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Matteo'};
+  const marcasNomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Nike Serra'};
   const pedMarca={};
   Object.keys(marcasNomes).forEach(m=>pedMarca[m]=0);
   (typeof pedidos!=='undefined'?pedidos:[]).forEach(p=>{if(p.marca&&pedMarca[p.marca]!==undefined) pedMarca[p.marca]+=p.totalGeral||0;});
@@ -8151,7 +8156,7 @@ function renderEscBI(){
   }
 
   // Chart marcas (pedidos)
-  const marcasNomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Matteo'};
+  const marcasNomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Nike Serra'};
   const pedMarca={};
   Object.keys(marcasNomes).forEach(m=>pedMarca[m]=0);
   (typeof pedidos!=='undefined'?pedidos:[]).forEach(p=>{if(p.marca&&pedMarca[p.marca]!==undefined)pedMarca[p.marca]+=p.totalGeral||0;});
@@ -8186,7 +8191,7 @@ function renderEscBI(){
 const MARCAS_NOMES_DG = {
   reserva:'Reserva', reservago:'Reserva Go', oficina:'Oficina',
   foxton:'Foxton', ankor:'Ankor', aramis:'Aramis', urban:'Urban',
-  cacay:'Cacay', indesense:'Indesense', lofty:'Aramis Calçados', nike:'Nike', aramisnext:'Aramis Next', matteo:'Matteo'
+  cacay:'Cacay', indesense:'Indesense', lofty:'Aramis Calçados', nike:'Nike', aramisnext:'Aramis Next', matteo:'Nike Serra'
 };
 
 function getAllDemandas(filtroMarca, filtroStatus, filtroTopico){
@@ -8741,7 +8746,7 @@ const B64_INAD="PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InB0LUJSIj4KPGhlYWQ+CjxtZXRh
         <option value="lofty">Aramis Calçados</option>
               <option value="nike">Nike</option>
         
-        <option value="matteo">Matteo</option>
+        <option value="matteo">Nike Serra</option>
       </select>
       <select class="select" id="dg-filtro-status" onchange="renderDemandasGeral()" style="font-size:.8rem">
         <option value="">Todos os status</option>
@@ -9645,7 +9650,7 @@ function renderMarcaCompras(mid){
   var theadEl=document.getElementById(mid+'-comp-thead');
   var _lfk='mcomp-'+mid; if(window.__LFrr) window.__LFrr[_lfk]=function(){renderMarcaCompras(mid);};
   var _lfL=(typeof lfEnsure==='function')?lfEnsure(_lfk,document.getElementById(mid+'-info-comp')):null;
-  var buyers=clientes.filter(function(c){
+  var buyers=clientesMarca(mid).filter(function(c){
     if(s&&String(c['Nome da Loja']||'').toLowerCase().indexOf(s)===-1)return false;
     if(_lfL&&typeof lfMatch==='function'&&!lfMatch(c['Nome da Loja'],_lfL))return false;
     var comp=getComp(c.CNPJ)||{}; return cols.reduce(function(a,col){return a+num(comp[mid+'__'+col]);},0)>0;
@@ -9666,7 +9671,7 @@ function abrirLancarCompra(mid){
   var mc=MARCAS_CONFIG.find(function(m){return m.id===mid;}); var cols=mc?mc.cols:COLS;
   var modal=document.getElementById('modal-lancar-compra');
   if(!modal){modal=document.createElement('div');modal.className='modal-backdrop';modal.id='modal-lancar-compra';modal.addEventListener('click',function(e){if(e.target===modal)modal.classList.remove('open');});document.body.appendChild(modal);}
-  var cliOrd=clientes.slice().sort(function(a,b){return String(a['Nome da Loja']||'').localeCompare(String(b['Nome da Loja']||''));});
+  var cliOrd=clientesMarca(mid).slice().sort(function(a,b){return String(a['Nome da Loja']||'').localeCompare(String(b['Nome da Loja']||''));});
   modal.innerHTML='<div class="modal" style="max-width:460px"><div class="modal-head"><div class="modal-title">Lancar compra — '+_escC(mc?mc.nome:mid)+'</div><button class="close-btn" onclick="closeModal(\'modal-lancar-compra\')">×</button></div><div class="modal-body"><div class="form-field" style="display:flex;flex-direction:column;gap:.35rem;margin-bottom:.85rem"><label class="form-label">Cliente *</label><input class="form-input" list="lc-clientes-list" id="lc-cliente" placeholder="Digite para buscar..." autocomplete="off"><datalist id="lc-clientes-list">'+cliOrd.map(function(c){return '<option value="'+_escC(c['Nome da Loja'])+'">';}).join('')+'</datalist></div><div class="form-field" style="display:flex;flex-direction:column;gap:.35rem;margin-bottom:.85rem"><label class="form-label">Colecao *</label><select class="form-input" id="lc-colecao">'+cols.map(function(col){return '<option value="'+_escC(col)+'">'+_escC(col.trim())+'</option>';}).join('')+'</select></div><div class="form-field" style="display:flex;flex-direction:column;gap:.35rem"><label class="form-label">Valor (R$) *</label><input class="form-input" id="lc-valor" type="number" placeholder="0" style="text-align:right;font-family:var(--mono)"></div></div><div class="modal-foot" style="display:flex;justify-content:flex-end;gap:.5rem;padding:1rem 1.4rem;border-top:1px solid var(--line)"><button class="btn btn-secondary" onclick="closeModal(\'modal-lancar-compra\')">Cancelar</button><button class="btn btn-primary" onclick="confirmarLancarCompra(\''+mid+'\')">Lancar</button></div></div>';
   modal.classList.add('open');
   setTimeout(function(){var i=document.getElementById('lc-cliente');if(i)i.focus();},50);
@@ -9690,15 +9695,17 @@ function renderMarcaCli(mid){
   var s=(searchEl&&searchEl.value||'').toLowerCase();
   var cid=(document.getElementById(mid+'-filter-cidade')||{}).value||'';
   var st=(document.getElementById(mid+'-filter-status')||{}).value||'';
-  var cids=Array.from(new Set(clientes.map(function(c){return c.Cidade;}).filter(Boolean))).sort();
+  // cidades sem repetir a mesma escrita de jeitos diferentes (ANTONIO PRADO = Antonio Prado); mostra a grafia mais comum
+  var _cm={}; clientesMarca(mid).forEach(function(c){ var l=String(c.Cidade||'').trim(); if(!l) return; var k=_cidN(l); _cm[k]=_cm[k]||{}; _cm[k][l]=(_cm[k][l]||0)+1; });
+  var cids=Object.keys(_cm).map(function(k){ var o=_cm[k]; return Object.keys(o).sort(function(a,b){ var ca=a===a.toUpperCase()?1:0, cb=b===b.toUpperCase()?1:0; return ca-cb||o[b]-o[a]; })[0]; }).sort(function(a,b){return a.localeCompare(b,'pt-BR');});
   var selCid=document.getElementById(mid+'-filter-cidade');
   if(selCid&&selCid.options.length<2){ selCid.innerHTML='<option value="">Todas as cidades</option>'+cids.map(function(c){return '<option value="'+_escC(c)+'">'+_escC(c)+'</option>';}).join(''); }
   var _lfk='mcli-'+mid; if(window.__LFrr) window.__LFrr[_lfk]=function(){renderMarcaCli(mid);};
   var _lfL=(typeof lfEnsure==='function')?lfEnsure(_lfk,document.getElementById(mid+'-info-cli')):null;
-  var f=clientes.filter(function(c){
+  var f=clientesMarca(mid).filter(function(c){
     if(_lfL&&typeof lfMatch==='function'&&!lfMatch(c['Nome da Loja'],_lfL))return false;
     if(s&&String((c['Nome da Loja']||'')+' '+(c.CNPJ||'')+' '+(c.Cidade||'')+' '+(c['Razão Social']||'')).toLowerCase().indexOf(s)===-1)return false;
-    if(cid&&c.Cidade!==cid)return false;
+    if(cid&&_cidN(c.Cidade)!==_cidN(cid))return false;
     var l=ltvMarca(c.CNPJ,mid);
     if(st==='ativo'&&l===0)return false;
     if(st==='nunca'&&l>0)return false;
@@ -10040,13 +10047,13 @@ body.sb-collapsed .nav-item:hover::after{content:attr(data-tip);position:absolut
     if(!filt&&kpiEl){ filt=document.createElement('div'); filt.id=mid+'-dash-filter'; filt.style.cssText='display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap'; kpiEl.parentNode.insertBefore(filt,kpiEl); }
     if(filt){ var inSum=_inadResumo(mid);
       filt.innerHTML='<label class="form-label" style="margin:0">Coleção:</label><select class="select" id="'+mid+'-dash-col" onchange="onDashCol(\''+mid+'\',this.value)"><option value="">Todas as coleções</option>'+cols.map(function(col){return '<option value="'+_e(col)+'"'+(col===selCol?' selected':'')+'>'+_e(col.trim())+'</option>';}).join('')+'</select>'+(selCol?'<span class="badge gold">Panorama: '+_e(selCol.trim())+'</span>':'')+(selCity?'<span class="badge" style="background:var(--blue-soft);color:var(--blue);cursor:pointer" onclick="onDashCity(\''+mid+'\',\'\')">📍 '+_e(selCity)+' ✕</span>':'')+(inSum?'<span class="badge" style="background:var(--red-soft);color:var(--red);font-weight:600;margin-left:auto">● '+inSum.n+' inadimplentes · '+fmtK(inSum.total)+'</span>':''); }
-    var total=clientes.length;
+    var total=clientesMarca(mid).length;
     var ativos=compras.filter(function(c){return inCity(c.CNPJ)&&activeCols.reduce(function(s,col){return s+num(c[mid+'__'+col]);},0)>0;}).length;
     var fat=compras.reduce(function(s,c){return s+(inCity(c.CNPJ)?activeCols.reduce(function(s2,col){return s2+num(c[mid+'__'+col]);},0):0);},0);
     var tk=ativos?fat/ativos:0;
-    var cids=new Set(clientes.map(function(c){return c.Cidade;})).size;
+    var cids=new Set(clientesMarca(mid).map(function(c){return _cidN(c.Cidade);})).size;
     if(kpiEl) kpiEl.innerHTML=[
-      {l:'Total de Clientes',v:total,t:'Cadastro completo'},
+      {l:'Total de Clientes',v:total,t:(clientesMarca(mid).length!==clientes.length?'Clientes da região da marca':'Cadastro completo')},
       {l:'Clientes Ativos',v:ativos,t:(((ativos/total)*100)||0).toFixed(0)+'% da base',cls:'up'},
       {l:(selCol?'Fat. '+_e(selCol.trim()):'Faturamento')+(selCity?' · '+_e(selCity):''),v:fmtK(fat),t:(selCol||selCity?'Filtro aplicado':'Acumulado')},
       {l:'Ticket Médio',v:fmtK(tk),t:'Por cliente ativo'},
@@ -11772,7 +11779,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
     {'CNPJ':'demo-urbano','Nome da Loja':'Urbano Store','Cidade':'Florianópolis - SC'},
     {'CNPJ':'demo-costa','Nome da Loja':'Costa & Filhos','Cidade':'Joinville - SC'}
   ];
-  var DEMO_MARCAS=[{id:'reserva',nome:'Reserva'},{id:'reservago',nome:'Reserva Go'},{id:'oficina',nome:'Oficina'},{id:'foxton',nome:'Foxton'},{id:'ankor',nome:'Ankor'},{id:'aramis',nome:'Aramis'},{id:'urban',nome:'Urban'},{id:'cacay',nome:'Cacay'},{id:'indesense',nome:'Indesense'},{id:'lofty',nome:'Lofty'},{id:'nike',nome:'Nike'},{id:'matteo',nome:'Matteo'}];
+  var DEMO_MARCAS=[{id:'reserva',nome:'Reserva'},{id:'reservago',nome:'Reserva Go'},{id:'oficina',nome:'Oficina'},{id:'foxton',nome:'Foxton'},{id:'ankor',nome:'Ankor'},{id:'aramis',nome:'Aramis'},{id:'urban',nome:'Urban'},{id:'cacay',nome:'Cacay'},{id:'indesense',nome:'Indesense'},{id:'lofty',nome:'Lofty'},{id:'nike',nome:'Nike'},{id:'matteo',nome:'Nike Serra'}];
   var ACESSOS_DEFAULT={ 'antoniokrause06@gmail.com':['reserva','reservago','oficina','cacay','aramis'] };
 
   var ESTOQUE={}, diagCache={}, ACESSOS=null;
@@ -14640,7 +14647,7 @@ input.money-in{text-align:right;font-family:var(--sans)!important;font-variant-n
   // cidades sem repetição (ALEGRETE = Alegrete); mostra a grafia mais usada, preferindo a que não está toda em maiúsculas
   function cidades(){
     var m={};
-    (clientes||[]).forEach(function(c){ var l=String(c.Cidade||'').trim(); var k=_cidN(l); if(!k) return; if(!m[k]) m[k]={}; m[k][l]=(m[k][l]||0)+1; });
+    (window._dashMid?clientesMarca(window._dashMid):(clientes||[])).forEach(function(c){ var l=String(c.Cidade||'').trim(); var k=_cidN(l); if(!k) return; if(!m[k]) m[k]={}; m[k][l]=(m[k][l]||0)+1; });
     return Object.keys(m).map(function(k){ var ls=m[k]; var best=Object.keys(ls).sort(function(a,b){ var ca=(a===a.toUpperCase())?1:0, cb=(b===b.toUpperCase())?1:0; return ca-cb || ls[b]-ls[a]; })[0]; return best; })
       .sort(function(a,b){ return a.localeCompare(b,'pt-BR'); });
   }
@@ -14670,7 +14677,7 @@ input.money-in{text-align:right;font-family:var(--sans)!important;font-variant-n
     var bar=document.getElementById(mid+'-dash-top');
     if(!bar){ bar=document.createElement('div'); bar.id=mid+'-dash-top'; bar.className='dash-top'; }
     if(bar.parentNode!==alvo || alvo.firstChild!==bar) alvo.insertBefore(bar,alvo.firstChild);
-    var mc=MARCAS_CONFIG.find(function(m){return m.id===mid;})||{}; var cols=mc.cols||COLS; var f=F(mid);
+    var mc=MARCAS_CONFIG.find(function(m){return m.id===mid;})||{}; var cols=mc.cols||COLS; var f=F(mid); window._dashMid=mid;
     var inad=null; try{ inad=_inadResumo(mid); }catch(e){}
     bar.innerHTML='<div class="dash-seg">'+Object.keys(SEC).map(function(k){ return '<button class="pv2-chip'+(k===tab?' on':'')+'" onclick="switchMarcaTab(\''+mid+'\',\''+k+'\')">'+SEC[k]+'</button>'; }).join('')+'</div>'
       +'<div class="dash-filtros">'
