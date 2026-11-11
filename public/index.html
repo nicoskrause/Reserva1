@@ -2459,7 +2459,7 @@ tr:last-child td{border-bottom:none}
   <!-- topbar da marca -->
   <div class="topbar" style="padding:.75rem 1.5rem">
     <div style="display:flex;align-items:center;gap:.75rem">
-      <div style="font-family:var(--serif);font-size:1.3rem;font-weight:400">Nike</div>
+      <div style="font-family:var(--serif);font-size:1.3rem;font-weight:400">Nike Moda</div>
       <span class="badge blue" style="font-size:.65rem">Masculino</span>
     </div>
     <div class="topbar-actions">
@@ -3208,7 +3208,7 @@ tr:last-child td{border-bottom:none}
               <option value="cacay">Cacay</option>
               <option value="indesense">Indesense</option>
               <option value="lofty">Aramis Calçados</option>
-              <option value="nike">Nike</option>
+              <option value="nike">Nike Moda</option>
               
               <option value="matteo">Nike Serra</option>
             </select>
@@ -3265,7 +3265,7 @@ tr:last-child td{border-bottom:none}
           <option value="cacay">Cacay</option>
               <option value="indesense">Indesense</option>
           <option value="lofty">Aramis Calçados</option>
-              <option value="nike">Nike</option>
+              <option value="nike">Nike Moda</option>
           
           <option value="matteo">Nike Serra</option>
         </select>
@@ -6237,7 +6237,7 @@ function pedOnMarcaChange(){
   const badge=document.getElementById('ped-marca-badge');
   if(!badge) return;
   if(!mid){badge.innerHTML='';return;}
-  const nomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Nike Serra'};
+  const nomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike Moda','aramisnext':'Aramis Next','matteo':'Nike Serra'};
   badge.innerHTML=`<button class="btn btn-ghost btn-sm" style="color:var(--gold-deep);font-size:.75rem" onclick="navToMarca('${mid}')">↗ Ir para dashboard ${nomes[mid]||mid}</button>`;
 }
 
@@ -6333,7 +6333,7 @@ function renderPedLista(){
     body.innerHTML='<div style="padding:2.5rem;text-align:center;color:var(--ink-muted)">Nenhum pedido encontrado.<br><button class="btn btn-primary" style="margin-top:.75rem" onclick="pedSwitchTab(\'novo\')">+ Novo Pedido</button></div>';
     return;
   }
-  const nomesMarcas={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Nike Serra'};
+  const nomesMarcas={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike Moda','aramisnext':'Aramis Next','matteo':'Nike Serra'};
   body.innerHTML=filtrados.map(p=>{
     const marcaNome=nomesMarcas[p.marca]||p.marca||'—';
     const marcaLink=p.marca?`<span class="ped-badge-col" style="cursor:pointer;background:var(--gold-soft);color:var(--gold-deep)" onclick="navToMarca('${p.marca}')" title="Ir para dashboard ${marcaNome}">${marcaNome} ↗</span>`:`<span style="color:var(--ink-muted);font-size:.75rem">—</span>`;
@@ -6361,7 +6361,7 @@ function pedVerDetalhe(id){
     <td style="text-align:right;padding:.45rem .7rem;font-family:var(--mono)">${fmtBRL(i.vunit)}</td>
     <td style="text-align:right;padding:.45rem .7rem;font-family:var(--mono);font-weight:600">${fmtBRL(i.vtotal)}</td>
   </tr>`).join('');
-  const nomesMarcasDet={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Nike Serra'};
+  const nomesMarcasDet={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike Moda','aramisnext':'Aramis Next','matteo':'Nike Serra'};
   const html=`<div style="margin-bottom:.75rem">
     <strong style="font-size:1rem">${p.nomeCli}</strong><br>
     <span style="font-size:.78rem;color:var(--ink-muted)">${p.cnpj} · ${p.colecao} · ${p.data}</span>
@@ -6609,7 +6609,7 @@ function clientesMarca(mid){ var mc=(typeof MARCAS_CONFIG!=='undefined'?MARCAS_C
   var nz=function(x){return String(x||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ');}; var R=mc.regiao;
   return clientes.filter(function(c){ return R.indexOf(nz(c.Cidade))>=0; }); }
 window.clientesMarca=clientesMarca;
-const MARCAS_CONFIG = [{"id": "reserva", "nome": "Reserva", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "reservago", "nome": "Reserva Go", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "oficina", "nome": "Oficina", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "foxton", "nome": "Foxton", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Verão 27", "Perfumes "]}, {"id": "ankor", "nome": "Ankor", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "aramis", "nome": "Aramis", "pub": "M", "emoji": "🟦", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "urban", "nome": "Urban", "pub": "M", "emoji": "🟦", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "cacay", "nome": "Cacay", "pub": "F", "emoji": "🟣", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "indesense", "nome": "Indesense", "pub": "F", "emoji": "🩷", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "lofty", "nome": "Lofty", "pub": "F", "emoji": "🟣", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "matteo", "nome": "Nike Serra", "pub": "U", "regiao": ["caxias do sul","gramado","bento goncalves","farroupilha","canela","lagoa vermelha","flores da cunha","antonio prado","vacaria","serafina correa","casca","guapore","carlos barbosa","sao marcos","nova prata","veranopolis","picada cafe","nova roma do sul","sao francisco de paula","garibaldi","nova bassano"], "emoji": "🟤", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "nike", "nome": "Nike", "pub": "U", "emoji": "⚫", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}];
+const MARCAS_CONFIG = [{"id": "reserva", "nome": "Reserva", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "reservago", "nome": "Reserva Go", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "oficina", "nome": "Oficina", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "foxton", "nome": "Foxton", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Verão 27", "Perfumes "]}, {"id": "ankor", "nome": "Ankor", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "aramis", "nome": "Aramis", "pub": "M", "emoji": "🟦", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "urban", "nome": "Urban", "pub": "M", "emoji": "🟦", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "cacay", "nome": "Cacay", "pub": "F", "emoji": "🟣", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "indesense", "nome": "Indesense", "pub": "F", "emoji": "🩷", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "lofty", "nome": "Lofty", "pub": "F", "emoji": "🟣", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "matteo", "nome": "Nike Serra", "pub": "U", "regiao": ["caxias do sul","gramado","bento goncalves","farroupilha","canela","lagoa vermelha","flores da cunha","antonio prado","vacaria","serafina correa","casca","guapore","carlos barbosa","sao marcos","nova prata","veranopolis","picada cafe","nova roma do sul","sao francisco de paula","garibaldi","nova bassano"], "emoji": "🟤", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "nike", "nome": "Nike Moda", "pub": "U", "emoji": "⚫", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}];
 
 // Estado por marca
 const marcaState = {};
@@ -6627,7 +6627,7 @@ const GESTOR_POR_MARCA = {
   reserva:'Mauricio', reservago:'Mauricio', oficina:'Mauricio',
   aramis:'Vainer', urban:'Vainer', lofty:'Vainer',
   cacay:'Eduarda', indesense:'Eduarda',
-  nike:'Showroom', matteo:'Showroom'
+  nike:'Showroom', matteo:'Franco'
 };
 MARCAS_CONFIG.forEach(m => { m.gestor = GESTOR_POR_MARCA[m.id] || 'Showroom'; });
 // ── Padrão de coleções por marca (correção aplicada UMA vez; depois é livre) ──
@@ -6643,7 +6643,7 @@ window.aplicarPadraoColecoes = aplicarPadraoColecoes;
 aplicarPadraoColecoes();
 // Lofty passa a ser Aramis Calçados
 (function(){ const m=MARCAS_CONFIG.find(x=>x.id==='lofty'); if(m){ m.nome='Aramis Calçados'; m.pub='M'; } })();
-const ORDEM_GESTORES = ['Mauricio','Vainer','Eduarda','Showroom'];
+const ORDEM_GESTORES = ['Mauricio','Vainer','Eduarda','Franco','Showroom'];
 const PUB_INFO = { M:{cor:'#2c4a7c',tag:'Masc'}, F:{cor:'#993556',tag:'Fem'}, U:{cor:'#534AB7',tag:'Uni'}, I:{cor:'#3d6b47',tag:'Inf'} };
 function renderMarcasNav(){
   const cont = document.getElementById('marcas-nav');
@@ -7766,7 +7766,7 @@ function renderEscritorio() {
   if(c2){if(escChartCid2)escChartCid2.destroy();escChartCid2=new Chart(c2,{type:'doughnut',data:{labels:topCid.map(c=>c[0]),datasets:[{data:topCid.map(c=>c[1]),backgroundColor:[_tc('--primary'),_tc('--accent-text'),_tc('--success'),_tc('--accent-text'),_tc('--warning'),_tc('--error'),_tc('--text-secondary'),_tc('--border')]}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:10},boxWidth:10}}}}});}
 
   // Gráfico resultado por marca (pedidos)
-  const marcasNomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Nike Serra'};
+  const marcasNomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike Moda','aramisnext':'Aramis Next','matteo':'Nike Serra'};
   const pedMarca={};
   Object.keys(marcasNomes).forEach(m=>pedMarca[m]=0);
   (typeof pedidos!=='undefined'?pedidos:[]).forEach(p=>{if(p.marca&&pedMarca[p.marca]!==undefined) pedMarca[p.marca]+=p.totalGeral||0;});
@@ -8156,7 +8156,7 @@ function renderEscBI(){
   }
 
   // Chart marcas (pedidos)
-  const marcasNomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike','aramisnext':'Aramis Next','matteo':'Nike Serra'};
+  const marcasNomes={'reserva':'Reserva','reservago':'Reserva Go','oficina':'Oficina','foxton':'Foxton','ankor':'Ankor','aramis':'Aramis','urban':'Urban','cacay':'Cacay','indesense':'Indesense','lofty':'Aramis Calçados','nike':'Nike Moda','aramisnext':'Aramis Next','matteo':'Nike Serra'};
   const pedMarca={};
   Object.keys(marcasNomes).forEach(m=>pedMarca[m]=0);
   (typeof pedidos!=='undefined'?pedidos:[]).forEach(p=>{if(p.marca&&pedMarca[p.marca]!==undefined)pedMarca[p.marca]+=p.totalGeral||0;});
@@ -8191,7 +8191,7 @@ function renderEscBI(){
 const MARCAS_NOMES_DG = {
   reserva:'Reserva', reservago:'Reserva Go', oficina:'Oficina',
   foxton:'Foxton', ankor:'Ankor', aramis:'Aramis', urban:'Urban',
-  cacay:'Cacay', indesense:'Indesense', lofty:'Aramis Calçados', nike:'Nike', aramisnext:'Aramis Next', matteo:'Nike Serra'
+  cacay:'Cacay', indesense:'Indesense', lofty:'Aramis Calçados', nike:'Nike Moda', aramisnext:'Aramis Next', matteo:'Nike Serra'
 };
 
 function getAllDemandas(filtroMarca, filtroStatus, filtroTopico){
@@ -8744,7 +8744,7 @@ const B64_INAD="PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InB0LUJSIj4KPGhlYWQ+CjxtZXRh
         <option value="cacay">Cacay</option>
               <option value="indesense">Indesense</option>
         <option value="lofty">Aramis Calçados</option>
-              <option value="nike">Nike</option>
+              <option value="nike">Nike Moda</option>
         
         <option value="matteo">Nike Serra</option>
       </select>
@@ -11779,7 +11779,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
     {'CNPJ':'demo-urbano','Nome da Loja':'Urbano Store','Cidade':'Florianópolis - SC'},
     {'CNPJ':'demo-costa','Nome da Loja':'Costa & Filhos','Cidade':'Joinville - SC'}
   ];
-  var DEMO_MARCAS=[{id:'reserva',nome:'Reserva'},{id:'reservago',nome:'Reserva Go'},{id:'oficina',nome:'Oficina'},{id:'foxton',nome:'Foxton'},{id:'ankor',nome:'Ankor'},{id:'aramis',nome:'Aramis'},{id:'urban',nome:'Urban'},{id:'cacay',nome:'Cacay'},{id:'indesense',nome:'Indesense'},{id:'lofty',nome:'Lofty'},{id:'nike',nome:'Nike'},{id:'matteo',nome:'Nike Serra'}];
+  var DEMO_MARCAS=[{id:'reserva',nome:'Reserva'},{id:'reservago',nome:'Reserva Go'},{id:'oficina',nome:'Oficina'},{id:'foxton',nome:'Foxton'},{id:'ankor',nome:'Ankor'},{id:'aramis',nome:'Aramis'},{id:'urban',nome:'Urban'},{id:'cacay',nome:'Cacay'},{id:'indesense',nome:'Indesense'},{id:'lofty',nome:'Lofty'},{id:'nike',nome:'Nike Moda'},{id:'matteo',nome:'Nike Serra'}];
   var ACESSOS_DEFAULT={ 'antoniokrause06@gmail.com':['reserva','reservago','oficina','cacay','aramis'] };
 
   var ESTOQUE={}, diagCache={}, ACESSOS=null;
@@ -12729,7 +12729,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
   var ETAPAS=['Prospecção','Qualificação','Agendado','Apresentação','Negociação','Fechado','Perdido'];
   var PROB={'Prospecção':.1,'Qualificação':.2,'Agendado':.35,'Apresentação':.5,'Negociação':.7,'Fechado':1,'Perdido':0};
   var TIPOS=['Showroom','Visita na loja','Online / vídeo','Telefone / WhatsApp'];
-  var GESTORES=['Mauricio','Vainer','Eduarda','Showroom'];
+  var GESTORES=['Mauricio','Vainer','Eduarda','Franco','Showroom'];
   var DAY=864e5, LS='und_pipeline_v2';
   var PIPE={};           // {mid:[itens]}
   var carregado={};      // mid -> true quando veio do Firebase
@@ -13716,7 +13716,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter
     var g=st.g;
     var h='<div class="pv2-head"><div><div class="pv2-title">Pós-Venda</div><div class="pv2-sub">Saúde dos clientes depois do pedido · ligado a Compras, Clientes, Inadimplência, Agenda e Pipeline</div></div>'+
       '<div style="display:flex;gap:.4rem;flex-wrap:wrap"><button class="btn btn-secondary btn-sm" onclick="pv2Backup()">Salvar backup</button><button class="btn btn-secondary btn-sm" onclick="pv2Restaurar()">Abrir backup</button><button class="btn btn-secondary btn-sm" onclick="pv2CSV(\'g\')">Exportar CSV</button><button class="btn btn-primary" onclick="pv2Novo(\''+(g.marca||'')+'\')">+ Lançamento</button></div></div>';
-    h+='<div class="pv2-bar"><div class="pv2-chips">'+['','Mauricio','Vainer','Eduarda','Showroom'].map(function(x){return '<button class="pv2-chip'+(g.gestor===x?' on':'')+'" onclick="pv2C(\'g\',\'gestor\',\''+x+'\')">'+(x||'Todos os gestores')+'</button>';}).join('')+'</div>'+
+    h+='<div class="pv2-bar"><div class="pv2-chips">'+['','Mauricio','Vainer','Eduarda','Franco','Showroom'].map(function(x){return '<button class="pv2-chip'+(g.gestor===x?' on':'')+'" onclick="pv2C(\'g\',\'gestor\',\''+x+'\')">'+(x||'Todos os gestores')+'</button>';}).join('')+'</div>'+
       '<select class="select" onchange="pv2C(\'g\',\'marca\',this.value)"><option value="">Todas as marcas</option>'+MARCAS_CONFIG.filter(function(m){return !g.gestor||m.gestor===g.gestor;}).map(function(m){return '<option value="'+m.id+'"'+(g.marca===m.id?' selected':'')+'>'+esc(m.nome)+'</option>';}).join('')+'</select></div>';
     h+=corpo('g',g,!g.marca);
     host.innerHTML=h;
