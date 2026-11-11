@@ -6609,7 +6609,7 @@ function clientesMarca(mid){ var mc=(typeof MARCAS_CONFIG!=='undefined'?MARCAS_C
   var nz=function(x){return String(x||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ');}; var R=mc.regiao;
   return clientes.filter(function(c){ return R.indexOf(nz(c.Cidade))>=0; }); }
 window.clientesMarca=clientesMarca;
-const MARCAS_CONFIG = [{"id": "reserva", "nome": "Reserva", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "reservago", "nome": "Reserva Go", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "oficina", "nome": "Oficina", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "foxton", "nome": "Foxton", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Verão 27", "Perfumes "]}, {"id": "ankor", "nome": "Ankor", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "aramis", "nome": "Aramis", "pub": "M", "emoji": "🟦", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "urban", "nome": "Urban", "pub": "M", "emoji": "🟦", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "cacay", "nome": "Cacay", "pub": "F", "emoji": "🟣", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "indesense", "nome": "Indesense", "pub": "F", "emoji": "🩷", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "lofty", "nome": "Lofty", "pub": "F", "emoji": "🟣", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "matteo", "nome": "Nike Serra", "pub": "U", "regiao": ["caxias do sul","gramado","bento goncalves","farroupilha","canela","lagoa vermelha","flores da cunha","antonio prado","vacaria","serafina correa","casca","guapore","carlos barbosa","sao marcos","nova prata","veranopolis","picada cafe","nova roma do sul","sao francisco de paula","garibaldi","nova bassano"], "emoji": "🟤", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "nike", "nome": "Nike Moda", "pub": "U", "emoji": "⚫", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}];
+const MARCAS_CONFIG = [{"id": "reserva", "nome": "Reserva", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "reservago", "nome": "Reserva Go", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "oficina", "nome": "Oficina", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "foxton", "nome": "Foxton", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Verão 27", "Perfumes "]}, {"id": "ankor", "nome": "Ankor", "pub": "M", "emoji": "🟦", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27", "Perfumes "]}, {"id": "aramis", "nome": "Aramis", "pub": "M", "emoji": "🟦", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "urban", "nome": "Urban", "pub": "M", "emoji": "🟦", "cols": ["Verão 26", "Inverno 26", "Verão 27"]}, {"id": "cacay", "nome": "Cacay", "pub": "F", "emoji": "🟣", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "indesense", "nome": "Indesense", "pub": "F", "emoji": "🩷", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "lofty", "nome": "Lofty", "pub": "F", "emoji": "🟣", "cols": ["Alto verão 25", "Inverno 25", "Alto inverno 25", "Verão 26", "Alto verão 26", "Inverno 26", "Alto Inv 26", "Verão 27"]}, {"id": "matteo", "nome": "Nike Serra", "pub": "U", "regiao": ["caxias do sul","gramado","bento goncalves","farroupilha","canela","lagoa vermelha","flores da cunha","antonio prado","vacaria","serafina correa","casca","guapore","carlos barbosa","sao marcos","nova prata","veranopolis","picada cafe","nova roma do sul","sao francisco de paula","garibaldi","nova bassano"], "emoji": "🟤", "cols": ["Spring 27","Summer 27","Fall 27","Holiday 27"]}, {"id": "nike", "nome": "Nike Moda", "pub": "U", "emoji": "⚫", "cols": ["Spring 27","Summer 27","Fall 27","Holiday 27"]}];
 
 // Estado por marca
 const marcaState = {};
@@ -6631,7 +6631,9 @@ const GESTOR_POR_MARCA = {
 };
 MARCAS_CONFIG.forEach(m => { m.gestor = GESTOR_POR_MARCA[m.id] || 'Showroom'; });
 // ── Padrão de coleções por marca (correção aplicada UMA vez; depois é livre) ──
-const COLS_VERSION = 2;
+const COLS_VERSION = 3;
+// v3: coleções das duas Nikes (Nike Moda e Nike Serra); não mexe nas outras marcas
+function aplicarColecoesV3(){ ['matteo','nike'].forEach(function(id){ const m=MARCAS_CONFIG.find(x=>x.id===id); if(m) m.cols=["Spring 27","Summer 27","Fall 27","Holiday 27"].slice(); }); }
 function aplicarPadraoColecoes(){
   MARCAS_CONFIG.forEach(m => {
     if(m.id === 'oficina') m.cols = ['Inverno 25','Verão 26','Inverno 26','Verão 27'];
@@ -7884,7 +7886,7 @@ function carregarColecoesMarca(){
     const raw=localStorage.getItem('und_marca_cols');
     if(raw){ const obj=JSON.parse(raw); const map=obj.map||obj; const lv=obj.v||0;
       MARCAS_CONFIG.forEach(mc=>{ if(Array.isArray(map[mc.id]) && map[mc.id].length) mc.cols=map[mc.id]; });
-      if(lv < COLS_VERSION) aplicarPadraoColecoes(); }
+      if(lv < 2) aplicarPadraoColecoes(); if(lv < 3) aplicarColecoesV3(); }
   }catch(e){}
   // Se o sistema abriu antes do login, a leitura abaixo é recusada: tenta de novo assim que o login acontecer.
   if(!window._colsAuthHook){ window._colsAuthHook=true; (function hook(){ if(!window._fbOnAuth){ setTimeout(hook,300); return; } window._fbOnAuth(function(u){ if(u && !window._marcaColsOk) carregarColecoesMarca(); }); })(); }
@@ -7898,7 +7900,7 @@ function carregarColecoesMarca(){
           window._marcaColsFora={}; Object.keys(d.map).forEach(id=>{ if(!MARCAS_CONFIG.some(mc=>mc.id===id)) window._marcaColsFora[id]=d.map[id]; }); }
       }
       // Correção única das regras (Oficina/Perfumes/Aramis Calçados) sobre dados antigos
-      if(ver < COLS_VERSION){ aplicarPadraoColecoes(); try{ salvarColecoesMarca(); }catch(e){} }
+      if(ver < COLS_VERSION){ if(ver < 2) aplicarPadraoColecoes(); if(ver < 3) aplicarColecoesV3(); try{ salvarColecoesMarca(); }catch(e){} }
       try{ renderMarcaTab(marcaAtual, marcaState[marcaAtual]?.currentTab||'dashboard'); }catch(e){}
     }).catch(()=>{}); }catch(e){}
   }
